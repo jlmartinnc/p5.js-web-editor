@@ -9,15 +9,7 @@
 }
 
 .about__content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding-top: #{math.div(17, $base-font-size)}rem;
-  padding-right: #{math.div(78, $base-font-size)}rem;
-  padding-bottom: #{math.div(20, $base-font-size)}rem;
-  padding-left: #{math.div(20, $base-font-size)}rem;
-  width: #{math.div(720, $base-font-size)}rem;
+ margin: 3rem 17rem;
 }
 
 .about__content-column {
@@ -84,15 +76,23 @@
 }
 
 .about__footer {
-  display: flex;
-  justify-content: space-between;
-  padding-top: #{math.div(18, $base-font-size)}rem;
+  border-top: 0.1rem dashed;
   padding-right: #{math.div(20, $base-font-size)}rem;
   padding-bottom: #{math.div(21, $base-font-size)}rem;
-  padding-left: #{math.div(20, $base-font-size)}rem;
+  width: 100%;
+
+  @include themify() {
+    border-color: getThemifyVariable('logo-color');
+  }
+}
+
+.about__footer-list-container {
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 
 .about__footer-list {
-  padding-top: #{math.div(12, $base-font-size)}rem;
+  padding-top: #{math.div(20, $base-font-size)}rem;
+  padding-right: 9.5%;
 }
