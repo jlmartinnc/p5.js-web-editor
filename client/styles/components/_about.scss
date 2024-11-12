@@ -8,8 +8,32 @@
   }
 }
 
+.about__content-intro {
+  display: flex;
+}
+
+.about__content-description {
+  line-height: 1.8;
+  margin: 1.5rem 0;
+}
+
+.big-description {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .about__content {
  margin: 3rem 17rem;
+}
+
+.about__content-row {
+  display: flex;
 }
 
 .about__content-column {
@@ -36,12 +60,15 @@
 }
 
 .about__content-column-title {
-  font-size: #{math.div(21, $base-font-size)}rem;
-  padding-left: #{math.div(17, $base-font-size)}rem;
+  font-size: #{math.div(18, $base-font-size)}rem;
+  font-weight: 600;
+  // padding-left: #{math.div(17, $base-font-size)}rem;
 }
 
 .about__content-column-asterisk {
-  padding-right: #{math.div(5, $base-font-size)}rem;
+  padding-right: #{math.div(8, $base-font-size)}rem;
+  width: #{math.div(20, $base-font-size)}rem;
+  height: #{math.div(20, $base-font-size)}rem;
   @include themify() {
     & path {
       fill: getThemifyVariable('logo-color');
@@ -68,11 +95,6 @@
       padding-top: #{math.div(30, $base-font-size)}rem;
     }
   }
-  // span {
-  //   @include themify() {
-  //     fill: getThemifyVariable('logo-color');
-  //   }
-  // }
 }
 
 .about__footer {
