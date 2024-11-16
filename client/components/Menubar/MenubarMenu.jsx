@@ -2,24 +2,24 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useContext, useMemo } from 'react';
 import TriangleIcon from '../../images/down-filled-triangle.svg';
-import { MenuOpenContext, NavBarContext, ParentMenuContext } from './contexts';
+import { MenuOpenContext, MenubarContext, ParentMenuContext } from './contexts';
 
 export function useMenuProps(id) {
   const activeMenu = useContext(MenuOpenContext);
 
   const isOpen = id === activeMenu;
 
-  const { createDropdownHandlers } = useContext(NavBarContext);
+  const { createMenuHandlers } = useContext(MenubarContext);
 
-  const handlers = useMemo(() => createDropdownHandlers(id), [
-    createDropdownHandlers,
+  const handlers = useMemo(() => createMenuHandlers(id), [
+    createMenuHandlers,
     id
   ]);
 
   return { isOpen, handlers };
 }
 
-function NavDropdownMenu({ id, title, children }) {
+function MenubarMenu({ id, title, children }) {
   const { isOpen, handlers } = useMenuProps(id);
 
   return (
@@ -46,14 +46,14 @@ function NavDropdownMenu({ id, title, children }) {
   );
 }
 
-NavDropdownMenu.propTypes = {
+MenubarMenu.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
   children: PropTypes.node
 };
 
-NavDropdownMenu.defaultProps = {
+MenubarMenu.defaultProps = {
   children: null
 };
 
-export default NavDropdownMenu;
+export default MenubarMenu;

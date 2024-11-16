@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useMemo } from 'react';
 import ButtonOrLink from '../../common/ButtonOrLink';
-import { NavBarContext, ParentMenuContext } from './contexts';
+import { MenubarContext, ParentMenuContext } from './contexts';
 
-function NavMenuItem({ hideIf, className, ...rest }) {
+function MenubarItem({ hideIf, className, ...rest }) {
   const parent = useContext(ParentMenuContext);
 
-  const { createMenuItemHandlers } = useContext(NavBarContext);
+  const { createMenuItemHandlers } = useContext(MenubarContext);
 
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,
@@ -24,7 +24,7 @@ function NavMenuItem({ hideIf, className, ...rest }) {
   );
 }
 
-NavMenuItem.propTypes = {
+MenubarItem.propTypes = {
   ...ButtonOrLink.propTypes,
   onClick: PropTypes.func,
   value: PropTypes.string,
@@ -35,11 +35,11 @@ NavMenuItem.propTypes = {
   className: PropTypes.string
 };
 
-NavMenuItem.defaultProps = {
+MenubarItem.defaultProps = {
   onClick: null,
   value: null,
   hideIf: false,
   className: 'nav__dropdown-item'
 };
 
-export default NavMenuItem;
+export default MenubarItem;

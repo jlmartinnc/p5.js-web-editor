@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import useModalClose from '../../common/useModalClose';
-import { MenuOpenContext, NavBarContext } from './contexts';
+import { MenuOpenContext, MenubarContext } from './contexts';
 
-function NavBar({ children, className }) {
-  const [dropdownOpen, setDropdownOpen] = useState('none');
+function Menubar({ children, className }) {
+  const [menuOpen, setMenuOpen] = useState('none');
 
   const timerRef = useRef(null);
 
   const handleClose = useCallback(() => {
-    setDropdownOpen('none');
-  }, [setDropdownOpen]);
+    setMenuOpen('none');
+  }, [setMenuOpen]);
 
   const nodeRef = useModalClose(handleClose);
 
@@ -22,71 +22,67 @@ function NavBar({ children, className }) {
   }, [timerRef]);
 
   const handleBlur = useCallback(() => {
-    timerRef.current = setTimeout(() => setDropdownOpen('none'), 10);
-  }, [timerRef, setDropdownOpen]);
+    timerRef.current = setTimeout(() => setMenuOpen('none'), 10);
+  }, [timerRef, setMenuOpen]);
 
-  const toggleDropdownOpen = useCallback(
-    (dropdown) => {
-      setDropdownOpen((prevState) =>
-        prevState === dropdown ? 'none' : dropdown
-      );
+  const toggleMenuOpen = useCallback(
+    (menu) => {
+      setMenuOpen((prevState) => (prevState === menu ? 'none' : menu));
     },
-    [setDropdownOpen]
+    [setMenuOpen]
   );
 
   const contextValue = useMemo(
     () => ({
-      createDropdownHandlers: (dropdown) => ({
+      createMenuHandlers: (menu) => ({
         onMouseOver: () => {
-          setDropdownOpen((prevState) =>
-            prevState === 'none' ? 'none' : dropdown
-          );
+          setMenuOpen((prevState) => (prevState === 'none' ? 'none' : menu));
         },
         onClick: () => {
-          toggleDropdownOpen(dropdown);
+          toggleMenuOpen(menu);
         },
         onBlur: handleBlur,
         onFocus: clearHideTimeout
       }),
-      createMenuItemHandlers: (dropdown) => ({
+      createMenuItemHandlers: (menu) => ({
         onMouseUp: (e) => {
           if (e.button === 2) {
             return;
           }
-          setDropdownOpen('none');
+          setMenuOpen('none');
         },
         onBlur: handleBlur,
         onFocus: () => {
           clearHideTimeout();
-          setDropdownOpen(dropdown);
+          setMenuOpen(menu);
         }
       }),
-      toggleDropdownOpen
+      toggleMenuOpen
     }),
-    [setDropdownOpen, toggleDropdownOpen, clearHideTimeout, handleBlur]
+    [setMenuOpen, toggleMenuOpen, clearHideTimeout, handleBlur]
   );
 
   return (
-    <NavBarContext.Provider value={contextValue}>
+    <MenubarContext.Provider value={contextValue}>
       <header>
         <div className={className} ref={nodeRef}>
-          <MenuOpenContext.Provider value={dropdownOpen}>
+          <MenuOpenContext.Provider value={menuOpen}>
             {children}
           </MenuOpenContext.Provider>
         </div>
       </header>
-    </NavBarContext.Provider>
+    </MenubarContext.Provider>
   );
 }
 
-NavBar.propTypes = {
+Menubar.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string
 };
 
-NavBar.defaultProps = {
+Menubar.defaultProps = {
   children: null,
   className: 'nav'
 };
 
-export default NavBar;
+export default Menubar;
