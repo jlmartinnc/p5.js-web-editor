@@ -251,6 +251,7 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem href="/about">{t('Nav.Help.About')}</MenubarItem>
       </MenubarMenu>
+      {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
     </ul>
   );
 };
@@ -280,7 +281,6 @@ const UnauthenticatedUserMenu = () => {
   const { t } = useTranslation();
   return (
     <ul className="nav__items-right" title="user-menu">
-      {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
       <li className="nav__item">
         <Link to="/login" className="nav__auth-button" role="menuitem">
           <span className="nav__item-header" title="Login">
@@ -308,7 +308,6 @@ const AuthenticatedUserMenu = () => {
 
   return (
     <ul className="nav__items-right" title="user-menu">
-      {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
       <MenubarMenu
         id="account"
         title={
