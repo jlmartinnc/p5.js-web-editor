@@ -64,13 +64,11 @@ function Menubar({ children, className }) {
 
   return (
     <MenubarContext.Provider value={contextValue}>
-      <header>
-        <div className={className} ref={nodeRef}>
-          <MenuOpenContext.Provider value={menuOpen}>
-            {children}
-          </MenuOpenContext.Provider>
-        </div>
-      </header>
+      <div className={className} ref={nodeRef}>
+        <MenuOpenContext.Provider value={menuOpen}>
+          {children}
+        </MenuOpenContext.Provider>
+      </div>
     </MenubarContext.Provider>
   );
 }

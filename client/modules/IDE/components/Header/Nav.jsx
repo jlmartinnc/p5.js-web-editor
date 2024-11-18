@@ -37,10 +37,14 @@ const Nav = ({ layout }) => {
   return isMobile ? (
     <MobileNav />
   ) : (
-    <Menubar>
-      <LeftLayout layout={layout} />
-      <UserMenu />
-    </Menubar>
+    <>
+      <header className="nav__header">
+        <Menubar>
+          <LeftLayout layout={layout} />
+        </Menubar>
+        <UserMenu />
+      </header>
+    </>
   );
 };
 
@@ -275,7 +279,7 @@ const LanguageMenu = () => {
 const UnauthenticatedUserMenu = () => {
   const { t } = useTranslation();
   return (
-    <ul className="nav__items-right" title="user-menu" role="navigation">
+    <ul className="nav__items-right" title="user-menu">
       {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
       <li className="nav__item">
         <Link to="/login" className="nav__auth-button" role="menuitem">
@@ -303,7 +307,7 @@ const AuthenticatedUserMenu = () => {
   const dispatch = useDispatch();
 
   return (
-    <ul className="nav__items-right" title="user-menu" role="navigation">
+    <ul className="nav__items-right" title="user-menu">
       {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
       <MenubarMenu
         id="account"
