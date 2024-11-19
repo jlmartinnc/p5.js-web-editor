@@ -65,7 +65,7 @@ MenubarList.defaultProps = {
 };
 
 function MenubarMenu({ id, title, children }) {
-  const { isOpen, handlers } = useMenuProps(id);
+  const { isOpen } = useMenuProps(id);
 
   return (
     <li className={classNames('nav__item', isOpen && 'nav__item--open')}>
