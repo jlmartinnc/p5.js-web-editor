@@ -19,29 +19,58 @@ export function useMenuProps(id) {
   return { isOpen, handlers };
 }
 
+function MenubarTrigger({ id, title, ...props }) {
+  const { isOpen, handlers } = useMenuProps(id);
+
+  return (
+    <button
+      {...handlers}
+      {...props}
+      role="menuitem"
+      aria-haspopup="menu"
+      aria-expanded={isOpen}
+    >
+      <span className="nav__item-header">{title}</span>
+      <TriangleIcon
+        className="nav__item-header-triangle"
+        focusable="false"
+        aria-hidden="true"
+      />
+    </button>
+  );
+}
+
+MenubarTrigger.propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.node.isRequired
+};
+
+function MenubarList({ id, children }) {
+  return (
+    <ul className="nav__dropdown" role="menu">
+      <ParentMenuContext.Provider value={id}>
+        {children}
+      </ParentMenuContext.Provider>
+    </ul>
+  );
+}
+
+MenubarList.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.node
+};
+
+MenubarList.defaultProps = {
+  children: null
+};
+
 function MenubarMenu({ id, title, children }) {
   const { isOpen, handlers } = useMenuProps(id);
 
   return (
     <li className={classNames('nav__item', isOpen && 'nav__item--open')}>
-      <button
-        {...handlers}
-        role="menuitem"
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-      >
-        <span className="nav__item-header">{title}</span>
-        <TriangleIcon
-          className="nav__item-header-triangle"
-          focusable="false"
-          aria-hidden="true"
-        />
-      </button>
-      <ul className="nav__dropdown" role="menu">
-        <ParentMenuContext.Provider value={id}>
-          {children}
-        </ParentMenuContext.Provider>
-      </ul>
+      <MenubarTrigger id={id} title={title} />
+      <MenubarList id={id}>{children}</MenubarList>
     </li>
   );
 }
