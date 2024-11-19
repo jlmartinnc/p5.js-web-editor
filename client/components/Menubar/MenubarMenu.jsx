@@ -19,6 +19,10 @@ export function useMenuProps(id) {
   return { isOpen, handlers };
 }
 
+/* -------------------------------------------------------------------------------------------------
+ * MenubarTrigger
+ * -----------------------------------------------------------------------------------------------*/
+
 function MenubarTrigger({ id, title, ...props }) {
   const { isOpen, handlers } = useMenuProps(id);
 
@@ -45,6 +49,10 @@ MenubarTrigger.propTypes = {
   title: PropTypes.node.isRequired
 };
 
+/* -------------------------------------------------------------------------------------------------
+ * MenubarList
+ * -----------------------------------------------------------------------------------------------*/
+
 function MenubarList({ id, children }) {
   return (
     <ul className="nav__dropdown" role="menu">
@@ -63,6 +71,10 @@ MenubarList.propTypes = {
 MenubarList.defaultProps = {
   children: null
 };
+
+/* -------------------------------------------------------------------------------------------------
+ * MenubarMenu
+ * -----------------------------------------------------------------------------------------------*/
 
 function MenubarMenu({ id, title, children }) {
   const { isOpen } = useMenuProps(id);
