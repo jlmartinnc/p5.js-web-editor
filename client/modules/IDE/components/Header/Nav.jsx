@@ -282,15 +282,17 @@ const UnauthenticatedUserMenu = () => {
   return (
     <ul className="nav__items-right" title="user-menu">
       <li className="nav__item">
-        <Link to="/login" className="nav__auth-button" role="menuitem">
+        <Link to="/login" className="nav__auth-button">
           <span className="nav__item-header" title="Login">
             {t('Nav.Login')}
           </span>
         </Link>
       </li>
-      <li className="nav__item-or">{t('Nav.LoginOr')}</li>
+      <li className="nav__item-or" role="presentation">
+        {t('Nav.LoginOr')}
+      </li>
       <li className="nav__item">
-        <Link to="/signup" className="nav__auth-button" role="menuitem">
+        <Link to="/signup" className="nav__auth-button">
           <span className="nav__item-header" title="SignUp">
             {t('Nav.SignUp')}
           </span>
