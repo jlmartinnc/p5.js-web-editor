@@ -4,12 +4,13 @@ import CodeMirror from 'codemirror';
 import { Encode } from 'console-feed';
 
 import RightArrowIcon from '../../../images/right-arrow.svg';
+import { dispatchConsoleEvent } from '../../IDE/actions/console';
 import { dispatchMessage, MessageTypes } from '../../../utils/dispatcher';
 
 // heavily inspired by
 // https://github.com/codesandbox/codesandbox-client/blob/92a1131f4ded6f7d9c16945dc7c18aa97c8ada27/packages/app/src/app/components/Preview/DevTools/Console/Input/index.tsx
 
-function ConsoleInput({ theme, dispatchConsoleEvent, fontSize }) {
+function ConsoleInput({ theme, fontSize }) {
   const [commandHistory, setCommandHistory] = useState([]);
   const [commandCursor, setCommandCursor] = useState(-1);
   const codemirrorContainer = useRef(null);
@@ -23,76 +24,99 @@ function ConsoleInput({ theme, dispatchConsoleEvent, fontSize }) {
       mode: 'javascript',
       inputStyle: 'contenteditable'
     });
+  }, []);
 
-    cmInstance.current.on('keydown', (cm, e) => {
+  useEffect(() => {
+    const handleEnterKey = (cm, e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
-        const value = cm.getValue();
-        if (value.trim(' ') === '') {
-          return false;
-        }
+
+        const value = cm.getValue().trim();
+        if (value === '') return;
+
         const messages = [
           { log: Encode({ method: 'command', data: [value] }) }
         ];
         const consoleEvent = [{ method: 'command', data: [value] }];
+
         dispatchMessage({
           type: MessageTypes.EXECUTE,
-          payload: {
-            source: 'console',
-            messages
-          }
+          payload: { source: 'console', messages }
         });
+
         dispatchConsoleEvent(consoleEvent);
         cm.setValue('');
         setCommandHistory([value, ...commandHistory]);
         setCommandCursor(-1);
-      } else if (e.key === 'ArrowUp') {
-        const lineNumber = cmInstance.current.getDoc().getCursor().line;
-        if (lineNumber !== 0) {
-          return false;
-        }
+      }
+    };
+
+    if (cmInstance.current) {
+      cmInstance.current.on('keydown', handleEnterKey);
+    }
+
+    return () => {
+      if (cmInstance.current) {
+        cmInstance.current.off('keydown', handleEnterKey);
+      }
+    };
+  }, [commandHistory]);
+
+  useEffect(() => {
+    const handleUpArrowKey = (cm, e) => {
+      if (e.key === 'ArrowUp') {
+        const lineNumber = cm.getDoc().getCursor().line;
+        if (lineNumber !== 0) return;
 
         const newCursor = Math.min(
           commandCursor + 1,
           commandHistory.length - 1
         );
-        cmInstance.current.getDoc().setValue(commandHistory[newCursor] || '');
-        const cursorPos = cmInstance.current.getDoc().getLine(0).length - 1;
-        cmInstance.current.getDoc().setCursor({ line: 0, ch: cursorPos });
-        setCommandCursor(newCursor);
-      } else if (e.key === 'ArrowDown') {
-        const lineNumber = cmInstance.current.getDoc().getCursor().line;
-        const lineCount = cmInstance.current.getValue().split('\n').length;
-        if (lineNumber + 1 !== lineCount) {
-          return false;
-        }
-
-        const newCursor = Math.max(commandCursor - 1, -1);
-        cmInstance.current.getDoc().setValue(commandHistory[newCursor] || '');
-        const newLineCount = cmInstance.current.getValue().split('\n').length;
-        const newLine = cmInstance.current.getDoc().getLine(newLineCount);
-        const cursorPos = newLine ? newLine.length - 1 : 1;
-        cmInstance.current
-          .getDoc()
-          .setCursor({ line: lineCount, ch: cursorPos });
+        cm.setValue(commandHistory[newCursor] || '');
+        const cursorPos = cm.getDoc().getLine(0).length - 1;
+        cm.getDoc().setCursor({ line: 0, ch: cursorPos });
         setCommandCursor(newCursor);
       }
-      return true;
-    });
+    };
 
-    cmInstance.current.getWrapperElement().style['font-size'] = `${fontSize}px`;
+    if (cmInstance.current) {
+      cmInstance.current.on('keydown', handleUpArrowKey);
+    }
 
     return () => {
-      cmInstance.current = null;
+      if (cmInstance.current) {
+        cmInstance.current.off('keydown', handleUpArrowKey);
+      }
     };
-  }, []);
+  }, [commandCursor, commandHistory]);
 
   useEffect(() => {
-    cmInstance.current.setOption('theme', `p5-${theme}`);
-    cmInstance.current.getWrapperElement().style['font-size'] = `${fontSize}px`;
-    cmInstance.current.refresh();
-  }, [theme, fontSize]);
+    const handleArrowDownKey = (cm, e) => {
+      if (e.key === 'ArrowDown') {
+        const lineNumber = cm.getDoc().getCursor().line;
+        const lineCount = cm.lineCount();
+        if (lineNumber + 1 !== lineCount) return;
+
+        const newCursor = Math.max(commandCursor - 1, -1);
+        cm.setValue(commandHistory[newCursor] || '');
+        const newLine = cm.getDoc().getLine(lineCount - 1);
+        const cursorPos = newLine ? newLine.length - 1 : 1;
+        cm.getDoc().setCursor({ line: lineCount - 1, ch: cursorPos });
+        setCommandCursor(newCursor);
+      }
+    };
+
+    if (cmInstance.current) {
+      cmInstance.current.on('keydown', handleArrowDownKey);
+    }
+
+    return () => {
+      if (cmInstance.current) {
+        cmInstance.current.off('keydown', handleArrowDownKey);
+      }
+    };
+  }, [commandCursor, commandHistory]);
 
   return (
     <div className="console__input">
@@ -110,14 +134,17 @@ function ConsoleInput({ theme, dispatchConsoleEvent, fontSize }) {
           }}
         />
       </div>
-      <div ref={codemirrorContainer} className="console__editor" />
+      <div
+        ref={codemirrorContainer}
+        className="console__editor"
+        style={{ fontSize: `${fontSize}px` }}
+      />
     </div>
   );
 }
 
 ConsoleInput.propTypes = {
   theme: PropTypes.string.isRequired,
-  dispatchConsoleEvent: PropTypes.func.isRequired,
   fontSize: PropTypes.number.isRequired
 };
 
