@@ -80,11 +80,13 @@
 }
 
 .form__eye__icon {
-  font-size: 28px;
+  font-size: #{math.div(30, $base-font-size)}rem;
   position: absolute;
   right: 0px;
-  display: flex;
-  vertical-align: middle;
+  
+  & svg {
+    transform: translateY(10%);
+  }
 }
 
 
