@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import * as IDEActions from '../actions/ide';
@@ -87,6 +87,7 @@ const FileNode = ({
   const [isEditingName, setIsEditingName] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [updatedName, setUpdatedName] = useState(name);
+  const dispatch = useDispatch();
 
   const { t } = useTranslation();
   const fileNameInput = useRef(null);
@@ -122,17 +123,17 @@ const FileNode = ({
   };
 
   const handleClickAddFile = () => {
-    newFile(id);
+    dispatch(newFile(id));
     setTimeout(() => hideFileOptions(), 0);
   };
 
   const handleClickAddFolder = () => {
-    newFolder(id);
+    dispatch(newFolder(id));
     setTimeout(() => hideFileOptions(), 0);
   };
 
   const handleClickUploadFile = () => {
-    openUploadFileModal(id);
+    dispatch(openUploadFileModal(id));
     setTimeout(hideFileOptions, 0);
   };
 
