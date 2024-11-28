@@ -13,7 +13,7 @@ import {
 import { selectRootFile } from '../selectors/files';
 import { getAuthenticated, selectCanEditSketch } from '../selectors/users';
 
-import ConnectedFileNode from './FileNode';
+import FileNode from './FileNode';
 import { PlusIcon } from '../../../common/icons';
 import { FileDrawer } from './Editor/MobileEditor';
 
@@ -130,7 +130,7 @@ export default function SideBar() {
             </ul>
           </div>
         </header>
-        <ConnectedFileNode id={rootFile.id} canEdit={canEditProject} />
+        <FileNode id={rootFile.id} canEdit={canEditProject} />
       </section>
     </FileDrawer>
   );
