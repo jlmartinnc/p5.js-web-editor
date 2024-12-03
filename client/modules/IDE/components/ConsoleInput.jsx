@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useRef, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import CodeMirror from 'codemirror';
 import { Encode } from 'console-feed';
 
@@ -16,7 +15,6 @@ function ConsoleInput({ theme, fontSize }) {
   const [commandCursor, setCommandCursor] = useState(-1);
   const codemirrorContainer = useRef(null);
   const cmInstance = useRef(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     cmInstance.current = CodeMirror(codemirrorContainer.current, {
@@ -47,7 +45,7 @@ function ConsoleInput({ theme, fontSize }) {
           payload: { source: 'console', messages }
         });
 
-        dispatch(dispatchConsoleEvent(consoleEvent));
+        dispatchConsoleEvent(consoleEvent);
         cm.setValue('');
         setCommandHistory([value, ...commandHistory]);
         setCommandCursor(-1);

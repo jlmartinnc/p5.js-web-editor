@@ -1,16 +1,42 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import * as IDEActions from '../actions/ide';
 import * as FileActions from '../actions/files';
-import parseFileName from '../utils/parseFileName';
 import DownArrowIcon from '../../../images/down-filled-triangle.svg';
 import FolderRightIcon from '../../../images/triangle-arrow-right.svg';
 import FolderDownIcon from '../../../images/triangle-arrow-down.svg';
 import FileTypeIcon from './FileTypeIcon';
+
+function parseFileName(name) {
+  const nameArray = name.split('.');
+  if (nameArray.length > 1) {
+    const extension = `.${nameArray[nameArray.length - 1]}`;
+    const baseName = nameArray.slice(0, -1).join('.');
+    const firstLetter = baseName[0];
+    const lastLetter = baseName[baseName.length - 1];
+    const middleText = baseName.slice(1, -1);
+    return {
+      baseName,
+      firstLetter,
+      lastLetter,
+      middleText,
+      extension
+    };
+  }
+  const firstLetter = name[0];
+  const lastLetter = name[name.length - 1];
+  const middleText = name.slice(1, -1);
+  return {
+    baseName: name,
+    firstLetter,
+    lastLetter,
+    middleText
+  };
+}
 
 function FileName({ name }) {
   const {
@@ -36,35 +62,40 @@ FileName.propTypes = {
   name: PropTypes.string.isRequired
 };
 
-const FileNode = ({ id, canEdit, onClickFile }) => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-
-  const fileNode =
-    useSelector((state) => state.files.find((file) => file.id === id)) || {};
-  const authenticated = useSelector((state) => state.user.authenticated);
-
-  const {
-    name = '',
-    parentId = null,
-    children = [],
-    fileType = 'file',
-    isSelectedFile = false,
-    isFolderClosed = false
-  } = fileNode;
-
+const FileNode = ({
+  id,
+  parentId,
+  children,
+  name,
+  fileType,
+  isSelectedFile,
+  isFolderClosed,
+  setSelectedFile,
+  deleteFile,
+  updateFileName,
+  resetSelectedFile,
+  newFile,
+  newFolder,
+  showFolderChildren,
+  hideFolderChildren,
+  canEdit,
+  openUploadFileModal,
+  authenticated,
+  onClickFile
+}) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [updatedName, setUpdatedName] = useState(name);
 
+  const { t } = useTranslation();
   const fileNameInput = useRef(null);
   const fileOptionsRef = useRef(null);
 
   const handleFileClick = (event) => {
     event.stopPropagation();
     if (name !== 'root' && !isDeleting) {
-      dispatch(IDEActions.setSelectedFile(id));
+      setSelectedFile(id);
     }
     if (onClickFile) {
       onClickFile();
@@ -91,17 +122,17 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
   };
 
   const handleClickAddFile = () => {
-    dispatch(IDEActions.newFile(id));
+    newFile(id);
     setTimeout(() => hideFileOptions(), 0);
   };
 
   const handleClickAddFolder = () => {
-    dispatch(IDEActions.newFolder(id));
+    newFolder(id);
     setTimeout(() => hideFileOptions(), 0);
   };
 
   const handleClickUploadFile = () => {
-    dispatch(IDEActions.openUploadFileModal(id));
+    openUploadFileModal(id);
     setTimeout(hideFileOptions, 0);
   };
 
@@ -110,8 +141,8 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
 
     if (window.confirm(prompt)) {
       setIsDeleting(true);
-      dispatch(IDEActions.resetSelectedFile(id));
-      setTimeout(() => dispatch(FileActions.deleteFile(id, parentId), 100));
+      resetSelectedFile(id);
+      setTimeout(() => deleteFile(id, parentId), 100);
     }
   };
 
@@ -127,7 +158,7 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
 
   const saveUpdatedFileName = () => {
     if (updatedName !== name) {
-      dispatch(FileActions.updateFileName(id, updatedName));
+      updateFileName(id, updatedName);
     }
   };
 
@@ -212,7 +243,7 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
             <div className="sidebar__file-item--folder">
               <button
                 className="sidebar__file-item-closed"
-                onClick={() => dispatch(FileActions.showFolderChildren(id))}
+                onClick={() => showFolderChildren(id)}
                 aria-label={t('FileNode.OpenFolderARIA')}
                 title={t('FileNode.OpenFolderARIA')}
               >
@@ -224,7 +255,7 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
               </button>
               <button
                 className="sidebar__file-item-open"
-                onClick={() => dispatch(FileActions.hideFolderChildren(id))}
+                onClick={() => hideFolderChildren(id)}
                 aria-label={t('FileNode.CloseFolderARIA')}
                 title={t('FileNode.CloseFolderARIA')}
               >
@@ -322,7 +353,7 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
         <ul className="file-item__children">
           {children.map((childId) => (
             <li key={childId}>
-              <FileNode
+              <ConnectedFileNode
                 id={childId}
                 parentId={id}
                 canEdit={canEdit}
@@ -338,12 +369,50 @@ const FileNode = ({ id, canEdit, onClickFile }) => {
 
 FileNode.propTypes = {
   id: PropTypes.string.isRequired,
+  parentId: PropTypes.string,
+  children: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  name: PropTypes.string.isRequired,
+  fileType: PropTypes.string.isRequired,
+  isSelectedFile: PropTypes.bool,
+  isFolderClosed: PropTypes.bool,
+  setSelectedFile: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
+  updateFileName: PropTypes.func.isRequired,
+  resetSelectedFile: PropTypes.func.isRequired,
+  newFile: PropTypes.func.isRequired,
+  newFolder: PropTypes.func.isRequired,
+  showFolderChildren: PropTypes.func.isRequired,
+  hideFolderChildren: PropTypes.func.isRequired,
   canEdit: PropTypes.bool.isRequired,
+  openUploadFileModal: PropTypes.func.isRequired,
+  authenticated: PropTypes.bool.isRequired,
   onClickFile: PropTypes.func
 };
 
 FileNode.defaultProps = {
-  onClickFile: null
+  onClickFile: null,
+  parentId: '0',
+  isSelectedFile: false,
+  isFolderClosed: false
 };
 
-export default FileNode;
+function mapStateToProps(state, ownProps) {
+  // this is a hack, state is updated before ownProps
+  const fileNode = state.files.find((file) => file.id === ownProps.id) || {
+    name: 'test',
+    fileType: 'file'
+  };
+  return Object.assign({}, fileNode, {
+    authenticated: state.user.authenticated
+  });
+}
+
+const mapDispatchToProps = { ...FileActions, ...IDEActions };
+
+const ConnectedFileNode = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FileNode);
+
+export { FileNode };
+export default ConnectedFileNode;

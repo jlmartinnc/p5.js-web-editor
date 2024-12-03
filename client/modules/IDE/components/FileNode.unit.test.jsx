@@ -1,8 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-import { useDispatch } from 'react-redux';
-import * as FileActions from '../actions/files';
 
 import {
   fireEvent,
@@ -11,27 +7,9 @@ import {
   waitFor,
   within
 } from '../../../test-utils';
-import FileNode from './FileNode';
-
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: jest.fn()
-}));
-
-jest.mock('../actions/files', () => ({
-  updateFileName: jest.fn()
-}));
-
-const mockStore = configureStore([]);
+import { FileNode } from './FileNode';
 
 describe('<FileNode />', () => {
-  const mockDispatch = jest.fn();
-
-  beforeEach(() => {
-    useDispatch.mockReturnValue(mockDispatch);
-    jest.clearAllMocks();
-  });
-
   const changeName = (newFileName) => {
     const renameButton = screen.getByText(/Rename/i);
     fireEvent.click(renameButton);
@@ -46,64 +24,62 @@ describe('<FileNode />', () => {
     await waitFor(() => within(name).queryByText(expectedName));
   };
 
-  const renderFileNode = (fileType, extraState = {}) => {
-    const initialState = {
-      files: [
-        {
-          id: '0',
-          name: fileType === 'folder' ? 'afolder' : 'test.jsx',
-          fileType,
-          parentId: 'root',
-          children: [],
-          isSelectedFile: false,
-          isFolderClosed: false
-        }
-      ],
-      user: { authenticated: false },
-      ...extraState
+  const renderFileNode = (fileType, extraProps = {}) => {
+    const props = {
+      ...extraProps,
+      id: '0',
+      name: fileType === 'folder' ? 'afolder' : 'test.jsx',
+      fileType,
+      canEdit: true,
+      children: [],
+      authenticated: false,
+      setSelectedFile: jest.fn(),
+      deleteFile: jest.fn(),
+      updateFileName: jest.fn(),
+      resetSelectedFile: jest.fn(),
+      newFile: jest.fn(),
+      newFolder: jest.fn(),
+      showFolderChildren: jest.fn(),
+      hideFolderChildren: jest.fn(),
+      openUploadFileModal: jest.fn(),
+      setProjectName: jest.fn()
     };
 
-    const store = mockStore(initialState);
+    render(<FileNode {...props} />);
 
-    render(
-      <Provider store={store}>
-        <FileNode id="0" canEdit />
-      </Provider>
-    );
-
-    return { store };
+    return props;
   };
 
   describe('fileType: file', () => {
     it('cannot change to an empty name', async () => {
-      renderFileNode('file');
+      const props = renderFileNode('file');
 
       changeName('');
 
-      await waitFor(() => expect(mockDispatch).not.toHaveBeenCalled());
-      await expectFileNameToBe('test.jsx');
+      await waitFor(() => expect(props.updateFileName).not.toHaveBeenCalled());
+      await expectFileNameToBe(props.name);
     });
 
     it('can change to a valid filename', async () => {
       const newName = 'newname.jsx';
-      renderFileNode('file');
+      const props = renderFileNode('file');
 
       changeName(newName);
 
       await waitFor(() =>
-        expect(FileActions.updateFileName).toHaveBeenCalledWith('0', newName)
+        expect(props.updateFileName).toHaveBeenCalledWith(props.id, newName)
       );
       await expectFileNameToBe(newName);
     });
 
     it('must have an extension', async () => {
       const newName = 'newname';
-      renderFileNode('file');
+      const props = renderFileNode('file');
 
       changeName(newName);
 
-      await waitFor(() => expect(mockDispatch).not.toHaveBeenCalled());
-      await expectFileNameToBe('test.jsx');
+      await waitFor(() => expect(props.updateFileName).not.toHaveBeenCalled());
+      await expectFileNameToBe(props.name);
     });
 
     it('can change to a different extension', async () => {
@@ -111,58 +87,58 @@ describe('<FileNode />', () => {
       window.confirm = mockConfirm;
 
       const newName = 'newname.gif';
-      renderFileNode('file');
+      const props = renderFileNode('file');
 
       changeName(newName);
 
       expect(mockConfirm).toHaveBeenCalled();
       await waitFor(() =>
-        expect(FileActions.updateFileName).toHaveBeenCalledWith('0', newName)
+        expect(props.updateFileName).toHaveBeenCalledWith(props.id, newName)
       );
-      await expectFileNameToBe(newName);
+      await expectFileNameToBe(props.name);
     });
 
     it('cannot be just an extension', async () => {
       const newName = '.jsx';
-      renderFileNode('file');
+      const props = renderFileNode('file');
 
       changeName(newName);
 
-      await waitFor(() => expect(mockDispatch).not.toHaveBeenCalled());
-      await expectFileNameToBe('test.jsx');
+      await waitFor(() => expect(props.updateFileName).not.toHaveBeenCalled());
+      await expectFileNameToBe(props.name);
     });
   });
 
   describe('fileType: folder', () => {
     it('cannot change to an empty name', async () => {
-      renderFileNode('folder');
+      const props = renderFileNode('folder');
 
       changeName('');
 
-      await waitFor(() => expect(mockDispatch).not.toHaveBeenCalled());
-      await expectFileNameToBe('afolder');
+      await waitFor(() => expect(props.updateFileName).not.toHaveBeenCalled());
+      await expectFileNameToBe(props.name);
     });
 
     it('can change to another name', async () => {
       const newName = 'foldername';
-      renderFileNode('folder');
+      const props = renderFileNode('folder');
 
       changeName(newName);
 
       await waitFor(() =>
-        expect(FileActions.updateFileName).toHaveBeenCalledWith('0', newName)
+        expect(props.updateFileName).toHaveBeenCalledWith(props.id, newName)
       );
       await expectFileNameToBe(newName);
     });
 
     it('cannot have a file extension', async () => {
       const newName = 'foldername.jsx';
-      renderFileNode('folder');
+      const props = renderFileNode('folder');
 
       changeName(newName);
 
-      await waitFor(() => expect(mockDispatch).not.toHaveBeenCalled());
-      await expectFileNameToBe('afolder');
+      await waitFor(() => expect(props.updateFileName).not.toHaveBeenCalled());
+      await expectFileNameToBe(props.name);
     });
   });
 });
