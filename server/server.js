@@ -130,7 +130,7 @@ if (process.env.BASIC_USERNAME && process.env.BASIC_PASSWORD) {
 app.use(
   '/.well-known/apple-developer-merchantid-domain-association',
   (req, res, next) => {
-    const filePath = path.join(
+    const filePath = path.resolve(
       __dirname,
       '../public/.well-known/apple-developer-merchantid-domain-association'
     );
