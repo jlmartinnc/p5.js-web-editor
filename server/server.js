@@ -130,14 +130,12 @@ if (process.env.BASIC_USERNAME && process.env.BASIC_PASSWORD) {
 app.use(
   '/.well-known/apple-developer-merchantid-domain-association',
   (req, res, next) => {
-    const filePath = path.resolve(
-      __dirname,
-      '../public/.well-known/apple-developer-merchantid-domain-association'
-    );
+    const rootPath = path.resolve(__dirname, '../public/.well-known');
+    const fileName = 'apple-developer-merchantid-domain-association';
 
     res.setHeader('Content-Type', 'text/plain');
 
-    res.sendFile(filePath, (err) => {
+    res.sendFile(fileName, { root: rootPath }, (err) => {
       if (err) {
         console.error('Error serving file:', err);
         next(err);
