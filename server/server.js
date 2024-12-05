@@ -125,25 +125,6 @@ if (process.env.BASIC_USERNAME && process.env.BASIC_PASSWORD) {
   );
 }
 
-// routing to serve files in .well-known with specific content type
-// temporary addition for the apple pay integration with donorbox
-app.use(
-  '/.well-known/apple-developer-merchantid-domain-association',
-  (req, res, next) => {
-    const rootPath = path.resolve(__dirname, '../public/.well-known');
-    const fileName = 'apple-developer-merchantid-domain-association';
-
-    res.setHeader('Content-Type', 'text/plain');
-
-    res.sendFile(fileName, { root: rootPath }, (err) => {
-      if (err) {
-        console.error('Error serving file:', err);
-        next(err);
-      }
-    });
-  }
-);
-
 // Body parser, cookie parser, sessions, serve public assets
 app.use(
   '/locales',
