@@ -72,6 +72,14 @@
       this.cm.getLine(this.startPos.line).length -
       this.cm.getSelection().length;
 
+    //    keydown event for handling Escape key press  
+      var self = this;
+
+      cm.getWrapperElement().addEventListener('keydown', function (event) {
+        self.handleKeyPress(self.cm, event);
+      });
+
+
     if (this.options.updateOnCursorActivity) {
       var self = this;
       cm.on(
@@ -156,6 +164,14 @@
           self.update();
         });
         if (this.widget) this.widget.disable();
+      }
+    },
+
+    handleKeyPress: function (cm, event) {
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        // Close the completion component
+        this.close();
+        event.preventDefault(); // Prevent default Escape key behavior
       }
     },
 
