@@ -78,13 +78,8 @@ export const Section = styled.div`
 
   & h3 {
     font-size: ${remSize(24)};
+    padding-bottom: ${remSize(30)};
     font-weight: 600;
-  }
-
-  @media (max-width: 1279px) {
-    & h3 {
-      padding-bottom: ${remSize(20)};
-    }
   }
 
   @media (max-width: 769px) {
@@ -95,14 +90,10 @@ export const Section = styled.div`
 export const SectionContainer = styled.div`
   display: flex;
   justify-content: row;
-  padding-top: ${remSize(40)};
+  padding-top: 0;
   font-size: ${remSize(16)};
   width: 100%;
-
-  @media (max-width: 1279px) {
-    flex-wrap: wrap;
-    padding-top: 0;
-  }
+  flex-wrap: wrap;
 
   @media (max-width: 769px) {
     display: grid;
@@ -114,7 +105,7 @@ export const SectionItem = styled.div`
   display: flex;
   line-height: ${remSize(19.5)};
   font-size: ${remSize(14)};
-  padding-right: ${remSize(30)};
+  padding: 0 ${remSize(30)} ${remSize(30)} 0;
 
   & p {
     margin-top: ${remSize(7)};
@@ -137,12 +128,10 @@ export const SectionItem = styled.div`
 
   @media (max-width: 1279px) {
     width: 50%;
-    padding-bottom: ${remSize(30)};
   }
 
   @media (max-width: 769px) {
     width: 100%;
-    padding-bottom: ${remSize(20)};
   }
 `;
 
@@ -373,8 +362,6 @@ const About = () => {
                 <p>{t('About.LinkDescriptions.Report')}</p>
               </div>
             </SectionItem>
-          </SectionContainer>
-          <SectionContainer>
             <SectionItem>
               <AsteriskIcon aria-hidden="true" focusable="false" />
               <div>
