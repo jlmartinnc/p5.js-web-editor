@@ -94,7 +94,6 @@ export default function SideBar() {
                   aria-label={t('Sidebar.AddFolderARIA')}
                   onClick={() => {
                     dispatch(newFolder(rootFile.id));
-                    setTimeout(() => dispatch(closeProjectOptions()), 0);
                   }}
                   onBlur={onBlurComponent}
                 >
@@ -106,7 +105,6 @@ export default function SideBar() {
                   aria-label={t('Sidebar.AddFileARIA')}
                   onClick={() => {
                     dispatch(newFile(rootFile.id));
-                    setTimeout(() => dispatch(closeProjectOptions()), 0);
                   }}
                   onBlur={onBlurComponent}
                 >
@@ -119,7 +117,6 @@ export default function SideBar() {
                     aria-label={t('Sidebar.UploadFileARIA')}
                     onClick={() => {
                       dispatch(openUploadFileModal(rootFile.id));
-                      setTimeout(() => dispatch(closeProjectOptions()), 0);
                     }}
                     onBlur={onBlurComponent}
                   >
