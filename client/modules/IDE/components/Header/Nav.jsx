@@ -41,8 +41,8 @@ const Nav = ({ layout }) => {
       <header className="nav__header">
         <Menubar>
           <LeftLayout layout={layout} />
+          <UserMenu />
         </Menubar>
-        <UserMenu />
       </header>
     </>
   );

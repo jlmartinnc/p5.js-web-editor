@@ -3,6 +3,7 @@
 .nav {
   height: #{math.div(42, $base-font-size)}rem;
   display: flex;
+  width: 100%;
   flex-direction: row;
   justify-content: space-between;
 
