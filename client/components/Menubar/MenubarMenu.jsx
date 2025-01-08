@@ -1,3 +1,5 @@
+// https://blog.logrocket.com/building-accessible-menubar-component-react
+
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useContext, useMemo } from 'react';
