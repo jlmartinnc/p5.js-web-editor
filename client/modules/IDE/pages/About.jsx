@@ -8,7 +8,9 @@ import styled from 'styled-components';
 import { remSize, prop } from '../../../theme';
 import AsteriskIcon from '../../../images/p5-asterisk.svg';
 import Nav from '../components/Header/Nav';
+import RootPage from '../../../components/RootPage';
 import packageData from '../../../../package.json';
+import HeartIcon from '../../../images/heart.svg';
 import LogoIcon from '../../../images/p5js-square-logo.svg';
 
 export const AboutContent = styled.div`
@@ -28,10 +30,27 @@ export const IntroSection = styled.div`
     font-size: ${remSize(32)};
     font-weight: 700;
   }
-  & button {
+
+  & a {
     padding: ${remSize(12)};
-    border: ${remSize(1)} solid black;
+    border: ${remSize(1)} solid ${prop('primaryTextColor')};
     border-radius: ${remSize(24)};
+    display: flex;
+    align-items: center;
+    width: ${remSize(110)};
+    justify-content: space-evenly;
+    &:hover {
+      color: ${prop('Button.primary.default.background')};
+      background-color: ${prop('Button.primary.hover.background')};
+      border-color: ${prop('Button.primary.hover.border')};
+      text-decoration: none;
+
+      & svg {
+        & path {
+          fill: ${prop('Button.primary.default.background')};
+        }
+      }
+    }
   }
 `;
 
@@ -49,7 +68,7 @@ export const IntroSectionContent = styled.div`
 
   & svg {
     & path {
-      // fill: ${prop('logo-color')};
+      fill: ${prop('logoColor')};
     }
   }
 
@@ -114,6 +133,9 @@ export const SectionItem = styled.div`
   & a {
     font-weight: 700;
     font-size: ${remSize(16)};
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   & svg {
@@ -121,8 +143,8 @@ export const SectionItem = styled.div`
     width: ${remSize(30)};
     height: ${remSize(20)};
     & path {
-      // fill: ${prop('logo-color')};
-      // stroke: ${prop('logo-color')};
+      fill: ${prop('logoColor')};
+      stroke: ${prop('logoColor')};
     }
   }
 
@@ -162,6 +184,13 @@ export const ContactSectionTitle = styled.p`
 export const ContactSectionDetails = styled.p`
   width: 50%;
 
+  & a {
+    color: ${prop('logoColor')};
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   @media (max-width: 769px) {
     width: 70%;
   }
@@ -173,7 +202,6 @@ export const Footer = styled.div`
   padding-bottom: ${remSize(70)};
   width: 100%;
   font-size: ${remSize(16)};
-  // border-color: ${prop('logo-color')};
 
   & div {
     display: flex;
@@ -184,7 +212,10 @@ export const Footer = styled.div`
   & a {
     padding-top: ${remSize(20)};
     padding-right: 9.5%;
-    // color: ${prop('logo-color')};
+    color: ${prop('logoColor')};
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   & p {
@@ -216,7 +247,7 @@ const About = () => {
   });
 
   return (
-    <div>
+    <RootPage>
       <Helmet>
         <title> {t('About.TitleHelmet')} </title>
       </Helmet>
@@ -240,13 +271,14 @@ const About = () => {
             <p>{t('About.Description1')}</p>
             <p>{t('About.Description2')}</p>
           </IntroSectionDescription>
-          <button
+          <a
             href="https://p5js.org/donate/"
             target="_blank"
             rel="noopener noreferrer"
           >
+            <HeartIcon aria-hidden="true" focusable="false" />
             {t('About.Donate')}
-          </button>
+          </a>
         </IntroSection>
 
         <Section>
@@ -450,7 +482,7 @@ const About = () => {
           </p>
         </Footer>
       </AboutContent>
-    </div>
+    </RootPage>
   );
 };
 
