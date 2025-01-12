@@ -4,7 +4,7 @@ import { sortBy } from 'lodash';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import MenubarMenu from '../../../../components/Menubar/MenubarSubmenu';
+import MenubarSubmenu from '../../../../components/Menubar/MenubarSubmenu';
 import MenubarItem from '../../../../components/Menubar/MenubarItem';
 import { availableLanguages, languageKeyToLabel } from '../../../../i18n';
 import getConfig from '../../../../utils/getConfig';
@@ -163,7 +163,7 @@ const ProjectMenu = () => {
           </a>
         )}
       </li>
-      <MenubarMenu id="file" title={t('Nav.File.Title')}>
+      <MenubarSubmenu id="file" title={t('Nav.File.Title')}>
         <MenubarItem onClick={newSketch}>{t('Nav.File.New')}</MenubarItem>
         <MenubarItem
           hideIf={
@@ -208,8 +208,8 @@ const ProjectMenu = () => {
         >
           {t('Nav.File.Examples')}
         </MenubarItem>
-      </MenubarMenu>
-      <MenubarMenu id="edit" title={t('Nav.Edit.Title')}>
+      </MenubarSubmenu>
+      <MenubarSubmenu id="edit" title={t('Nav.Edit.Title')}>
         <MenubarItem onClick={cmRef.current?.tidyCode}>
           {t('Nav.Edit.TidyCode')}
           <span className="nav__keyboard-shortcut">{metaKeyName}+Shift+F</span>
@@ -222,8 +222,8 @@ const ProjectMenu = () => {
           {t('Nav.Edit.Replace')}
           <span className="nav__keyboard-shortcut">{replaceCommand}</span>
         </MenubarItem>
-      </MenubarMenu>
-      <MenubarMenu id="sketch" title={t('Nav.Sketch.Title')}>
+      </MenubarSubmenu>
+      <MenubarSubmenu id="sketch" title={t('Nav.Sketch.Title')}>
         <MenubarItem onClick={() => dispatch(newFile(rootFile.id))}>
           {t('Nav.Sketch.AddFile')}
           <span className="nav__keyboard-shortcut">{newFileCommand}</span>
@@ -241,8 +241,8 @@ const ProjectMenu = () => {
             Shift+{metaKeyName}+Enter
           </span>
         </MenubarItem>
-      </MenubarMenu>
-      <MenubarMenu id="help" title={t('Nav.Help.Title')}>
+      </MenubarSubmenu>
+      <MenubarSubmenu id="help" title={t('Nav.Help.Title')}>
         <MenubarItem onClick={() => dispatch(showKeyboardShortcutModal())}>
           {t('Nav.Help.KeyboardShortcuts')}
         </MenubarItem>
@@ -250,7 +250,7 @@ const ProjectMenu = () => {
           {t('Nav.Help.Reference')}
         </MenubarItem>
         <MenubarItem href="/about">{t('Nav.Help.About')}</MenubarItem>
-      </MenubarMenu>
+      </MenubarSubmenu>
       {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
     </ul>
   );
@@ -266,14 +266,14 @@ const LanguageMenu = () => {
   }
 
   return (
-    <MenubarMenu id="lang" title={languageKeyToLabel(language)}>
+    <MenubarSubmenu id="lang" title={languageKeyToLabel(language)}>
       {sortBy(availableLanguages).map((key) => (
         // eslint-disable-next-line react/jsx-no-bind
         <MenubarItem key={key} value={key} onClick={handleLangSelection}>
           {languageKeyToLabel(key)}
         </MenubarItem>
       ))}
-    </MenubarMenu>
+    </MenubarSubmenu>
   );
 };
 
@@ -310,7 +310,7 @@ const AuthenticatedUserMenu = () => {
 
   return (
     <ul className="nav__items-right" title="user-menu">
-      <MenubarMenu
+      <MenubarSubmenu
         id="account"
         title={
           <span>
@@ -334,7 +334,7 @@ const AuthenticatedUserMenu = () => {
         <MenubarItem onClick={() => dispatch(logoutUser())}>
           {t('Nav.Auth.LogOut')}
         </MenubarItem>
-      </MenubarMenu>
+      </MenubarSubmenu>
     </ul>
   );
 };
