@@ -75,10 +75,10 @@ MenubarList.defaultProps = {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * MenubarMenu
+ * MenubarSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function MenubarMenu({ id, title, children }) {
+function MenubarSubmenu({ id, title, children }) {
   const { isOpen } = useMenuProps(id);
 
   return (
@@ -89,14 +89,14 @@ function MenubarMenu({ id, title, children }) {
   );
 }
 
-MenubarMenu.propTypes = {
+MenubarSubmenu.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
   children: PropTypes.node
 };
 
-MenubarMenu.defaultProps = {
+MenubarSubmenu.defaultProps = {
   children: null
 };
 
-export default MenubarMenu;
+export default MenubarSubmenu;

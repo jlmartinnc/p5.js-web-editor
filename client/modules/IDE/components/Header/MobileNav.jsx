@@ -7,7 +7,7 @@ import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { ParentMenuContext } from '../../../../components/Menubar/contexts';
 import Menubar from '../../../../components/Menubar/Menubar';
-import { useMenuProps } from '../../../../components/Menubar/MenubarMenu';
+import { useMenuProps } from '../../../../components/Menubar/MenubarSubmenu';
 import NavMenuItem from '../../../../components/Menubar/MenubarItem';
 import { prop, remSize } from '../../../../theme';
 import AsteriskIcon from '../../../../images/p5-asterisk.svg';
