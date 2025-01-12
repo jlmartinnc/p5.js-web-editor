@@ -3,7 +3,13 @@ import React, { useContext, useMemo } from 'react';
 import ButtonOrLink from '../../common/ButtonOrLink';
 import { MenubarContext, ParentMenuContext } from './contexts';
 
-function MenubarItem({ hideIf, className, ...rest }) {
+function MenubarItem({
+  hideIf,
+  className,
+  role: customRole,
+  selected,
+  ...rest
+}) {
   const parent = useContext(ParentMenuContext);
 
   const { createMenuItemHandlers } = useContext(MenubarContext);
@@ -17,9 +23,12 @@ function MenubarItem({ hideIf, className, ...rest }) {
     return null;
   }
 
+  const role = customRole || 'menuitem';
+  const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
+
   return (
     <li className={className}>
-      <ButtonOrLink {...rest} {...handlers} role="menuitem" />
+      <ButtonOrLink {...rest} {...handlers} {...ariaSelected} role={role} />
     </li>
   );
 }
@@ -32,14 +41,18 @@ MenubarItem.propTypes = {
    * Provides a way to deal with optional items.
    */
   hideIf: PropTypes.bool,
-  className: PropTypes.string
+  className: PropTypes.string,
+  role: PropTypes.oneOf(['menuitem', 'option']),
+  selected: PropTypes.bool
 };
 
 MenubarItem.defaultProps = {
   onClick: null,
   value: null,
   hideIf: false,
-  className: 'nav__dropdown-item'
+  className: 'nav__dropdown-item',
+  role: 'menuitem',
+  selected: false
 };
 
 export default MenubarItem;

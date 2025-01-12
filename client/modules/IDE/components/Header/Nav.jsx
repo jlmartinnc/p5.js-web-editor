@@ -266,10 +266,21 @@ const LanguageMenu = () => {
   }
 
   return (
-    <MenubarSubmenu id="lang" title={languageKeyToLabel(language)}>
+    <MenubarSubmenu
+      id="lang"
+      title={languageKeyToLabel(language)}
+      triggerRole="button"
+      listRole="listbox"
+    >
       {sortBy(availableLanguages).map((key) => (
         // eslint-disable-next-line react/jsx-no-bind
-        <MenubarItem key={key} value={key} onClick={handleLangSelection}>
+        <MenubarItem
+          key={key}
+          value={key}
+          onClick={handleLangSelection}
+          role="option"
+          selected={key === language}
+        >
           {languageKeyToLabel(key)}
         </MenubarItem>
       ))}

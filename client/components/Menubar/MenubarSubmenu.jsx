@@ -25,15 +25,15 @@ export function useMenuProps(id) {
  * MenubarTrigger
  * -----------------------------------------------------------------------------------------------*/
 
-function MenubarTrigger({ id, title, ...props }) {
+function MenubarTrigger({ id, title, role, hasPopup, ...props }) {
   const { isOpen, handlers } = useMenuProps(id);
 
   return (
     <button
       {...handlers}
       {...props}
-      role="menuitem"
-      aria-haspopup="menu"
+      role={role}
+      aria-haspopup={hasPopup}
       aria-expanded={isOpen}
     >
       <span className="nav__item-header">{title}</span>
@@ -48,16 +48,23 @@ function MenubarTrigger({ id, title, ...props }) {
 
 MenubarTrigger.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.node.isRequired
+  title: PropTypes.node.isRequired,
+  role: PropTypes.string,
+  hasPopup: PropTypes.oneOf(['menu', 'listbox', 'true'])
+};
+
+MenubarTrigger.defaultProps = {
+  role: 'menuitem',
+  hasPopup: 'menu'
 };
 
 /* -------------------------------------------------------------------------------------------------
  * MenubarList
  * -----------------------------------------------------------------------------------------------*/
 
-function MenubarList({ id, children }) {
+function MenubarList({ id, children, role, ...props }) {
   return (
-    <ul className="nav__dropdown" role="menu">
+    <ul className="nav__dropdown" role={role} {...props}>
       <ParentMenuContext.Provider value={id}>
         {children}
       </ParentMenuContext.Provider>
@@ -67,24 +74,46 @@ function MenubarList({ id, children }) {
 
 MenubarList.propTypes = {
   id: PropTypes.string.isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
+  role: PropTypes.oneOf(['menu', 'listbox'])
 };
 
 MenubarList.defaultProps = {
-  children: null
+  children: null,
+  role: 'menu'
 };
 
 /* -------------------------------------------------------------------------------------------------
  * MenubarSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function MenubarSubmenu({ id, title, children }) {
+function MenubarSubmenu({
+  id,
+  title,
+  children,
+  triggerRole: customTriggerRole,
+  listRole: customListRole,
+  ...props
+}) {
   const { isOpen } = useMenuProps(id);
+
+  const triggerRole = customTriggerRole || 'menuitem';
+  const listRole = customListRole || 'menu';
+
+  const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
   return (
     <li className={classNames('nav__item', isOpen && 'nav__item--open')}>
-      <MenubarTrigger id={id} title={title} />
-      <MenubarList id={id}>{children}</MenubarList>
+      <MenubarTrigger
+        id={id}
+        title={title}
+        role={triggerRole}
+        hasPopup={hasPopup}
+        {...props}
+      />
+      <MenubarList id={id} role={listRole}>
+        {children}
+      </MenubarList>
     </li>
   );
 }
@@ -92,11 +121,15 @@ function MenubarSubmenu({ id, title, children }) {
 MenubarSubmenu.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
+  triggerRole: PropTypes.string,
+  listRole: PropTypes.string
 };
 
 MenubarSubmenu.defaultProps = {
-  children: null
+  children: null,
+  triggerRole: 'menuitem',
+  listRole: 'menu'
 };
 
 export default MenubarSubmenu;
