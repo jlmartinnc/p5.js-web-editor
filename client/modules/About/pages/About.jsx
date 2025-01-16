@@ -73,7 +73,7 @@ const About = () => {
               focusable="false"
             />
             <div>
-              <p>{t('About.OneLine')}</p>
+              <p>{t('About.Headline')}</p>
             </div>
           </IntroHeadline>
           <IntroDescription>
