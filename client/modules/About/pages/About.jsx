@@ -6,16 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import {
-  AboutContent,
-  IntroSection,
-  IntroSectionContent,
-  IntroSectionDescription,
+  AboutPageContent,
+  Intro,
+  IntroHeadline,
+  IntroDescription,
   Section,
   SectionContainer,
   SectionItem,
-  ContactSection,
-  ContactSectionTitle,
-  ContactSectionDetails,
+  Contact,
+  ContactTitle,
+  ContactHandles,
   Footer
 } from '../About.styles';
 
@@ -23,6 +23,7 @@ import { ContactSectionLinks, AboutSectionInfo } from '../statics/aboutData';
 import Nav from '../../IDE/components/Header/Nav';
 import RootPage from '../../../components/RootPage';
 import packageData from '../../../../package.json';
+
 import HeartIcon from '../../../images/heart.svg';
 import AsteriskIcon from '../../../images/p5-asterisk.svg';
 import LogoIcon from '../../../images/p5js-square-logo.svg';
@@ -62,10 +63,10 @@ const About = () => {
 
       <Nav layout="dashboard" />
 
-      <AboutContent>
-        <IntroSection>
+      <AboutPageContent>
+        <Intro>
           <h1>{t('About.Title')}</h1>
-          <IntroSectionContent>
+          <IntroHeadline>
             <LogoIcon
               role="img"
               aria-label={t('Common.p5logoARIA')}
@@ -74,11 +75,11 @@ const About = () => {
             <div>
               <p>{t('About.OneLine')}</p>
             </div>
-          </IntroSectionContent>
-          <IntroSectionDescription>
-            <p>{t('About.Description1')}</p>
-            <p>{t('About.Description2')}</p>
-          </IntroSectionDescription>
+          </IntroHeadline>
+          <IntroDescription>
+            <p>{t('About.IntroDescription1')}</p>
+            <p>{t('About.IntroDescription2')}</p>
+          </IntroDescription>
           <a
             href="https://p5js.org/donate/"
             target="_blank"
@@ -87,23 +88,29 @@ const About = () => {
             <HeartIcon aria-hidden="true" focusable="false" />
             {t('About.Donate')}
           </a>
-        </IntroSection>
+        </Intro>
 
         {AboutSectionInfo.map((section) => (
           <AboutSection key={t(section.header)} section={section} t={t} />
         ))}
 
-        <ContactSection>
+        <Contact>
           <h2>{t('Contact')}</h2>
           <div>
-            <ContactSectionTitle>{t('About.Email')}</ContactSectionTitle>
-            <ContactSectionDetails>
-              {t('About.EmailAddress')}
-            </ContactSectionDetails>
+            <ContactTitle>{t('About.Email')}</ContactTitle>
+            <ContactHandles>
+              <a
+                href={t('About.EmailAddress')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('About.EmailAddress')}
+              </a>
+            </ContactHandles>
           </div>
           <div>
-            <ContactSectionTitle>{t('About.Socials')}</ContactSectionTitle>
-            <ContactSectionDetails>
+            <ContactTitle>{t('About.Socials')}</ContactTitle>
+            <ContactHandles>
               {ContactSectionLinks.map((item, index, array) => (
                 <React.Fragment key={item.href}>
                   <a href={item.href} target="_blank" rel="noopener noreferrer">
@@ -112,9 +119,9 @@ const About = () => {
                   {index < array.length - 1 && ', '}
                 </React.Fragment>
               ))}
-            </ContactSectionDetails>
+            </ContactHandles>
           </div>
-        </ContactSection>
+        </Contact>
 
         <Footer>
           <div>
@@ -129,7 +136,7 @@ const About = () => {
             p5.js: <span>v{p5version}</span>
           </p>
         </Footer>
-      </AboutContent>
+      </AboutPageContent>
     </RootPage>
   );
 };
