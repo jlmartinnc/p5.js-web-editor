@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { remSize, prop } from '../../theme';
 
-export const AboutContent = styled.div`
+export const AboutPageContent = styled.div`
   margin: ${remSize(42)} ${remSize(295)};
 
   @media (max-width: 1279px) {
@@ -13,7 +13,7 @@ export const AboutContent = styled.div`
   }
 `;
 
-export const IntroSection = styled.div`
+export const Intro = styled.div`
   & h1 {
     font-size: ${remSize(32)};
     font-weight: 700;
@@ -42,7 +42,7 @@ export const IntroSection = styled.div`
   }
 `;
 
-export const IntroSectionContent = styled.div`
+export const IntroHeadline = styled.div`
   display: flex;
   align-items: center;
 
@@ -70,7 +70,7 @@ export const IntroSectionContent = styled.div`
   }
 `;
 
-export const IntroSectionDescription = styled.div`
+export const IntroDescription = styled.div`
   line-height: ${remSize(27)};
   font-size: ${remSize(16)};
   margin: ${remSize(24)} 0;
@@ -145,7 +145,7 @@ export const SectionItem = styled.div`
   }
 `;
 
-export const ContactSection = styled.div`
+export const Contact = styled.div`
   margin-bottom: ${remSize(50)};
 
   & h2 {
@@ -161,7 +161,7 @@ export const ContactSection = styled.div`
   }
 `;
 
-export const ContactSectionTitle = styled.p`
+export const ContactTitle = styled.p`
   width: 50%;
 
   @media (max-width: 769px) {
@@ -169,7 +169,7 @@ export const ContactSectionTitle = styled.p`
   }
 `;
 
-export const ContactSectionDetails = styled.p`
+export const ContactHandles = styled.p`
   width: 50%;
 
   & a {
