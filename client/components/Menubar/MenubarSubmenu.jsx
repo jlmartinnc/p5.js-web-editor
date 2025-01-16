@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useContext, useMemo } from 'react';
+import React, { useEffect, useContext, useRef, useMemo } from 'react';
 import TriangleIcon from '../../images/down-filled-triangle.svg';
 import { MenuOpenContext, MenubarContext, ParentMenuContext } from './contexts';
 
@@ -24,27 +24,29 @@ export function useMenuProps(id) {
 /* -------------------------------------------------------------------------------------------------
  * MenubarTrigger
  * -----------------------------------------------------------------------------------------------*/
+const MenubarTrigger = React.forwardRef(
+  ({ id, title, role, hasPopup, ...props }, ref) => {
+    const { isOpen, handlers } = useMenuProps(id);
 
-function MenubarTrigger({ id, title, role, hasPopup, ...props }) {
-  const { isOpen, handlers } = useMenuProps(id);
-
-  return (
-    <button
-      {...handlers}
-      {...props}
-      role={role}
-      aria-haspopup={hasPopup}
-      aria-expanded={isOpen}
-    >
-      <span className="nav__item-header">{title}</span>
-      <TriangleIcon
-        className="nav__item-header-triangle"
-        focusable="false"
-        aria-hidden="true"
-      />
-    </button>
-  );
-}
+    return (
+      <button
+        ref={ref}
+        {...handlers}
+        {...props}
+        role={role}
+        aria-haspopup={hasPopup}
+        aria-expanded={isOpen}
+      >
+        <span className="nav__item-header">{title}</span>
+        <TriangleIcon
+          className="nav__item-header-triangle"
+          focusable="false"
+          aria-hidden="true"
+        />
+      </button>
+    );
+  }
+);
 
 MenubarTrigger.propTypes = {
   id: PropTypes.string.isRequired,
@@ -95,20 +97,37 @@ function MenubarSubmenu({
   listRole: customListRole,
   ...props
 }) {
-  const { isOpen } = useMenuProps(id);
+  const { isOpen, handlers } = useMenuProps(id);
+  const { activeIndex, menuItems, registerItem } = useContext(MenubarContext);
+  const isActive = menuItems[activeIndex] === id;
+  const buttonRef = useRef(null);
 
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
-
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
+
+  useEffect(() => {
+    if (isActive && buttonRef.current) {
+      buttonRef.current.focus();
+    }
+  }, [isActive]);
+
+  // register this menu item
+  useEffect(() => {
+    const unregister = registerItem(id);
+    return unregister;
+  }, [id, registerItem]);
 
   return (
     <li className={classNames('nav__item', isOpen && 'nav__item--open')}>
       <MenubarTrigger
+        ref={buttonRef}
         id={id}
         title={title}
         role={triggerRole}
         hasPopup={hasPopup}
+        tabIndex={isActive ? 0 : -1}
+        {...handlers}
         {...props}
       />
       <MenubarList id={id} role={listRole}>

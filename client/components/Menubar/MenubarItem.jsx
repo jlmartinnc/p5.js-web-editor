@@ -28,7 +28,13 @@ function MenubarItem({
 
   return (
     <li className={className}>
-      <ButtonOrLink {...rest} {...handlers} {...ariaSelected} role={role} />
+      <ButtonOrLink
+        {...rest}
+        {...handlers}
+        {...ariaSelected}
+        role={role}
+        tabIndex={-1}
+      />
     </li>
   );
 }
