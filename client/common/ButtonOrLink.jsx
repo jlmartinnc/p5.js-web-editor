@@ -5,23 +5,34 @@ import PropTypes from 'prop-types';
 /**
  * Helper for switching between <button>, <a>, and <Link>
  */
-const ButtonOrLink = ({ href, children, ...props }) => {
+
+const ButtonOrLink = React.forwardRef(({ href, children, ...props }, ref) => {
   if (href) {
     if (href.startsWith('http')) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+        <a
+          ref={ref}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          {...props}
+        >
           {children}
         </a>
       );
     }
     return (
-      <Link to={href} {...props}>
+      <Link ref={ref} to={href} {...props}>
         {children}
       </Link>
     );
   }
-  return <button {...props}>{children}</button>;
-};
+  return (
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  );
+});
 
 /**
  * Accepts all the props of an HTML <a> or <button> tag.
