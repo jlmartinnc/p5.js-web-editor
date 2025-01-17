@@ -12,8 +12,10 @@ export const MenubarContext = createContext({
   activeIndex: -1,
   setActiveIndex: () => {},
   registerItem: () => {},
-  menuItems: [],
+  menuItems: []
+});
 
+export const SubmenuContext = createContext({
   // submenu state
   submenuActiveIndex: -1,
   setSubmenuActiveIndex: () => {},

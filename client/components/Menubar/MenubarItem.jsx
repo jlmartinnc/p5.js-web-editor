@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useContext, useRef, useMemo } from 'react';
 import ButtonOrLink from '../../common/ButtonOrLink';
-import { MenubarContext, ParentMenuContext } from './contexts';
+import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
 
 function MenubarItem({
   id,
@@ -13,13 +13,11 @@ function MenubarItem({
 }) {
   const submenuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
+  const { createMenuItemHandlers } = useContext(MenubarContext);
 
-  const {
-    createMenuItemHandlers,
-    registerSubmenuItem,
-    submenuActiveIndex,
-    submenuItems
-  } = useContext(MenubarContext);
+  const { registerSubmenuItem, submenuActiveIndex, submenuItems } = useContext(
+    SubmenuContext
+  );
 
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,
@@ -32,13 +30,13 @@ function MenubarItem({
 
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
-  const isActive = submenuItems[submenuActiveIndex] === id;
+  const isActive = submenuItems[submenuActiveIndex] === id; // is this item active in its own submenu?
 
   useEffect(() => {
     if (isActive && submenuItemRef.current) {
       submenuItemRef.current.focus();
     }
-  }, [isActive, submenuActiveIndex]);
+  }, [isActive, submenuItemRef]);
 
   useEffect(() => {
     const unregister = registerSubmenuItem(id);
