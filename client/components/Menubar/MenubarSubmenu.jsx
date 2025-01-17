@@ -114,47 +114,42 @@ function MenubarSubmenu({
   const { activeIndex, menuItems, registerItem } = useContext(MenubarContext);
   const [submenuItems, setSubmenuItems] = useState([]);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(-1);
-  const isActive = menuItems[activeIndex] === id;
   const buttonRef = useRef(null);
 
+  const isActive = menuItems[activeIndex] === id;
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
-  const keyHandlers = useMemo(() => {
-    // we only want to create the handlers if the menu is open,
-    // otherwise return empty handlers
-    if (!isOpen) {
-      return {};
-    }
-
-    return {
+  const keyHandlers = useMemo(
+    () => ({
+      // we only want to create the handlers if the menu is open,
+      // otherwise early return{
       ArrowUp: (e) => {
+        if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
 
-        setSubmenuActiveIndex((prev) => {
-          const newIndex =
-            (prev - 1 + submenuItems.length) % submenuItems.length;
-          return newIndex;
-        });
+        setSubmenuActiveIndex(
+          (prev) => (prev - 1 + submenuItems.length) % submenuItems.length
+        );
       },
       ArrowDown: (e) => {
+        if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
 
-        setSubmenuActiveIndex((prev) => {
-          const newIndex = (prev + 1) % submenuItems.length;
-          return newIndex;
-        });
+        setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.length);
       },
       Enter: (e) => {
+        if (!isOpen) return;
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
       },
       ' ': (e) => {
         // same as Enter
+        if (!isOpen) return;
         e.preventDefault();
       },
       Escape: (e) => {
@@ -163,10 +158,10 @@ function MenubarSubmenu({
       Tab: (e) => {
         // close
       }
-    };
-
-    // support direct access keys
-  }, [isOpen, submenuItems.length, submenuActiveIndex]);
+      // support direct access keys
+    }),
+    [isOpen, submenuItems.length, submenuActiveIndex]
+  );
 
   useKeyDownHandlers(keyHandlers);
 
