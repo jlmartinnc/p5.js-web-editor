@@ -1,18 +1,25 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useMemo } from 'react';
+import React, { useEffect, useContext, useRef, useMemo } from 'react';
 import ButtonOrLink from '../../common/ButtonOrLink';
 import { MenubarContext, ParentMenuContext } from './contexts';
 
 function MenubarItem({
+  id,
   hideIf,
   className,
   role: customRole,
   selected,
   ...rest
 }) {
+  const submenuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
 
-  const { createMenuItemHandlers } = useContext(MenubarContext);
+  const {
+    createMenuItemHandlers,
+    registerSubmenuItem,
+    submenuActiveIndex,
+    submenuItems
+  } = useContext(MenubarContext);
 
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,
@@ -25,15 +32,41 @@ function MenubarItem({
 
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
+  const isActive = submenuItems[submenuActiveIndex] === id;
+
+  useEffect(() => {
+    if (isActive && submenuItemRef.current) {
+      submenuItemRef.current.focus();
+    }
+  }, [isActive, submenuActiveIndex]);
+
+  useEffect(() => {
+    const unregister = registerSubmenuItem(id);
+    return unregister;
+  }, [id, registerSubmenuItem]);
+
+  useEffect(() => {
+    if (isActive) {
+      console.log('MenubarItem Focus:', {
+        id,
+        isActive,
+        parent,
+        submenuActiveIndex,
+        element: submenuItemRef.current
+      });
+    }
+  }, [isActive, id, parent, submenuActiveIndex]);
 
   return (
     <li className={className}>
       <ButtonOrLink
+        ref={submenuItemRef}
         {...rest}
         {...handlers}
         {...ariaSelected}
         role={role}
-        tabIndex={-1}
+        tabIndex={isActive ? 0 : -1}
+        id={id}
       />
     </li>
   );
@@ -41,6 +74,7 @@ function MenubarItem({
 
 MenubarItem.propTypes = {
   ...ButtonOrLink.propTypes,
+  id: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   value: PropTypes.string,
   /**
