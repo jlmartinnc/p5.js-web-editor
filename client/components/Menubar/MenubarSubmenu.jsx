@@ -182,7 +182,7 @@ function MenubarSubmenu({
     if (!isOpen) {
       setSubmenuActiveIndex(-1);
     }
-  }, isOpen);
+  }, [isOpen]);
 
   const registerSubmenuItem = useCallback((submenuId) => {
     setSubmenuItems((prev) => [...prev, submenuId]);
