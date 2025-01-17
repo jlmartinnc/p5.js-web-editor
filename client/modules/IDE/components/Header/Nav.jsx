@@ -39,6 +39,10 @@ const Nav = ({ layout }) => {
   ) : (
     <>
       <header className="nav__header">
+        <div className="nav__item-logo">
+          <Logo />
+        </div>
+
         <Menubar>
           <LeftLayout layout={layout} />
           <UserMenu />
@@ -87,19 +91,40 @@ const UserMenu = () => {
   return null;
 };
 
-const DashboardMenu = () => {
+const Logo = () => {
   const { t } = useTranslation();
-  const editorLink = useSelector(selectSketchPath);
-  return (
-    <ul className="nav__items-left">
-      <li className="nav__item-logo">
+  const user = useSelector((state) => state.user);
+
+  if (user?.username) {
+    return (
+      <Link to={`/${user.username}/sketches`}>
         <LogoIcon
           role="img"
           aria-label={t('Common.p5logoARIA')}
           focusable="false"
           className="svg__logo"
         />
-      </li>
+      </Link>
+    );
+  }
+
+  return (
+    <a href="https://p5js.org">
+      <LogoIcon
+        role="img"
+        aria-label={t('Common.p5logoARIA')}
+        focusable="true"
+        className="svg__logo"
+      />
+    </a>
+  );
+};
+
+const DashboardMenu = () => {
+  const { t } = useTranslation();
+  const editorLink = useSelector(selectSketchPath);
+  return (
+    <ul className="nav__items-left">
       <li className="nav__item nav__item--no-icon">
         <Link to={editorLink} className="nav__back-link">
           <CaretLeftIcon
@@ -142,27 +167,6 @@ const ProjectMenu = () => {
 
   return (
     <ul className="nav__items-left" role="menubar">
-      <li className="nav__item-logo">
-        {user && user.username !== undefined ? (
-          <Link to={userSketches}>
-            <LogoIcon
-              role="img"
-              aria-label={t('Common.p5logoARIA')}
-              focusable="false"
-              className="svg__logo"
-            />
-          </Link>
-        ) : (
-          <a href="https://p5js.org">
-            <LogoIcon
-              role="img"
-              aria-label={t('Common.p5logoARIA')}
-              focusable="false"
-              className="svg__logo"
-            />
-          </a>
-        )}
-      </li>
       <MenubarSubmenu id="file" title={t('Nav.File.Title')}>
         <MenubarItem id="file-new" onClick={newSketch}>
           {t('Nav.File.New')}
