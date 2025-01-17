@@ -200,7 +200,7 @@ export const Footer = styled.div`
   }
 
   & a {
-    padding: ${remSize(20)} 9.5% 0 0;
+    margin: ${remSize(20)} 9.5% 0 0;
     color: ${prop('logoColor')};
 
     &:hover {
