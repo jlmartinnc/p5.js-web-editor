@@ -41,35 +41,25 @@ function Menubar({ children, className }) {
         // if submenu is closed, open it and focus the last item
         if (menuOpen === 'none') {
           toggleMenuOpen(menuItems[activeIndex]);
-          setSubmenuActiveIndex(submenuItems.length - 1); // focus last
-        } else {
-          setSubmenuActiveIndex(
-            (prev) => (prev - 1 + submenuItems.length) % submenuItems.length
-          );
         }
-        // if submenu is open, focus the previous item
       },
       ArrowDown: (e) => {
         e.preventDefault();
         // if submenu is closed, open it and focus the first item
         if (menuOpen === 'none') {
           toggleMenuOpen(menuItems[activeIndex]);
-          setSubmenuActiveIndex(0); // focus first
-        } else {
-          setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.length);
         }
-        // if submenu is open, focus the next item
       },
       ArrowLeft: (e) => {
         e.preventDefault();
+        // focus the previous item, wrapping around if we reach the beginning
         const newIndex =
           (activeIndex - 1 + menuItems.length) % menuItems.length;
         setActiveIndex(newIndex);
 
-        // if submenu is open, close it, open the next one and focus the next top-level item
+        // if submenu is open, close it
         if (menuOpen !== 'none') {
           toggleMenuOpen(menuItems[activeIndex]);
-          setMenuOpen(menuItems[newIndex]);
         }
       },
       ArrowRight: (e) => {
@@ -77,10 +67,9 @@ function Menubar({ children, className }) {
         const newIndex = (activeIndex + 1) % menuItems.length;
         setActiveIndex(newIndex);
 
-        // if submenu is open, close it, open previous one and focus the previous top-level item
+        // close the current submenu if it's happen
         if (menuOpen !== 'none') {
           toggleMenuOpen(menuItems[activeIndex]);
-          setMenuOpen(menuItems[newIndex]);
         }
       },
       Enter: (e) => {
