@@ -7,8 +7,7 @@ export const AboutPageContent = styled.div`
   @media (max-width: 1279px) {
     margin: ${remSize(20)};
     width: 95%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     flex-direction: column;
   }
 `;
@@ -27,6 +26,7 @@ export const Intro = styled.div`
     align-items: center;
     width: ${remSize(110)};
     justify-content: space-evenly;
+
     &:hover {
       color: ${prop('Button.primary.default.background')};
       background-color: ${prop('Button.primary.hover.background')};
@@ -121,6 +121,7 @@ export const SectionItem = styled.div`
   & a {
     font-weight: 700;
     font-size: ${remSize(16)};
+
     &:hover {
       text-decoration: underline;
     }
@@ -130,6 +131,7 @@ export const SectionItem = styled.div`
     padding-right: ${remSize(8)};
     width: ${remSize(30)};
     height: ${remSize(20)};
+
     & path {
       fill: ${prop('logoColor')};
       stroke: ${prop('logoColor')};
@@ -174,6 +176,7 @@ export const ContactHandles = styled.p`
 
   & a {
     color: ${prop('logoColor')};
+
     &:hover {
       text-decoration: underline;
     }
@@ -186,8 +189,7 @@ export const ContactHandles = styled.p`
 
 export const Footer = styled.div`
   border-top: 0.1rem dashed;
-  padding-right: ${remSize(20)};
-  padding-bottom: ${remSize(70)};
+  padding: 0 ${remSize(20)} ${remSize(70)} 0;
   width: 100%;
   font-size: ${remSize(16)};
 
@@ -198,23 +200,21 @@ export const Footer = styled.div`
   }
 
   & a {
-    padding-top: ${remSize(20)};
-    padding-right: 9.5%;
+    padding: ${remSize(20)} 9.5% 0 0;
     color: ${prop('logoColor')};
+
     &:hover {
       text-decoration: underline;
     }
   }
 
   & p {
-    padding-top: ${remSize(20)};
-    padding-right: 9.5%;
+    padding: ${remSize(20)} 9.5% 0 0;
   }
 
   @media (max-width: 770px) {
     flex-direction: column;
-    padding-left: ${remSize(20)};
-    padding-right: ${remSize(20)};
+    padding: 0 ${remSize(20)};
   }
 
   @media (max-width: 550px) {
