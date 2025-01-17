@@ -164,8 +164,11 @@ const ProjectMenu = () => {
         )}
       </li>
       <MenubarSubmenu id="file" title={t('Nav.File.Title')}>
-        <MenubarItem onClick={newSketch}>{t('Nav.File.New')}</MenubarItem>
+        <MenubarItem id="file-new" onClick={newSketch}>
+          {t('Nav.File.New')}
+        </MenubarItem>
         <MenubarItem
+          id="file-save"
           hideIf={
             !getConfig('LOGIN_ENABLED') || (project?.owner && !isUserOwner)
           }
@@ -175,24 +178,31 @@ const ProjectMenu = () => {
           <span className="nav__keyboard-shortcut">{metaKeyName}+S</span>
         </MenubarItem>
         <MenubarItem
+          id="file-duplicate"
           hideIf={isUnsaved || !user.authenticated}
           onClick={() => dispatch(cloneProject())}
         >
           {t('Nav.File.Duplicate')}
         </MenubarItem>
-        <MenubarItem hideIf={isUnsaved} onClick={shareSketch}>
+        <MenubarItem id="file-share" hideIf={isUnsaved} onClick={shareSketch}>
           {t('Nav.File.Share')}
         </MenubarItem>
-        <MenubarItem hideIf={isUnsaved} onClick={downloadSketch}>
+        <MenubarItem
+          id="file-download"
+          hideIf={isUnsaved}
+          onClick={downloadSketch}
+        >
           {t('Nav.File.Download')}
         </MenubarItem>
         <MenubarItem
+          id="file-open"
           hideIf={!user.authenticated}
           href={`/${user.username}/sketches`}
         >
           {t('Nav.File.Open')}
         </MenubarItem>
         <MenubarItem
+          id="file-add-to-collection"
           hideIf={
             !getConfig('UI_COLLECTIONS_ENABLED') ||
             !user.authenticated ||
@@ -203,6 +213,7 @@ const ProjectMenu = () => {
           {t('Nav.File.AddToCollection')}
         </MenubarItem>
         <MenubarItem
+          id="file-examples"
           hideIf={!getConfig('EXAMPLES_ENABLED')}
           href="/p5/sketches"
         >
@@ -210,32 +221,38 @@ const ProjectMenu = () => {
         </MenubarItem>
       </MenubarSubmenu>
       <MenubarSubmenu id="edit" title={t('Nav.Edit.Title')}>
-        <MenubarItem onClick={cmRef.current?.tidyCode}>
+        <MenubarItem id="edit-tidy" onClick={cmRef.current?.tidyCode}>
           {t('Nav.Edit.TidyCode')}
           <span className="nav__keyboard-shortcut">{metaKeyName}+Shift+F</span>
         </MenubarItem>
-        <MenubarItem onClick={cmRef.current?.showFind}>
+        <MenubarItem id="edit-find" onClick={cmRef.current?.showFind}>
           {t('Nav.Edit.Find')}
           <span className="nav__keyboard-shortcut">{metaKeyName}+F</span>
         </MenubarItem>
-        <MenubarItem onClick={cmRef.current?.showReplace}>
+        <MenubarItem id="edit-replace" onClick={cmRef.current?.showReplace}>
           {t('Nav.Edit.Replace')}
           <span className="nav__keyboard-shortcut">{replaceCommand}</span>
         </MenubarItem>
       </MenubarSubmenu>
       <MenubarSubmenu id="sketch" title={t('Nav.Sketch.Title')}>
-        <MenubarItem onClick={() => dispatch(newFile(rootFile.id))}>
+        <MenubarItem
+          id="sketch-add-file"
+          onClick={() => dispatch(newFile(rootFile.id))}
+        >
           {t('Nav.Sketch.AddFile')}
           <span className="nav__keyboard-shortcut">{newFileCommand}</span>
         </MenubarItem>
-        <MenubarItem onClick={() => dispatch(newFolder(rootFile.id))}>
+        <MenubarItem
+          id="sketch-add-folder"
+          onClick={() => dispatch(newFolder(rootFile.id))}
+        >
           {t('Nav.Sketch.AddFolder')}
         </MenubarItem>
-        <MenubarItem onClick={() => dispatch(startSketch())}>
+        <MenubarItem id="sketch-run" onClick={() => dispatch(startSketch())}>
           {t('Nav.Sketch.Run')}
           <span className="nav__keyboard-shortcut">{metaKeyName}+Enter</span>
         </MenubarItem>
-        <MenubarItem onClick={() => dispatch(stopSketch())}>
+        <MenubarItem id="sketch-stop" onClick={() => dispatch(stopSketch())}>
           {t('Nav.Sketch.Stop')}
           <span className="nav__keyboard-shortcut">
             Shift+{metaKeyName}+Enter
@@ -243,13 +260,18 @@ const ProjectMenu = () => {
         </MenubarItem>
       </MenubarSubmenu>
       <MenubarSubmenu id="help" title={t('Nav.Help.Title')}>
-        <MenubarItem onClick={() => dispatch(showKeyboardShortcutModal())}>
+        <MenubarItem
+          id="help-shortcuts"
+          onClick={() => dispatch(showKeyboardShortcutModal())}
+        >
           {t('Nav.Help.KeyboardShortcuts')}
         </MenubarItem>
-        <MenubarItem href="https://p5js.org/reference/">
+        <MenubarItem id="help-reference" href="https://p5js.org/reference/">
           {t('Nav.Help.Reference')}
         </MenubarItem>
-        <MenubarItem href="/about">{t('Nav.Help.About')}</MenubarItem>
+        <MenubarItem id="help-about" href="/about">
+          {t('Nav.Help.About')}
+        </MenubarItem>
       </MenubarSubmenu>
       {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
     </ul>
@@ -275,6 +297,7 @@ const LanguageMenu = () => {
       {sortBy(availableLanguages).map((key) => (
         // eslint-disable-next-line react/jsx-no-bind
         <MenubarItem
+          id={key}
           key={key}
           value={key}
           onClick={handleLangSelection}
@@ -329,20 +352,23 @@ const AuthenticatedUserMenu = () => {
           </span>
         }
       >
-        <MenubarItem href={`/${username}/sketches`}>
+        <MenubarItem id="account-sketches" href={`/${username}/sketches`}>
           {t('Nav.Auth.MySketches')}
         </MenubarItem>
         <MenubarItem
+          id="account-collections"
           href={`/${username}/collections`}
           hideIf={!getConfig('UI_COLLECTIONS_ENABLED')}
         >
           {t('Nav.Auth.MyCollections')}
         </MenubarItem>
-        <MenubarItem href={`/${username}/assets`}>
+        <MenubarItem id="account-assets" href={`/${username}/assets`}>
           {t('Nav.Auth.MyAssets')}
         </MenubarItem>
-        <MenubarItem href="/account">{t('Preferences.Settings')}</MenubarItem>
-        <MenubarItem onClick={() => dispatch(logoutUser())}>
+        <MenubarItem id="account-settings" href="/account">
+          {t('Preferences.Settings')}
+        </MenubarItem>
+        <MenubarItem id="account-logout" onClick={() => dispatch(logoutUser())}>
           {t('Nav.Auth.LogOut')}
         </MenubarItem>
       </MenubarSubmenu>
