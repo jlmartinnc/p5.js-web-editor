@@ -111,12 +111,14 @@ function MenubarSubmenu({
   ...props
 }) {
   const { isOpen, handlers } = useMenuProps(id);
-  const { activeIndex, menuItems, registerItem } = useContext(MenubarContext);
-  const [submenuItems, setSubmenuItems] = useState([]);
-  const [submenuActiveIndex, setSubmenuActiveIndex] = useState(-1);
+  const { oldActiveIndex, oldMenuItems, oldRegisterItem } = useContext(
+    MenubarContext
+  );
+  const [oldSubmenuItems, setOldSubmenuItems] = useState([]);
+  const [oldSubmenuActiveIndex, setOldSubmenuActiveIndex] = useState(-1);
   const buttonRef = useRef(null);
 
-  const isActive = menuItems[activeIndex] === id;
+  const isActive = oldMenuItems[oldActiveIndex] === id;
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
@@ -130,8 +132,8 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
 
-        setSubmenuActiveIndex(
-          (prev) => (prev - 1 + submenuItems.length) % submenuItems.length
+        setOldSubmenuActiveIndex(
+          (prev) => (prev - 1 + oldSubmenuItems.length) % oldSubmenuItems.length
         );
       },
       ArrowDown: (e) => {
@@ -139,7 +141,7 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
 
-        setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.length);
+        setOldSubmenuActiveIndex((prev) => (prev + 1) % oldSubmenuItems.length);
       },
       Enter: (e) => {
         if (!isOpen) return;
@@ -160,7 +162,7 @@ function MenubarSubmenu({
       }
       // support direct access keys
     }),
-    [isOpen, submenuItems.length, submenuActiveIndex]
+    [isOpen, oldSubmenuItems.length, oldSubmenuActiveIndex]
   );
 
   useKeyDownHandlers(keyHandlers);
@@ -173,35 +175,35 @@ function MenubarSubmenu({
 
   // register this menu item
   useEffect(() => {
-    const unregister = registerItem(id);
+    const unregister = oldRegisterItem(id);
     return unregister;
-  }, [id, registerItem]);
+  }, [id, oldRegisterItem]);
 
   // reset submenu active index when submenu is closed
   useEffect(() => {
     if (!isOpen) {
-      setSubmenuActiveIndex(-1);
+      setOldSubmenuActiveIndex(-1);
     }
   }, [isOpen]);
 
-  const registerSubmenuItem = useCallback((submenuId) => {
-    setSubmenuItems((prev) => [...prev, submenuId]);
+  const oldRegisterSubmenuItem = useCallback((submenuId) => {
+    setOldSubmenuItems((prev) => [...prev, submenuId]);
 
     return () => {
-      setSubmenuItems((prev) =>
+      setOldSubmenuItems((prev) =>
         prev.filter((currentId) => currentId !== submenuId)
       );
     };
   }, []);
 
-  const subMenuContext = useMemo(
+  const submenuContext = useMemo(
     () => ({
-      submenuItems,
-      submenuActiveIndex,
-      setSubmenuActiveIndex,
-      registerSubmenuItem
+      oldSubmenuItems,
+      oldSubmenuActiveIndex,
+      setOldSubmenuActiveIndex,
+      oldRegisterSubmenuItem
     }),
-    [submenuItems, submenuActiveIndex, registerSubmenuItem]
+    [oldSubmenuItems, oldSubmenuActiveIndex, oldRegisterSubmenuItem]
   );
 
   return (
@@ -216,7 +218,7 @@ function MenubarSubmenu({
         {...handlers}
         {...props}
       />
-      <SubmenuContext.Provider value={subMenuContext}>
+      <SubmenuContext.Provider value={submenuContext}>
         <MenubarList id={id} role={listRole}>
           {children}
         </MenubarList>

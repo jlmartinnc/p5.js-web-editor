@@ -9,16 +9,16 @@ export const MenubarContext = createContext({
   createMenuHandlers: () => ({}),
   createMenuItemHandlers: () => ({}),
   toggleMenuOpen: () => {},
-  activeIndex: -1,
-  setActiveIndex: () => {},
-  registerItem: () => {},
-  menuItems: []
+  oldActiveIndex: -1,
+  setOldActiveIndex: () => {},
+  oldRegisterItem: () => {},
+  oldMenuItems: []
 });
 
 export const SubmenuContext = createContext({
   // submenu state
-  submenuActiveIndex: -1,
-  setSubmenuActiveIndex: () => {},
-  registerSubmenuItem: () => {},
-  submenuItems: []
+  oldSubmenuActiveIndex: -1,
+  setOldSubmenuActiveIndex: () => {},
+  oldRegisterSubmenuItem: () => {},
+  oldSubmenuItems: []
 });
