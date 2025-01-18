@@ -1,29 +1,42 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect
+} from 'react';
 import useModalClose from '../../common/useModalClose';
 import { MenuOpenContext, MenubarContext } from './contexts';
 import useKeyDownHandlers from '../../common/useKeyDownHandlers';
+import usePrevious from '../../common/usePrevious';
 
 function Menubar({ children, className }) {
   const [menuOpen, setMenuOpen] = useState('none');
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [menuItems, setMenuItems] = useState([]);
-  const [submenuActiveIndex, setSubmenuActiveIndex] = useState(-1);
-  const [submenuItems, setSubmenuItems] = useState([]);
+
+  const menuItems = useRef(new Set()).current;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const prevIndex = usePrevious(activeIndex);
+
+  // old state variables
+  const [oldActiveIndex, setOldActiveIndex] = useState(-1);
+  const [oldMenuItems, setOldMenuItems] = useState([]);
+  const [oldSubmenuActiveIndex, setOldSubmenuActiveIndex] = useState(-1);
+  const [oldSubmenuItems, setOldSubmenuItems] = useState([]);
   const timerRef = useRef(null);
   const nodeRef = useRef(null);
 
-  const registerItem = useCallback((id) => {
-    setMenuItems((prev) => [...prev, id]);
+  const oldRegisterItem = useCallback((id) => {
+    setOldMenuItems((prev) => [...prev, id]);
     return () => {
-      setMenuItems((prev) => prev.filter((item) => item !== id));
+      setOldMenuItems((prev) => prev.filter((item) => item !== id));
     };
   }, []);
 
-  const registerSubmenuItem = useCallback((id) => {
-    setSubmenuItems((prev) => [...prev, id]);
+  const oldRegisterSubmenuItem = useCallback((id) => {
+    setOldSubmenuItems((prev) => [...prev, id]);
     return () => {
-      setSubmenuItems((prev) => prev.filter((item) => item !== id));
+      setOldSubmenuItems((prev) => prev.filter((item) => item !== id));
     };
   }, []);
 
@@ -40,50 +53,50 @@ function Menubar({ children, className }) {
         e.preventDefault();
         // if submenu is closed, open it and focus the last item
         if (menuOpen === 'none') {
-          toggleMenuOpen(menuItems[activeIndex]);
+          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       ArrowDown: (e) => {
         e.preventDefault();
         // if submenu is closed, open it and focus the first item
         if (menuOpen === 'none') {
-          toggleMenuOpen(menuItems[activeIndex]);
+          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       ArrowLeft: (e) => {
         e.preventDefault();
         // focus the previous item, wrapping around if we reach the beginning
         const newIndex =
-          (activeIndex - 1 + menuItems.length) % menuItems.length;
-        setActiveIndex(newIndex);
+          (oldActiveIndex - 1 + oldMenuItems.length) % oldMenuItems.length;
+        setOldActiveIndex(newIndex);
 
         // if submenu is open, close it
         if (menuOpen !== 'none') {
-          toggleMenuOpen(menuItems[activeIndex]);
+          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       ArrowRight: (e) => {
         e.preventDefault();
-        const newIndex = (activeIndex + 1) % menuItems.length;
-        setActiveIndex(newIndex);
+        const newIndex = (oldActiveIndex + 1) % oldMenuItems.length;
+        setOldActiveIndex(newIndex);
 
         // close the current submenu if it's happen
         if (menuOpen !== 'none') {
-          toggleMenuOpen(menuItems[activeIndex]);
+          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       Enter: (e) => {
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        toggleMenuOpen(menuItems[activeIndex]);
+        toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       ' ': (e) => {
         // same as Enter
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        toggleMenuOpen(menuItems[activeIndex]);
+        toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       Escape: (e) => {
         // close all submenus
@@ -94,7 +107,7 @@ function Menubar({ children, className }) {
       }
       // support direct access keys
     }),
-    [menuItems, menuOpen, activeIndex, toggleMenuOpen]
+    [oldMenuItems, menuOpen, oldActiveIndex, toggleMenuOpen]
   );
 
   useKeyDownHandlers(keyHandlers);
@@ -113,9 +126,21 @@ function Menubar({ children, className }) {
   const handleBlur = useCallback(() => {
     timerRef.current = setTimeout(() => {
       setMenuOpen('none');
-      setActiveIndex(-1);
+      setOldActiveIndex(-1);
     }, 10);
   }, [timerRef, setMenuOpen]);
+
+  useEffect(() => {
+    if (activeIndex !== prevIndex) {
+      const items = Array.from(menuItems);
+      const activeNode = items[activeIndex]?.firstChild;
+      const prevNode = items[prevIndex]?.firstChild;
+
+      prevNode?.setAttribute('tabindex', '-1');
+      activeNode?.setAttribute('tabindex', '0');
+      activeNode.focus();
+    }
+  }, [activeIndex, prevIndex, menuItems]);
 
   const contextValue = useMemo(
     () => ({
@@ -143,26 +168,28 @@ function Menubar({ children, className }) {
         }
       }),
       toggleMenuOpen,
-      activeIndex,
-      setActiveIndex,
-      registerItem,
       menuItems,
-      submenuActiveIndex,
-      setSubmenuActiveIndex,
-      registerSubmenuItem,
-      submenuItems
+      oldActiveIndex,
+      setOldActiveIndex,
+      oldRegisterItem,
+      oldMenuItems,
+      oldSubmenuActiveIndex,
+      setOldSubmenuActiveIndex,
+      oldRegisterSubmenuItem,
+      oldSubmenuItems
     }),
     [
       menuOpen,
       toggleMenuOpen,
       clearHideTimeout,
       handleBlur,
-      activeIndex,
-      registerItem,
       menuItems,
-      submenuActiveIndex,
-      registerSubmenuItem,
-      submenuItems
+      oldActiveIndex,
+      oldRegisterItem,
+      oldMenuItems,
+      oldSubmenuActiveIndex,
+      oldRegisterSubmenuItem,
+      oldSubmenuItems
     ]
   );
 
