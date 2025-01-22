@@ -46,11 +46,7 @@ function Menubar({ children, className }) {
       const menuItemNode = ref.current;
 
       if (menuItemNode) {
-        if (menuItems.size === 0) {
-          setIsFirstChild(true);
-        }
         menuItems.add(menuItemNode);
-        console.log('Menubar Register: ', menuItemNode.textContent);
       }
 
       return () => {

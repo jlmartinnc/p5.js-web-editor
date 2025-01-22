@@ -61,17 +61,17 @@ const MenubarTrigger = React.forwardRef(
       return unregister;
     }, [menuItems, registerTopLevelItem]);
 
-    useEffect(() => {
-      // oldSubmenuItemRef.current.focus();
-      const items = Array.from(menuItems);
-      console.log(
-        `${items[activeIndex]}: ${isActive}, index: ${activeIndex}, ref: ${ref.current}, id: ${id}`
-      );
+    // useEffect(() => {
+    //   // oldSubmenuItemRef.current.focus();
+    //   const items = Array.from(menuItems);
+    //   // console.log(
+    //   //   `${items[activeIndex]}: ${isActive}, index: ${activeIndex}, ref: ${ref.current}, id: ${id}`
+    //   // );
 
-      if (isActive && ref.current) {
-        ref.current.focus();
-      }
-    }, [ref, isActive, activeIndex]);
+    //   if (isActive && ref.current) {
+    //     ref.current.focus();
+    //   }
+    // }, [ref, isActive, activeIndex]);
 
     return (
       <button
