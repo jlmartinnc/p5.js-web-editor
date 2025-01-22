@@ -140,8 +140,6 @@ function MenubarSubmenu({
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
 
-  const [oldSubmenuItems, setOldSubmenuItems] = useState([]);
-  const [oldSubmenuActiveIndex, setOldSubmenuActiveIndex] = useState(-1);
   const buttonRef = useRef(null);
   const listItemRef = useRef(null);
 
@@ -172,8 +170,8 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
 
-        setOldSubmenuActiveIndex(
-          (prev) => (prev - 1 + oldSubmenuItems.length) % oldSubmenuItems.length
+        setSubmenuActiveIndex(
+          (prev) => (prev - 1 + submenuItems.size) % submenuItems.size
         );
       },
       ArrowDown: (e) => {
@@ -181,7 +179,6 @@ function MenubarSubmenu({
         e.stopPropagation();
         e.preventDefault();
 
-        setOldSubmenuActiveIndex((prev) => (prev + 1) % oldSubmenuItems.length);
         setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.size);
       },
       Enter: (e) => {
@@ -204,7 +201,7 @@ function MenubarSubmenu({
       }
       // support direct access keys
     }),
-    [isOpen, oldSubmenuItems.length, oldSubmenuActiveIndex]
+    [isOpen, submenuItems, submenuActiveIndex]
   );
 
   const handleKeyDown = useCallback(
@@ -258,11 +255,11 @@ function MenubarSubmenu({
   }, [isOpen, submenuItems, submenuActiveIndex]);
 
   // reset submenu active index when submenu is closed
-  useEffect(() => {
-    if (!isOpen) {
-      setOldSubmenuActiveIndex(-1);
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (!isOpen) {
+  //     setOldSubmenuActiveIndex(-1);
+  //   }
+  // }, [isOpen]);
 
   useEffect(() => {
     const el = listItemRef.current;
@@ -272,16 +269,6 @@ function MenubarSubmenu({
     return () => el.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const oldRegisterSubmenuItem = useCallback((submenuId) => {
-    setOldSubmenuItems((prev) => [...prev, submenuId]);
-
-    return () => {
-      setOldSubmenuItems((prev) =>
-        prev.filter((currentId) => currentId !== submenuId)
-      );
-    };
-  }, []);
-
   const submenuContext = useMemo(
     () => ({
       submenuItems,
@@ -289,11 +276,7 @@ function MenubarSubmenu({
       isFirstChild,
       first,
       last,
-      submenuActiveIndex,
-      oldSubmenuItems,
-      oldSubmenuActiveIndex,
-      setOldSubmenuActiveIndex,
-      oldRegisterSubmenuItem
+      submenuActiveIndex
     }),
     [
       submenuItems,
@@ -301,10 +284,7 @@ function MenubarSubmenu({
       isFirstChild,
       submenuActiveIndex,
       first,
-      last,
-      oldSubmenuItems,
-      oldSubmenuActiveIndex,
-      oldRegisterSubmenuItem
+      last
     ]
   );
 

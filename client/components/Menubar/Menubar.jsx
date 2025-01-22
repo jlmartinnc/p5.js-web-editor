@@ -20,27 +20,8 @@ function Menubar({ children, className }) {
   const [isFirstChild, setIsFirstChild] = useState(false);
   const menuItemToId = useRef(new Map()).current;
 
-  // old state variables
-  const [oldActiveIndex, setOldActiveIndex] = useState(-1);
-  const [oldMenuItems, setOldMenuItems] = useState([]);
-  const [oldSubmenuActiveIndex, setOldSubmenuActiveIndex] = useState(-1);
-  const [oldSubmenuItems, setOldSubmenuItems] = useState([]);
   const timerRef = useRef(null);
   const nodeRef = useRef(null);
-
-  const oldRegisterItem = useCallback((id) => {
-    setOldMenuItems((prev) => [...prev, id]);
-    return () => {
-      setOldMenuItems((prev) => prev.filter((item) => item !== id));
-    };
-  }, []);
-
-  const oldRegisterSubmenuItem = useCallback((id) => {
-    setOldSubmenuItems((prev) => [...prev, id]);
-    return () => {
-      setOldSubmenuItems((prev) => prev.filter((item) => item !== id));
-    };
-  }, []);
 
   const registerTopLevelItem = useCallback(
     (ref, submenuId) => {
@@ -113,14 +94,7 @@ function Menubar({ children, className }) {
       }
       // support direct access keys
     }),
-    [
-      menuItems,
-      activeIndex,
-      oldMenuItems,
-      menuOpen,
-      oldActiveIndex,
-      toggleMenuOpen
-    ]
+    [menuItems, activeIndex, menuOpen, toggleMenuOpen]
   );
 
   useKeyDownHandlers(keyHandlers);
@@ -139,7 +113,6 @@ function Menubar({ children, className }) {
   const handleBlur = useCallback(() => {
     timerRef.current = setTimeout(() => {
       setMenuOpen('none');
-      setOldActiveIndex(-1);
     }, 10);
   }, [timerRef, setMenuOpen]);
 
@@ -185,14 +158,7 @@ function Menubar({ children, className }) {
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
-      isFirstChild,
-      oldActiveIndex,
-      setOldActiveIndex,
-      oldMenuItems,
-      oldSubmenuActiveIndex,
-      setOldSubmenuActiveIndex,
-      oldRegisterSubmenuItem,
-      oldSubmenuItems
+      isFirstChild
     }),
     [
       menuOpen,
@@ -203,12 +169,7 @@ function Menubar({ children, className }) {
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
-      isFirstChild,
-      oldActiveIndex,
-      oldMenuItems,
-      oldSubmenuActiveIndex,
-      oldRegisterSubmenuItem,
-      oldSubmenuItems
+      isFirstChild
     ]
   );
 

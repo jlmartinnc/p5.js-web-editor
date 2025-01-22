@@ -15,15 +15,8 @@ function MenubarItem({
   const { submenuItems, registerSubmenuItem, isFirstChild } = useContext(
     SubmenuContext
   );
-  const oldSubmenuItemRef = useRef(null);
   const menuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
-
-  const {
-    oldRegisterSubmenuItem,
-    oldSubmenuActiveIndex,
-    oldSubmenuItems
-  } = useContext(SubmenuContext);
 
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,
@@ -36,18 +29,6 @@ function MenubarItem({
 
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
-  const isActive = oldSubmenuItems[oldSubmenuActiveIndex] === id; // is this item active in its own submenu?
-
-  useEffect(() => {
-    if (isActive && oldSubmenuItemRef.current) {
-      oldSubmenuItemRef.current.focus();
-    }
-  }, [isActive, oldSubmenuItemRef]);
-
-  useEffect(() => {
-    const unregister = oldRegisterSubmenuItem(id);
-    return unregister;
-  }, [id, oldRegisterSubmenuItem]);
 
   useEffect(() => {
     const unregister = registerSubmenuItem(menuItemRef);
@@ -57,7 +38,6 @@ function MenubarItem({
   return (
     <li className={className} ref={menuItemRef}>
       <ButtonOrLink
-        ref={oldSubmenuItemRef}
         {...rest}
         {...handlers}
         {...ariaSelected}
