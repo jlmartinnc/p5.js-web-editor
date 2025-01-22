@@ -174,9 +174,14 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
 
-        setSubmenuActiveIndex(
-          (prev) => (prev - 1 + submenuItems.size) % submenuItems.size
-        );
+        // setSubmenuActiveIndex(
+        //   (prev) => (prev - 1 + submenuItems.size) % submenuItems.size
+        // );
+        const newIndex =
+          submenuActiveIndex <= 0
+            ? submenuItems.size - 1
+            : submenuActiveIndex - 1;
+        setSubmenuActiveIndex(newIndex);
       },
       ArrowDown: (e) => {
         if (!isOpen) return;
@@ -184,6 +189,11 @@ function MenubarSubmenu({
         e.preventDefault();
 
         setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.size);
+        const newIndex =
+          submenuActiveIndex === submenuItems.size - 1
+            ? 0
+            : submenuActiveIndex + 1;
+        setSubmenuActiveIndex(newIndex);
       },
       Enter: (e) => {
         if (!isOpen) return;
@@ -259,11 +269,11 @@ function MenubarSubmenu({
   }, [isOpen, submenuItems, submenuActiveIndex]);
 
   // reset submenu active index when submenu is closed
-  // useEffect(() => {
-  //   if (!isOpen) {
-  //     setOldSubmenuActiveIndex(-1);
-  //   }
-  // }, [isOpen]);
+  useEffect(() => {
+    if (!isOpen) {
+      setSubmenuActiveIndex(-1);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const el = listItemRef.current;
