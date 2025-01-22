@@ -55,6 +55,14 @@ const MenubarTrigger = React.forwardRef(
             first();
           }
           break;
+        case 'ArrowUp':
+          if (!isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMenuOpen(id);
+            last();
+          }
+          break;
         default:
           break;
       }
@@ -148,20 +156,16 @@ function MenubarSubmenu({
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
   const first = useCallback(() => {
-    setSubmenuActiveIndex(0);
-
-    const items = Array.from(submenuItems);
-    const firstNode = items[0].querySelector(
-      '[role="menuitem"], [role="option"]'
-    );
-    if (firstNode) {
-      firstNode.focus();
+    if (submenuItems.size > 0) {
+      setSubmenuActiveIndex(0);
     }
   }, [submenuItems]);
 
   const last = useCallback(() => {
-    setSubmenuActiveIndex(submenuItems.size - 1);
-  }, [submenuItems.size]);
+    if (submenuItems.size > 0) {
+      setSubmenuActiveIndex(submenuItems.size - 1);
+    }
+  }, [submenuItems]);
 
   const keyHandlers = useMemo(
     () => ({
