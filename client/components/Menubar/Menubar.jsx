@@ -66,31 +66,22 @@ function Menubar({ children, className }) {
     // return items[activeIndex]?.id;
   }, [menuItems, menuItemToId, activeIndex]);
 
-  const toggleMenuOpen = useCallback(() => {
-    const activeId = getActiveMenuId();
-    // const items = Array.from(menuItems);
-    // const activeId = items[activeIndex]?.id;
-    // console.log(items);
-    console.log(`toggleMenuOpen: ${activeId}`);
-    setMenuOpen((prevState) => (prevState === activeId ? 'none' : activeId));
+  // const toggleMenuOpen = useCallback(() => {
+  //   const activeId = getActiveMenuId();
+  //   // const items = Array.from(menuItems);
+  //   // const activeId = items[activeIndex]?.id;
+  //   // console.log(items);
+  //   // console.log(`toggleMenuOpen: ${activeId}`);
+  //   setMenuOpen((prevState) => (prevState === activeId ? 'none' : activeId));
+  // });
+
+  const toggleMenuOpen = useCallback((id) => {
+    console.log('2. Menubar toggleMenuOpen handler reached with id:', id);
+    setMenuOpen((prevState) => (prevState === id ? 'none' : id));
   });
 
   const keyHandlers = useMemo(
     () => ({
-      ArrowUp: (e) => {
-        e.preventDefault();
-        // if submenu is closed, open it and focus the last item
-        if (menuOpen === 'none') {
-          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
-        }
-      },
-      ArrowDown: (e) => {
-        e.preventDefault();
-        // if submenu is closed, open it and focus the first item
-        if (menuOpen === 'none') {
-          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
-        }
-      },
       ArrowLeft: (e) => {
         e.preventDefault();
         // focus the previous item, wrapping around if we reach the beginning
@@ -103,7 +94,7 @@ function Menubar({ children, className }) {
 
         // if submenu is open, close it
         if (menuOpen !== 'none') {
-          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+          // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       ArrowRight: (e) => {
@@ -112,26 +103,25 @@ function Menubar({ children, className }) {
         // setOldActiveIndex(newIndex);
 
         const newIndex = (activeIndex + 1) % menuItems.size;
-        console.log(activeIndex, newIndex, menuItems.size);
         setActiveIndex(newIndex);
 
         // close the current submenu if it's happen
         if (menuOpen !== 'none') {
-          toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+          // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
         }
       },
       Enter: (e) => {
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+        // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       ' ': (e) => {
         // same as Enter
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+        // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       Escape: (e) => {
         // close all submenus
@@ -177,7 +167,6 @@ function Menubar({ children, className }) {
       const items = Array.from(menuItems);
       const activeNode = items[activeIndex];
       const prevNode = items[prevIndex];
-      console.log(activeNode, prevNode);
 
       prevNode?.setAttribute('tabindex', '-1');
       activeNode?.setAttribute('tabindex', '0');
