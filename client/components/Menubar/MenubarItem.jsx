@@ -11,8 +11,13 @@ function MenubarItem({
   selected,
   ...rest
 }) {
-  const [isFirstChild, setIsFirstChild] = useState(false);
   const { createMenuItemHandlers, menuItems } = useContext(MenubarContext);
+  const {
+    submenuItems,
+    submenuActiveIndex,
+    registerSubmenuItem,
+    isFirstChild
+  } = useContext(SubmenuContext);
   const oldSubmenuItemRef = useRef(null);
   const menuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
@@ -60,6 +65,11 @@ function MenubarItem({
     const unregister = oldRegisterSubmenuItem(id);
     return unregister;
   }, [id, oldRegisterSubmenuItem]);
+
+  useEffect(() => {
+    const unregister = registerSubmenuItem(menuItemRef);
+    return unregister;
+  }, [submenuItems, registerSubmenuItem]);
 
   useEffect(() => {
     if (isActive) {
