@@ -17,6 +17,7 @@ function Menubar({ children, className }) {
   const menuItems = useRef(new Set()).current;
   const [activeIndex, setActiveIndex] = useState(0);
   const prevIndex = usePrevious(activeIndex);
+  const [isFirstChild, setIsFirstChild] = useState(false);
 
   // old state variables
   const [oldActiveIndex, setOldActiveIndex] = useState(-1);
@@ -39,6 +40,25 @@ function Menubar({ children, className }) {
       setOldSubmenuItems((prev) => prev.filter((item) => item !== id));
     };
   }, []);
+
+  const registerTopLevelItem = useCallback(
+    (ref) => {
+      const menuItemNode = ref.current;
+
+      if (menuItemNode) {
+        if (menuItems.size === 0) {
+          setIsFirstChild(true);
+        }
+        menuItems.add(menuItemNode);
+        console.log('Menubar Register: ', menuItemNode.textContent);
+      }
+
+      return () => {
+        menuItems.delete(menuItemNode);
+      };
+    },
+    [menuItems]
+  );
 
   const toggleMenuOpen = useCallback(
     (menu) => {
@@ -66,9 +86,12 @@ function Menubar({ children, className }) {
       ArrowLeft: (e) => {
         e.preventDefault();
         // focus the previous item, wrapping around if we reach the beginning
-        const newIndex =
-          (oldActiveIndex - 1 + oldMenuItems.length) % oldMenuItems.length;
-        setOldActiveIndex(newIndex);
+        // const newIndex =
+        //   (oldActiveIndex - 1 + oldMenuItems.length) % oldMenuItems.length;
+        // setOldActiveIndex(newIndex);
+
+        const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
+        setActiveIndex(newIndex);
 
         // if submenu is open, close it
         if (menuOpen !== 'none') {
@@ -77,8 +100,12 @@ function Menubar({ children, className }) {
       },
       ArrowRight: (e) => {
         e.preventDefault();
-        const newIndex = (oldActiveIndex + 1) % oldMenuItems.length;
-        setOldActiveIndex(newIndex);
+        // const newIndex = (oldActiveIndex + 1) % oldMenuItems.length;
+        // setOldActiveIndex(newIndex);
+
+        const newIndex = (activeIndex + 1) % menuItems.size;
+        console.log(activeIndex, newIndex, menuItems.size);
+        setActiveIndex(newIndex);
 
         // close the current submenu if it's happen
         if (menuOpen !== 'none') {
@@ -107,7 +134,14 @@ function Menubar({ children, className }) {
       }
       // support direct access keys
     }),
-    [oldMenuItems, menuOpen, oldActiveIndex, toggleMenuOpen]
+    [
+      menuItems,
+      activeIndex,
+      oldMenuItems,
+      menuOpen,
+      oldActiveIndex,
+      toggleMenuOpen
+    ]
   );
 
   useKeyDownHandlers(keyHandlers);
@@ -133,8 +167,9 @@ function Menubar({ children, className }) {
   useEffect(() => {
     if (activeIndex !== prevIndex) {
       const items = Array.from(menuItems);
-      const activeNode = items[activeIndex]?.firstChild;
-      const prevNode = items[prevIndex]?.firstChild;
+      const activeNode = items[activeIndex];
+      const prevNode = items[prevIndex];
+      console.log(activeNode, prevNode);
 
       prevNode?.setAttribute('tabindex', '-1');
       activeNode?.setAttribute('tabindex', '0');
@@ -169,6 +204,10 @@ function Menubar({ children, className }) {
       }),
       toggleMenuOpen,
       menuItems,
+      activeIndex,
+      setActiveIndex,
+      registerTopLevelItem,
+      isFirstChild,
       oldActiveIndex,
       setOldActiveIndex,
       oldRegisterItem,
@@ -184,6 +223,10 @@ function Menubar({ children, className }) {
       clearHideTimeout,
       handleBlur,
       menuItems,
+      activeIndex,
+      setActiveIndex,
+      registerTopLevelItem,
+      isFirstChild,
       oldActiveIndex,
       oldRegisterItem,
       oldMenuItems,

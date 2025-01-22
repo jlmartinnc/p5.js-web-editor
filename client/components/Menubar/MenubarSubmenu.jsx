@@ -40,6 +40,38 @@ export function useMenuProps(id) {
 const MenubarTrigger = React.forwardRef(
   ({ id, title, role, hasPopup, ...props }, ref) => {
     const { isOpen, handlers } = useMenuProps(id);
+    const {
+      menuItems,
+      activeIndex,
+      registerTopLevelItem,
+      isFirstChild
+    } = useContext(MenubarContext);
+
+    // const isActive = menuItems[activeIndex] === id; // is this item active in its own submenu?
+    const isActive = useMemo(() => {
+      const items = Array.from(menuItems);
+      const activeNode = items[activeIndex];
+      // console.log(`${items[activeIndex]?.id}, ${id}`);
+      console.log(`${activeNode}, ${ref.current}`);
+      return items[activeIndex]?.id === id;
+    }, [menuItems, activeIndex, id]);
+
+    useEffect(() => {
+      const unregister = registerTopLevelItem(ref);
+      return unregister;
+    }, [menuItems, registerTopLevelItem]);
+
+    useEffect(() => {
+      // oldSubmenuItemRef.current.focus();
+      const items = Array.from(menuItems);
+      console.log(
+        `${items[activeIndex]}: ${isActive}, index: ${activeIndex}, ref: ${ref.current}, id: ${id}`
+      );
+
+      if (isActive && ref.current) {
+        ref.current.focus();
+      }
+    }, [ref, isActive, activeIndex]);
 
     return (
       <button
@@ -111,6 +143,10 @@ function MenubarSubmenu({
   ...props
 }) {
   const { isOpen, handlers } = useMenuProps(id);
+  const submenuItems = useRef(new Set()).current;
+  const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
+  const [isFirstChild, setIsFirstChild] = useState(false);
+
   const { oldActiveIndex, oldMenuItems, oldRegisterItem } = useContext(
     MenubarContext
   );
@@ -179,6 +215,28 @@ function MenubarSubmenu({
     return unregister;
   }, [id, oldRegisterItem]);
 
+  const registerSubmenuItem = useCallback(
+    (ref) => {
+      const submenuItemNode = ref.current;
+
+      if (submenuItemNode) {
+        if (submenuItems.size === 0) {
+          setIsFirstChild(true);
+        }
+
+        submenuItems.add(submenuItemNode);
+        console.log(
+          `Submenu Register: ${submenuItemNode.textContent} to ${id}`
+        );
+      }
+
+      return () => {
+        submenuItems.delete(submenuItemNode);
+      };
+    },
+    [submenuItems]
+  );
+
   // reset submenu active index when submenu is closed
   useEffect(() => {
     if (!isOpen) {
@@ -198,12 +256,24 @@ function MenubarSubmenu({
 
   const submenuContext = useMemo(
     () => ({
+      submenuItems,
+      registerSubmenuItem,
+      isFirstChild,
+      submenuActiveIndex,
       oldSubmenuItems,
       oldSubmenuActiveIndex,
       setOldSubmenuActiveIndex,
       oldRegisterSubmenuItem
     }),
-    [oldSubmenuItems, oldSubmenuActiveIndex, oldRegisterSubmenuItem]
+    [
+      submenuItems,
+      registerSubmenuItem,
+      isFirstChild,
+      submenuActiveIndex,
+      oldSubmenuItems,
+      oldSubmenuActiveIndex,
+      oldRegisterSubmenuItem
+    ]
   );
 
   return (
