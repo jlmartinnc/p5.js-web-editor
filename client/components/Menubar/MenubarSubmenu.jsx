@@ -40,31 +40,15 @@ export function useMenuProps(id) {
 const MenubarTrigger = React.forwardRef(
   ({ id, title, role, hasPopup, ...props }, ref) => {
     const { isOpen, handlers } = useMenuProps(id);
-    const {
-      menuItems,
-      activeIndex,
-      registerTopLevelItem,
-      toggleMenuOpen
-    } = useContext(MenubarContext);
+    const { menuItems, registerTopLevelItem, toggleMenuOpen } = useContext(
+      MenubarContext
+    );
     const { first, last } = useContext(SubmenuContext);
-    // const submenuContext = useContext(SubmenuContext);
-
-    // const isActive = menuItems[activeIndex] === id; // is this item active in its own submenu?
-    const isActive = useMemo(() => {
-      const items = Array.from(menuItems);
-      const activeNode = items[activeIndex];
-      return items[activeIndex]?.id === id;
-    }, [menuItems, activeIndex, id]);
-
-    // useKeyDownHandlers(keyHandlers);
 
     const handleKeyDown = (e) => {
       switch (e.key) {
         case 'ArrowDown':
           if (!isOpen) {
-            console.log(
-              `1. MenubarTrigger ArrowDown handler: focus 1st submenu item`
-            );
             e.preventDefault();
             e.stopPropagation();
             toggleMenuOpen(id);
@@ -80,18 +64,6 @@ const MenubarTrigger = React.forwardRef(
       const unregister = registerTopLevelItem(ref, id);
       return unregister;
     }, [menuItems, registerTopLevelItem]);
-
-    // useEffect(() => {
-    //   // oldSubmenuItemRef.current.focus();
-    //   const items = Array.from(menuItems);
-    //   // console.log(
-    //   //   `${items[activeIndex]}: ${isActive}, index: ${activeIndex}, ref: ${ref.current}, id: ${id}`
-    //   // );
-
-    //   if (isActive && ref.current) {
-    //     ref.current.focus();
-    //   }
-    // }, [ref, isActive, activeIndex]);
 
     return (
       <button
@@ -178,7 +150,6 @@ function MenubarSubmenu({
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
   const first = useCallback(() => {
-    console.log('3. MenubarSubmenu first handler');
     setSubmenuActiveIndex(0);
 
     const items = Array.from(submenuItems);
@@ -196,13 +167,8 @@ function MenubarSubmenu({
 
   const keyHandlers = useMemo(
     () => ({
-      // console.log('Creating keyHandlers in MenubarSubmenu, isOpen:', isOpen);
-
-      // we only want to create the handlers if the menu is open,
-      // otherwise early return{
       ArrowUp: (e) => {
         if (!isOpen) return;
-        console.log('MenubarSubmenu ArrowDown handler ArrowUp reached');
         e.preventDefault();
         e.stopPropagation();
 
@@ -212,16 +178,11 @@ function MenubarSubmenu({
       },
       ArrowDown: (e) => {
         if (!isOpen) return;
-        console.log('1. MenubarSubmenu ArrowDown handler start');
         e.stopPropagation();
-        console.log('2. After stopPropagation');
         e.preventDefault();
-        console.log(`3. MenubarSubmenu ${id} handling ArrowDown`);
 
         setOldSubmenuActiveIndex((prev) => (prev + 1) % oldSubmenuItems.length);
-        console.log(`before setting submenuActiveIndex: ${submenuActiveIndex}`);
         setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.size);
-        console.log(`after setting submenuActiveIndex: ${submenuActiveIndex}`);
       },
       Enter: (e) => {
         if (!isOpen) return;
@@ -245,7 +206,6 @@ function MenubarSubmenu({
     }),
     [isOpen, oldSubmenuItems.length, oldSubmenuActiveIndex]
   );
-  // useKeyDownHandlers(keyHandlers);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -272,9 +232,6 @@ function MenubarSubmenu({
         }
 
         submenuItems.add(submenuItemNode);
-        // console.log(
-        //   `Submenu Register: ${submenuItemNode.textContent} to ${id}`
-        // );
       }
 
       return () => {

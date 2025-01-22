@@ -63,20 +63,9 @@ function Menubar({ children, className }) {
     const items = Array.from(menuItems);
     const activeNode = items[activeIndex];
     return menuItemToId.get(activeNode);
-    // return items[activeIndex]?.id;
   }, [menuItems, menuItemToId, activeIndex]);
 
-  // const toggleMenuOpen = useCallback(() => {
-  //   const activeId = getActiveMenuId();
-  //   // const items = Array.from(menuItems);
-  //   // const activeId = items[activeIndex]?.id;
-  //   // console.log(items);
-  //   // console.log(`toggleMenuOpen: ${activeId}`);
-  //   setMenuOpen((prevState) => (prevState === activeId ? 'none' : activeId));
-  // });
-
   const toggleMenuOpen = useCallback((id) => {
-    console.log('2. Menubar toggleMenuOpen handler reached with id:', id);
     setMenuOpen((prevState) => (prevState === id ? 'none' : id));
   });
 
@@ -85,9 +74,6 @@ function Menubar({ children, className }) {
       ArrowLeft: (e) => {
         e.preventDefault();
         // focus the previous item, wrapping around if we reach the beginning
-        // const newIndex =
-        //   (oldActiveIndex - 1 + oldMenuItems.length) % oldMenuItems.length;
-        // setOldActiveIndex(newIndex);
 
         const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
         setActiveIndex(newIndex);
@@ -99,29 +85,24 @@ function Menubar({ children, className }) {
       },
       ArrowRight: (e) => {
         e.preventDefault();
-        // const newIndex = (oldActiveIndex + 1) % oldMenuItems.length;
-        // setOldActiveIndex(newIndex);
 
         const newIndex = (activeIndex + 1) % menuItems.size;
         setActiveIndex(newIndex);
 
-        // close the current submenu if it's happen
         if (menuOpen !== 'none') {
-          // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+          // close the current submenu if it's open
         }
       },
       Enter: (e) => {
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       ' ': (e) => {
         // same as Enter
         e.preventDefault();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
-        // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
       },
       Escape: (e) => {
         // close all submenus
