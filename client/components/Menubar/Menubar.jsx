@@ -40,11 +40,14 @@ function Menubar({ children, className }) {
     [menuItems, menuItemToId]
   );
 
-  const getActiveMenuId = useCallback(() => {
-    const items = Array.from(menuItems);
-    const activeNode = items[activeIndex];
-    return menuItemToId.get(activeNode);
-  }, [menuItems, menuItemToId, activeIndex]);
+  const getMenuId = useCallback(
+    (index) => {
+      const items = Array.from(menuItems);
+      const itemNode = items[index];
+      return menuItemToId.get(itemNode);
+    },
+    [menuItems, menuItemToId, activeIndex]
+  );
 
   const toggleMenuOpen = useCallback((id) => {
     setMenuOpen((prevState) => (prevState === id ? 'none' : id));
@@ -55,13 +58,12 @@ function Menubar({ children, className }) {
       ArrowLeft: (e) => {
         e.preventDefault();
         // focus the previous item, wrapping around if we reach the beginning
-
         const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
         setActiveIndex(newIndex);
 
-        // if submenu is open, close it
         if (menuOpen !== 'none') {
-          // toggleMenuOpen(oldMenuItems[oldActiveIndex]);
+          const newMenuId = getMenuId(newIndex);
+          toggleMenuOpen(newMenuId);
         }
       },
       ArrowRight: (e) => {
@@ -71,7 +73,8 @@ function Menubar({ children, className }) {
         setActiveIndex(newIndex);
 
         if (menuOpen !== 'none') {
-          // close the current submenu if it's open
+          const newMenuId = getMenuId(newIndex);
+          toggleMenuOpen(newMenuId);
         }
       },
       Enter: (e) => {
