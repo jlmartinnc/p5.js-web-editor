@@ -11,7 +11,6 @@ export const MenubarContext = createContext({
   toggleMenuOpen: () => {},
   oldActiveIndex: -1,
   setOldActiveIndex: () => {},
-  oldRegisterItem: () => {},
   oldMenuItems: []
 });
 

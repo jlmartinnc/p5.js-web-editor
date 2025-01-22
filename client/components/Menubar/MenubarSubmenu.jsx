@@ -147,14 +147,10 @@ function MenubarSubmenu({
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
 
-  const { oldActiveIndex, oldMenuItems, oldRegisterItem } = useContext(
-    MenubarContext
-  );
   const [oldSubmenuItems, setOldSubmenuItems] = useState([]);
   const [oldSubmenuActiveIndex, setOldSubmenuActiveIndex] = useState(-1);
   const buttonRef = useRef(null);
 
-  const isActive = oldMenuItems[oldActiveIndex] === id;
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
@@ -203,18 +199,6 @@ function MenubarSubmenu({
 
   useKeyDownHandlers(keyHandlers);
 
-  useEffect(() => {
-    if (isActive && buttonRef.current) {
-      buttonRef.current.focus();
-    }
-  }, [isActive]);
-
-  // register this menu item
-  useEffect(() => {
-    const unregister = oldRegisterItem(id);
-    return unregister;
-  }, [id, oldRegisterItem]);
-
   const registerSubmenuItem = useCallback(
     (ref) => {
       const submenuItemNode = ref.current;
@@ -225,9 +209,9 @@ function MenubarSubmenu({
         }
 
         submenuItems.add(submenuItemNode);
-        console.log(
-          `Submenu Register: ${submenuItemNode.textContent} to ${id}`
-        );
+        // console.log(
+        //   `Submenu Register: ${submenuItemNode.textContent} to ${id}`
+        // );
       }
 
       return () => {
@@ -284,7 +268,6 @@ function MenubarSubmenu({
         title={title}
         role={triggerRole}
         hasPopup={hasPopup}
-        tabIndex={isActive ? 0 : -1}
         {...handlers}
         {...props}
       />

@@ -11,13 +11,10 @@ function MenubarItem({
   selected,
   ...rest
 }) {
-  const { createMenuItemHandlers, menuItems } = useContext(MenubarContext);
-  const {
-    submenuItems,
-    submenuActiveIndex,
-    registerSubmenuItem,
-    isFirstChild
-  } = useContext(SubmenuContext);
+  const { createMenuItemHandlers } = useContext(MenubarContext);
+  const { submenuItems, registerSubmenuItem, isFirstChild } = useContext(
+    SubmenuContext
+  );
   const oldSubmenuItemRef = useRef(null);
   const menuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
@@ -47,20 +44,6 @@ function MenubarItem({
     }
   }, [isActive, oldSubmenuItemRef]);
 
-  // useEffect(() => {
-  //   const menuItemNode = menuItemRef.current;
-  //   if (menuItemNode) {
-  //     if (menuItems.size === 0) {
-  //       setIsFirstChild(true);
-  //     }
-  //     menuItems.add(menuItemNode);
-  //   }
-
-  //   return () => {
-  //     menuItems.delete(menuItemNode);
-  //   };
-  // }, [menuItems]);
-
   useEffect(() => {
     const unregister = oldRegisterSubmenuItem(id);
     return unregister;
@@ -70,18 +53,6 @@ function MenubarItem({
     const unregister = registerSubmenuItem(menuItemRef);
     return unregister;
   }, [submenuItems, registerSubmenuItem]);
-
-  useEffect(() => {
-    if (isActive) {
-      console.log('MenubarItem Focus:', {
-        id,
-        isActive,
-        parent,
-        oldSubmenuActiveIndex,
-        element: oldSubmenuItemRef.current
-      });
-    }
-  }, [isActive, id, parent, oldSubmenuActiveIndex]);
 
   return (
     <li className={className} ref={menuItemRef}>
