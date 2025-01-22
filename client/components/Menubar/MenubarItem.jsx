@@ -42,19 +42,19 @@ function MenubarItem({
     }
   }, [isActive, oldSubmenuItemRef]);
 
-  useEffect(() => {
-    const menuItemNode = menuItemRef.current;
-    if (menuItemNode) {
-      if (menuItems.size === 0) {
-        setIsFirstChild(true);
-      }
-      menuItems.add(menuItemNode);
-    }
+  // useEffect(() => {
+  //   const menuItemNode = menuItemRef.current;
+  //   if (menuItemNode) {
+  //     if (menuItems.size === 0) {
+  //       setIsFirstChild(true);
+  //     }
+  //     menuItems.add(menuItemNode);
+  //   }
 
-    return () => {
-      menuItems.delete(menuItemNode);
-    };
-  }, [menuItems]);
+  //   return () => {
+  //     menuItems.delete(menuItemNode);
+  //   };
+  // }, [menuItems]);
 
   useEffect(() => {
     const unregister = oldRegisterSubmenuItem(id);
