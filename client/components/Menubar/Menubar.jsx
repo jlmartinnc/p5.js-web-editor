@@ -90,7 +90,13 @@ function Menubar({ children, className }) {
       },
       Escape: (e) => {
         // close all submenus
-        setMenuOpen('none');
+        e.preventDefault();
+        if (menuOpen !== 'none') {
+          const items = Array.from(menuItems);
+          const activeNode = items[activeIndex];
+          setMenuOpen('none');
+          activeNode.focus();
+        }
       },
       Tab: (e) => {
         // close

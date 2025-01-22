@@ -144,6 +144,7 @@ function MenubarSubmenu({
   ...props
 }) {
   const { isOpen, handlers } = useMenuProps(id);
+  const { toggleMenuOpen } = useContext(MenubarContext);
   const submenuItems = useRef(new Set()).current;
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
@@ -208,7 +209,11 @@ function MenubarSubmenu({
         e.preventDefault();
       },
       Escape: (e) => {
-        // close all submenus
+        if (!isOpen) return;
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenuOpen(id);
+        buttonRef.current.focus();
       },
       Tab: (e) => {
         // close
