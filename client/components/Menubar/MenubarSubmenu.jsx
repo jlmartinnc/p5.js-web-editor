@@ -57,7 +57,7 @@ const MenubarTrigger = React.forwardRef(
     }, [menuItems, activeIndex, id]);
 
     useEffect(() => {
-      const unregister = registerTopLevelItem(ref);
+      const unregister = registerTopLevelItem(ref, id);
       return unregister;
     }, [menuItems, registerTopLevelItem]);
 

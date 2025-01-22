@@ -18,6 +18,7 @@ function Menubar({ children, className }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const prevIndex = usePrevious(activeIndex);
   const [isFirstChild, setIsFirstChild] = useState(false);
+  const menuItemToId = useRef(new Map()).current;
 
   // old state variables
   const [oldActiveIndex, setOldActiveIndex] = useState(-1);
@@ -42,26 +43,37 @@ function Menubar({ children, className }) {
   }, []);
 
   const registerTopLevelItem = useCallback(
-    (ref) => {
+    (ref, submenuId) => {
       const menuItemNode = ref.current;
 
       if (menuItemNode) {
         menuItems.add(menuItemNode);
+        menuItemToId.set(menuItemNode, submenuId);
       }
 
       return () => {
         menuItems.delete(menuItemNode);
+        menuItemToId.delete(menuItemNode);
       };
     },
-    [menuItems]
+    [menuItems, menuItemToId]
   );
 
-  const toggleMenuOpen = useCallback(
-    (menu) => {
-      setMenuOpen((prevState) => (prevState === menu ? 'none' : menu));
-    },
-    [setMenuOpen]
-  );
+  const getActiveMenuId = useCallback(() => {
+    const items = Array.from(menuItems);
+    const activeNode = items[activeIndex];
+    return menuItemToId.get(activeNode);
+    // return items[activeIndex]?.id;
+  }, [menuItems, menuItemToId, activeIndex]);
+
+  const toggleMenuOpen = useCallback(() => {
+    const activeId = getActiveMenuId();
+    // const items = Array.from(menuItems);
+    // const activeId = items[activeIndex]?.id;
+    // console.log(items);
+    console.log(`toggleMenuOpen: ${activeId}`);
+    setMenuOpen((prevState) => (prevState === activeId ? 'none' : activeId));
+  });
 
   const keyHandlers = useMemo(
     () => ({
