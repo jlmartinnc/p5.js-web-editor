@@ -8,10 +8,7 @@ export const MenuOpenContext = createContext('none');
 export const MenubarContext = createContext({
   createMenuHandlers: () => ({}),
   createMenuItemHandlers: () => ({}),
-  toggleMenuOpen: () => {},
-  oldActiveIndex: -1,
-  setOldActiveIndex: () => {},
-  oldMenuItems: []
+  toggleMenuOpen: () => {}
 });
 
 export const SubmenuContext = createContext({});
