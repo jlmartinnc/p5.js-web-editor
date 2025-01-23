@@ -79,8 +79,6 @@ function Menubar({ children, className }) {
       },
       Enter: (e) => {
         e.preventDefault();
-        // if submenu is open, activate the focused item
-        // if submenu is closed, open it and focus the first item
       },
       ' ': (e) => {
         // same as Enter
