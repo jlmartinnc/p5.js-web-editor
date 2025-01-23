@@ -12,9 +12,12 @@ function MenubarItem({
   ...rest
 }) {
   const { createMenuItemHandlers } = useContext(MenubarContext);
-  const { submenuItems, registerSubmenuItem, isFirstChild } = useContext(
-    SubmenuContext
-  );
+  const {
+    submenuItems,
+    registerSubmenuItem,
+    isFirstChild,
+    setSubmenuActiveIndex
+  } = useContext(SubmenuContext);
   const menuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
 
@@ -30,13 +33,21 @@ function MenubarItem({
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
 
+  const handleMouseEnter = () => {
+    const items = Array.from(submenuItems);
+    const index = items.findIndex((item) => item === menuItemRef.current);
+    if (index !== -1) {
+      setSubmenuActiveIndex(index);
+    }
+  };
+
   useEffect(() => {
     const unregister = registerSubmenuItem(menuItemRef);
     return unregister;
   }, [submenuItems, registerSubmenuItem]);
 
   return (
-    <li className={className} ref={menuItemRef}>
+    <li className={className} ref={menuItemRef} onMouseEnter={handleMouseEnter}>
       <ButtonOrLink
         {...rest}
         {...handlers}

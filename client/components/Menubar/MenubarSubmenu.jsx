@@ -40,10 +40,22 @@ export function useMenuProps(id) {
 const MenubarTrigger = React.forwardRef(
   ({ id, title, role, hasPopup, ...props }, ref) => {
     const { isOpen, handlers } = useMenuProps(id);
-    const { menuItems, registerTopLevelItem, toggleMenuOpen } = useContext(
-      MenubarContext
-    );
+    const {
+      menuItems,
+      registerTopLevelItem,
+      toggleMenuOpen,
+      setActiveIndex
+    } = useContext(MenubarContext);
     const { first, last } = useContext(SubmenuContext);
+
+    const handleMouseEnter = () => {
+      const items = Array.from(menuItems);
+      const index = items.findIndex((item) => item === ref.current);
+
+      if (index !== -1) {
+        setActiveIndex(index);
+      }
+    };
 
     const handleKeyDown = (e) => {
       switch (e.key) {
@@ -88,6 +100,7 @@ const MenubarTrigger = React.forwardRef(
         {...handlers}
         {...props}
         role={role}
+        onMouseEnter={handleMouseEnter}
         onKeyDown={handleKeyDown}
         aria-haspopup={hasPopup}
         aria-expanded={isOpen}
@@ -345,12 +358,14 @@ function MenubarSubmenu({
       isFirstChild,
       first,
       last,
+      setSubmenuActiveIndex,
       submenuActiveIndex
     }),
     [
       submenuItems,
       registerSubmenuItem,
       isFirstChild,
+      setSubmenuActiveIndex,
       submenuActiveIndex,
       first,
       last
