@@ -58,6 +58,57 @@
   }
 }
 
+// base focus styles
+.nav__item button:focus {
+  outline: none;
+  
+  .nav__item-header {
+    @include themify() {
+      color: getThemifyVariable('nav-hover-color');
+    }
+  }
+  
+  & g, & path {
+    @include themify() {
+      fill: getThemifyVariable('nav-hover-color');
+    }
+  }
+}
+
+// more prominent focus indicator for keyboard users
+.nav__item button:focus-visible {
+  @include themify() {
+    box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
+  }
+}
+
+.nav__dropdown-item {
+  // Base focus styles
+  & button:focus,
+  & a:focus {
+    outline: none;
+    @include themify() {
+      color: getThemifyVariable('button-hover-color');
+      background-color: getThemifyVariable('nav-hover-color');
+    }
+  }
+
+  // keyboard styles
+  & button:focus-visible,
+  & a:focus-visible {
+    @include themify() {
+      box-shadow: inset 0 0 0 2px getThemifyVariable('nav-hover-color');
+    }
+  }
+
+  & button:focus .nav__keyboard-shortcut,
+  & a:focus .nav__keyboard-shortcut {
+    @include themify() {
+      color: getThemifyVariable('button-hover-color');
+    }
+  }
+}
+
 .nav__item--no-icon {
   padding-left: #{math.div(15, $base-font-size)}rem;
 }
