@@ -63,6 +63,15 @@ const MenubarTrigger = React.forwardRef(
             last();
           }
           break;
+        case 'Enter':
+        case ' ':
+          if (!isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMenuOpen(id);
+            first();
+          }
+          break;
         default:
           break;
       }
@@ -199,7 +208,23 @@ function MenubarSubmenu({
       Enter: (e) => {
         if (!isOpen) return;
         e.preventDefault();
-        console.log('Enter');
+        e.stopPropagation();
+
+        const items = Array.from(submenuItems);
+        const activeItem = items[submenuActiveIndex];
+
+        if (activeItem) {
+          const activeItemNode = activeItem.firstChild;
+          activeItemNode.click();
+
+          toggleMenuOpen(id);
+
+          // check if buttonRef is available and focus it
+          // we check because the button might be unmounted when activating a link or button
+          if (buttonRef.current) {
+            buttonRef.current.focus();
+          }
+        }
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
       },
@@ -213,7 +238,11 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
         toggleMenuOpen(id);
-        buttonRef.current.focus();
+
+        //
+        if (buttonRef.current) {
+          buttonRef.current.focus();
+        }
       },
       Tab: (e) => {
         // close
