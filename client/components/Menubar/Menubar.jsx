@@ -149,6 +149,15 @@ function Menubar({ children, className }) {
         },
         onClick: () => {
           toggleMenuOpen(menu);
+          const items = Array.from(menuItems);
+          const index = items.findIndex(
+            (item) => menuItemToId.get(item) === menu
+          );
+          const item = items[index];
+          if (index !== -1) {
+            setActiveIndex(index);
+            item.focus();
+          }
         },
         onBlur: handleBlur,
         onFocus: clearHideTimeout
