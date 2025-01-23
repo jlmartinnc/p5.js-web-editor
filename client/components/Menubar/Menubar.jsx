@@ -16,6 +16,7 @@ function Menubar({ children, className }) {
 
   const menuItems = useRef(new Set()).current;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [hasFocus, setHasFocus] = useState(false);
   const prevIndex = usePrevious(activeIndex);
   const [isFirstChild, setIsFirstChild] = useState(false);
   const menuItemToId = useRef(new Map()).current;
@@ -117,9 +118,14 @@ function Menubar({ children, className }) {
     }
   }, [timerRef]);
 
+  const handleFocus = useCallback(() => {
+    setHasFocus(true);
+  }, []);
+
   const handleBlur = useCallback(() => {
     timerRef.current = setTimeout(() => {
       setMenuOpen('none');
+      setHasFocus(false);
     }, 10);
   }, [timerRef, setMenuOpen]);
 
@@ -165,7 +171,9 @@ function Menubar({ children, className }) {
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
-      isFirstChild
+      isFirstChild,
+      hasFocus,
+      setHasFocus
     }),
     [
       menuOpen,
@@ -176,13 +184,14 @@ function Menubar({ children, className }) {
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
-      isFirstChild
+      isFirstChild,
+      hasFocus
     ]
   );
 
   return (
     <MenubarContext.Provider value={contextValue}>
-      <div className={className} ref={nodeRef}>
+      <div className={className} ref={nodeRef} onFocus={handleFocus}>
         <MenuOpenContext.Provider value={menuOpen}>
           {children}
         </MenuOpenContext.Provider>

@@ -11,7 +11,13 @@ function MenubarItem({
   selected,
   ...rest
 }) {
-  const { createMenuItemHandlers } = useContext(MenubarContext);
+  const {
+    createMenuItemHandlers,
+    hasFocus,
+    menuItems,
+    setActiveIndex
+  } = useContext(MenubarContext);
+
   const {
     submenuItems,
     registerSubmenuItem,
@@ -34,10 +40,12 @@ function MenubarItem({
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
 
   const handleMouseEnter = () => {
-    const items = Array.from(submenuItems);
-    const index = items.findIndex((item) => item === menuItemRef.current);
-    if (index !== -1) {
-      setSubmenuActiveIndex(index);
+    if (hasFocus) {
+      const items = Array.from(submenuItems);
+      const index = items.findIndex((item) => item === menuItemRef.current);
+      if (index !== -1) {
+        setSubmenuActiveIndex(index);
+      }
     }
   };
 

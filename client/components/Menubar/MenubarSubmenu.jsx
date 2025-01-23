@@ -44,16 +44,20 @@ const MenubarTrigger = React.forwardRef(
       menuItems,
       registerTopLevelItem,
       toggleMenuOpen,
-      setActiveIndex
+      setActiveIndex,
+      hasFocus
     } = useContext(MenubarContext);
     const { first, last } = useContext(SubmenuContext);
 
     const handleMouseEnter = () => {
-      const items = Array.from(menuItems);
-      const index = items.findIndex((item) => item === ref.current);
+      if (hasFocus) {
+        console.log('hasFocus', hasFocus);
+        const items = Array.from(menuItems);
+        const index = items.findIndex((item) => item === ref.current);
 
-      if (index !== -1) {
-        setActiveIndex(index);
+        if (index !== -1) {
+          setActiveIndex(index);
+        }
       }
     };
 
