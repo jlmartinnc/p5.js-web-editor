@@ -246,6 +246,9 @@ function MenubarSubmenu({
       },
       Tab: (e) => {
         // close
+        if (!isOpen) return;
+        e.preventDefault();
+        toggleMenuOpen(id);
       }
       // support direct access keys
     }),
