@@ -231,7 +231,25 @@ function MenubarSubmenu({
       ' ': (e) => {
         // same as Enter
         if (!isOpen) return;
+        if (!isOpen) return;
         e.preventDefault();
+        e.stopPropagation();
+
+        const items = Array.from(submenuItems);
+        const activeItem = items[submenuActiveIndex];
+
+        if (activeItem) {
+          const activeItemNode = activeItem.firstChild;
+          activeItemNode.click();
+
+          toggleMenuOpen(id);
+
+          // check if buttonRef is available and focus it
+          // we check because the button might be unmounted when activating a link or button
+          if (buttonRef.current) {
+            buttonRef.current.focus();
+          }
+        }
       },
       Escape: (e) => {
         if (!isOpen) return;
