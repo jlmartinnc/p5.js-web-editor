@@ -353,6 +353,7 @@ function MenubarSubmenu({
           hasPopup={hasPopup}
           {...handlers}
           {...props}
+          tabIndex={-1}
         />
         <MenubarList id={id} role={listRole}>
           {children}
