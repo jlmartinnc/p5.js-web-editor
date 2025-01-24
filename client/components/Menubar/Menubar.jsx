@@ -58,6 +58,7 @@ function Menubar({ children, className }) {
     () => ({
       ArrowLeft: (e) => {
         e.preventDefault();
+        e.stopPropagation();
         // focus the previous item, wrapping around if we reach the beginning
         const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
         setActiveIndex(newIndex);
@@ -69,7 +70,7 @@ function Menubar({ children, className }) {
       },
       ArrowRight: (e) => {
         e.preventDefault();
-
+        e.stopPropagation();
         const newIndex = (activeIndex + 1) % menuItems.size;
         setActiveIndex(newIndex);
 
@@ -80,16 +81,19 @@ function Menubar({ children, className }) {
       },
       Enter: (e) => {
         e.preventDefault();
+        e.stopPropagation();
       },
       ' ': (e) => {
         // same as Enter
         e.preventDefault();
+        e.stopPropagation();
         // if submenu is open, activate the focused item
         // if submenu is closed, open it and focus the first item
       },
       Escape: (e) => {
         // close all submenus
         e.preventDefault();
+        e.stopPropagation();
         if (menuOpen !== 'none') {
           const items = Array.from(menuItems);
           const activeNode = items[activeIndex];
@@ -98,6 +102,7 @@ function Menubar({ children, className }) {
         }
       },
       Tab: (e) => {
+        e.stopPropagation();
         // close
       }
       // support direct access keys
@@ -105,7 +110,7 @@ function Menubar({ children, className }) {
     [menuItems, activeIndex, menuOpen, toggleMenuOpen]
   );
 
-  useKeyDownHandlers(keyHandlers);
+  // useKeyDownHandlers(keyHandlers);
 
   const handleClose = useCallback(() => {
     setMenuOpen('none');
@@ -200,7 +205,20 @@ function Menubar({ children, className }) {
 
   return (
     <MenubarContext.Provider value={contextValue}>
-      <div className={className} ref={nodeRef} onFocus={handleFocus}>
+      <div
+        className={className}
+        ref={nodeRef}
+        role="menubar"
+        aria-orientation="horizontal"
+        onFocus={handleFocus}
+        onKeyDown={(e) => {
+          const handler = keyHandlers[e.key];
+          if (handler && (menuOpen !== 'none' || hasFocus)) {
+            handler(e);
+          }
+        }}
+        tabIndex="0"
+      >
         <MenuOpenContext.Provider value={menuOpen}>
           {children}
         </MenuOpenContext.Provider>
