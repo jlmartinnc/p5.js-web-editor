@@ -75,15 +75,21 @@
   }
 }
 
-// more prominent focus indicator for keyboard users
+// for keyboard navigation
 .nav__item button:focus-visible {
   @include themify() {
     box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
   }
 }
 
+// focus styles for mouse interactions
+.nav__item button:focus:not(:focus-visible) {
+  @include themify() {
+    box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
+  }
+}
+
 .nav__dropdown-item {
-  // Base focus styles
   & button:focus,
   & a:focus {
     outline: none;
@@ -93,11 +99,10 @@
     }
   }
 
-  // keyboard styles
   & button:focus-visible,
   & a:focus-visible {
     @include themify() {
-      box-shadow: inset 0 0 0 2px getThemifyVariable('nav-hover-color');
+      box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
     }
   }
 
