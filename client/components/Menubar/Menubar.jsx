@@ -128,11 +128,12 @@ function Menubar({ children, className }) {
   }, []);
 
   const handleBlur = useCallback(() => {
-    timerRef.current = setTimeout(() => {
-      setMenuOpen('none');
-      setHasFocus(false);
-    }, 10);
-  }, [timerRef, setMenuOpen]);
+    setHasFocus(false);
+    // timerRef.current = setTimeout(() => {
+    //   setMenuOpen('none');
+    //   setHasFocus(false);
+    // }, 10);
+  }, []);
 
   useEffect(() => {
     if (activeIndex !== prevIndex) {
@@ -213,9 +214,12 @@ function Menubar({ children, className }) {
         onFocus={handleFocus}
         onKeyDown={(e) => {
           const handler = keyHandlers[e.key];
-          if (handler && (menuOpen !== 'none' || hasFocus)) {
+          if (handler) {
             handler(e);
           }
+          // if (handler && (menuOpen !== 'none' || hasFocus)) {
+          //   handler(e);
+          // }
         }}
         tabIndex="0"
       >
