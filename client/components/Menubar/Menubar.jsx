@@ -79,17 +79,6 @@ function Menubar({ children, className }) {
           toggleMenuOpen(newMenuId);
         }
       },
-      Enter: (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      },
-      ' ': (e) => {
-        // same as Enter
-        e.preventDefault();
-        e.stopPropagation();
-        // if submenu is open, activate the focused item
-        // if submenu is closed, open it and focus the first item
-      },
       Escape: (e) => {
         // close all submenus
         e.preventDefault();
