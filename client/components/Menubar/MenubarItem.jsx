@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
-import ButtonOrLink from '../../common/ButtonOrLink';
+import React, { useEffect, useContext, useRef, useMemo } from 'react';
 import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
+import ButtonOrLink from '../../common/ButtonOrLink';
 
 function MenubarItem({
-  id,
-  hideIf,
   className,
+  id,
   role: customRole,
+  hideIf,
   selected,
   ...rest
 }) {
@@ -17,15 +17,14 @@ function MenubarItem({
   }
 
   const { createMenuItemHandlers, hasFocus } = useContext(MenubarContext);
-
   const {
+    setSubmenuActiveIndex,
     submenuItems,
     registerSubmenuItem,
-    isFirstChild,
-    setSubmenuActiveIndex
+    isFirstChild
   } = useContext(SubmenuContext);
-  const menuItemRef = useRef(null);
   const parent = useContext(ParentMenuContext);
+  const menuItemRef = useRef(null);
 
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,

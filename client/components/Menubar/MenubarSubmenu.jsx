@@ -5,18 +5,18 @@ import PropTypes from 'prop-types';
 import React, {
   useState,
   useEffect,
-  useCallback,
   useContext,
+  useCallback,
   useRef,
   useMemo
 } from 'react';
-import TriangleIcon from '../../images/down-filled-triangle.svg';
 import {
   MenuOpenContext,
   MenubarContext,
   SubmenuContext,
   ParentMenuContext
 } from './contexts';
+import TriangleIcon from '../../images/down-filled-triangle.svg';
 
 export function useMenuProps(id) {
   const activeMenu = useContext(MenuOpenContext);
@@ -37,20 +37,19 @@ export function useMenuProps(id) {
  * MenubarTrigger
  * -----------------------------------------------------------------------------------------------*/
 const MenubarTrigger = React.forwardRef(
-  ({ id, title, role, hasPopup, ...props }, ref) => {
+  ({ id, role, title, hasPopup, ...props }, ref) => {
     const { isOpen, handlers } = useMenuProps(id);
     const {
+      setActiveIndex,
       menuItems,
       registerTopLevelItem,
-      toggleMenuOpen,
-      setActiveIndex,
-      hasFocus
+      hasFocus,
+      toggleMenuOpen
     } = useContext(MenubarContext);
     const { first, last } = useContext(SubmenuContext);
 
     const handleMouseEnter = () => {
       if (hasFocus) {
-        console.log('hasFocus', hasFocus);
         const items = Array.from(menuItems);
         const index = items.findIndex((item) => item === ref.current);
 
@@ -99,9 +98,9 @@ const MenubarTrigger = React.forwardRef(
 
     return (
       <button
-        ref={ref}
-        {...handlers}
         {...props}
+        {...handlers}
+        ref={ref}
         role={role}
         onMouseEnter={handleMouseEnter}
         onKeyDown={handleKeyDown}
@@ -121,8 +120,8 @@ const MenubarTrigger = React.forwardRef(
 
 MenubarTrigger.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.node.isRequired,
   role: PropTypes.string,
+  title: PropTypes.node.isRequired,
   hasPopup: PropTypes.oneOf(['menu', 'listbox', 'true'])
 };
 
@@ -135,7 +134,7 @@ MenubarTrigger.defaultProps = {
  * MenubarList
  * -----------------------------------------------------------------------------------------------*/
 
-function MenubarList({ id, children, role, ...props }) {
+function MenubarList({ children, id, role, ...props }) {
   return (
     <ul className="nav__dropdown" role={role} {...props}>
       <ParentMenuContext.Provider value={id}>
@@ -161,18 +160,18 @@ MenubarList.defaultProps = {
  * -----------------------------------------------------------------------------------------------*/
 
 function MenubarSubmenu({
+  children,
   id,
   title,
-  children,
   triggerRole: customTriggerRole,
   listRole: customListRole,
   ...props
 }) {
   const { isOpen, handlers } = useMenuProps(id);
-  const { toggleMenuOpen } = useContext(MenubarContext);
-  const submenuItems = useRef(new Set()).current;
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
+  const { toggleMenuOpen } = useContext(MenubarContext);
+  const submenuItems = useRef(new Set()).current;
 
   const buttonRef = useRef(null);
   const listItemRef = useRef(null);
@@ -193,6 +192,25 @@ function MenubarSubmenu({
     }
   }, [submenuItems]);
 
+  const registerSubmenuItem = useCallback(
+    (ref) => {
+      const submenuItemNode = ref.current;
+
+      if (submenuItemNode) {
+        if (submenuItems.size === 0) {
+          setIsFirstChild(true);
+        }
+
+        submenuItems.add(submenuItemNode);
+      }
+
+      return () => {
+        submenuItems.delete(submenuItemNode);
+      };
+    },
+    [submenuItems]
+  );
+
   const keyHandlers = useMemo(
     () => ({
       ArrowUp: (e) => {
@@ -211,7 +229,6 @@ function MenubarSubmenu({
         e.stopPropagation();
         e.preventDefault();
 
-        setSubmenuActiveIndex((prev) => (prev + 1) % submenuItems.size);
         const newIndex =
           submenuActiveIndex === submenuItems.size - 1
             ? 0
@@ -297,24 +314,20 @@ function MenubarSubmenu({
     [isOpen, keyHandlers]
   );
 
-  const registerSubmenuItem = useCallback(
-    (ref) => {
-      const submenuItemNode = ref.current;
+  // reset submenu active index when submenu is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setSubmenuActiveIndex(-1);
+    }
+  }, [isOpen]);
 
-      if (submenuItemNode) {
-        if (submenuItems.size === 0) {
-          setIsFirstChild(true);
-        }
-
-        submenuItems.add(submenuItemNode);
-      }
-
-      return () => {
-        submenuItems.delete(submenuItemNode);
-      };
-    },
-    [submenuItems]
-  );
+  useEffect(() => {
+    const el = listItemRef.current;
+    if (el) {
+      el.addEventListener('keydown', handleKeyDown);
+    }
+    return () => el.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   useEffect(() => {
     if (isOpen && submenuItems.size > 0) {
@@ -332,37 +345,22 @@ function MenubarSubmenu({
     }
   }, [isOpen, submenuItems, submenuActiveIndex]);
 
-  // reset submenu active index when submenu is closed
-  useEffect(() => {
-    if (!isOpen) {
-      setSubmenuActiveIndex(-1);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const el = listItemRef.current;
-    if (el) {
-      el.addEventListener('keydown', handleKeyDown);
-    }
-    return () => el.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
-
   const submenuContext = useMemo(
     () => ({
       submenuItems,
+      submenuActiveIndex,
+      setSubmenuActiveIndex,
       registerSubmenuItem,
       isFirstChild,
       first,
-      last,
-      setSubmenuActiveIndex,
-      submenuActiveIndex
+      last
     }),
     [
       submenuItems,
+      submenuActiveIndex,
+      setSubmenuActiveIndex,
       registerSubmenuItem,
       isFirstChild,
-      setSubmenuActiveIndex,
-      submenuActiveIndex,
       first,
       last
     ]
@@ -394,8 +392,8 @@ function MenubarSubmenu({
 
 MenubarSubmenu.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.node.isRequired,
   children: PropTypes.node,
+  title: PropTypes.node.isRequired,
   triggerRole: PropTypes.string,
   listRole: PropTypes.string
 };

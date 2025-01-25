@@ -12,13 +12,12 @@ import usePrevious from '../../common/usePrevious';
 
 function Menubar({ children, className }) {
   const [menuOpen, setMenuOpen] = useState('none');
-
-  const menuItems = useRef(new Set()).current;
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasFocus, setHasFocus] = useState(false);
-  const prevIndex = usePrevious(activeIndex);
   const [isFirstChild, setIsFirstChild] = useState(false);
+  const menuItems = useRef(new Set()).current;
   const menuItemToId = useRef(new Map()).current;
+  const prevIndex = usePrevious(activeIndex);
 
   const timerRef = useRef(null);
 
@@ -51,6 +50,35 @@ function Menubar({ children, className }) {
   const toggleMenuOpen = useCallback((id) => {
     setMenuOpen((prevState) => (prevState === id ? 'none' : id));
   });
+
+  const clearHideTimeout = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, [timerRef]);
+
+  const handleClose = useCallback(() => {
+    clearHideTimeout();
+    setMenuOpen('none');
+  }, [setMenuOpen]);
+
+  const nodeRef = useModalClose(handleClose);
+
+  const handleFocus = useCallback(() => {
+    setHasFocus(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    const isInMenu = nodeRef.current?.contains(document.activeElement);
+
+    if (!isInMenu) {
+      timerRef.current = setTimeout(() => {
+        setMenuOpen('none');
+        setHasFocus(false);
+      }, 10);
+    }
+  }, [nodeRef]);
 
   const keyHandlers = useMemo(
     () => ({
@@ -98,35 +126,6 @@ function Menubar({ children, className }) {
     }),
     [menuItems, activeIndex, menuOpen, toggleMenuOpen]
   );
-
-  const clearHideTimeout = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, [timerRef]);
-
-  const handleClose = useCallback(() => {
-    clearHideTimeout();
-    setMenuOpen('none');
-  }, [setMenuOpen]);
-
-  const nodeRef = useModalClose(handleClose);
-
-  const handleFocus = useCallback(() => {
-    setHasFocus(true);
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    const isInMenu = nodeRef.current?.contains(document.activeElement);
-
-    if (!isInMenu) {
-      timerRef.current = setTimeout(() => {
-        setMenuOpen('none');
-        setHasFocus(false);
-      }, 10);
-    }
-  }, [nodeRef]);
 
   useEffect(() => {
     if (activeIndex !== prevIndex) {
@@ -201,8 +200,8 @@ function Menubar({ children, className }) {
     <MenubarContext.Provider value={contextValue}>
       <ul
         className={className}
-        ref={nodeRef}
         role="menubar"
+        ref={nodeRef}
         aria-orientation="horizontal"
         onFocus={handleFocus}
         onKeyDown={(e) => {
