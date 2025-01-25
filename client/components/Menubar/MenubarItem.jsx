@@ -11,6 +11,11 @@ function MenubarItem({
   selected,
   ...rest
 }) {
+  // moved to top bc of rules of hooks error, may remove if not needed
+  if (hideIf) {
+    return null;
+  }
+
   const {
     createMenuItemHandlers,
     hasFocus,
@@ -31,10 +36,6 @@ function MenubarItem({
     createMenuItemHandlers,
     parent
   ]);
-
-  if (hideIf) {
-    return null;
-  }
 
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
