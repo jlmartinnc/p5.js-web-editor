@@ -195,7 +195,7 @@ function Menubar({ children, className }) {
 
   return (
     <MenubarContext.Provider value={contextValue}>
-      <div
+      <ul
         className={className}
         ref={nodeRef}
         role="menubar"
@@ -215,7 +215,7 @@ function Menubar({ children, className }) {
         <MenuOpenContext.Provider value={menuOpen}>
           {children}
         </MenuOpenContext.Provider>
-      </div>
+      </ul>
     </MenubarContext.Provider>
   );
 }
@@ -227,7 +227,7 @@ Menubar.propTypes = {
 
 Menubar.defaultProps = {
   children: null,
-  className: 'nav'
+  className: 'nav__menubar'
 };
 
 export default Menubar;

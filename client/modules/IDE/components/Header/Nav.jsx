@@ -43,10 +43,12 @@ const Nav = ({ layout }) => {
           <Logo />
         </div>
 
-        <Menubar>
-          <LeftLayout layout={layout} />
-          <UserMenu />
-        </Menubar>
+        <nav className="nav">
+          <Menubar>
+            <LeftLayout layout={layout} />
+            <UserMenu />
+          </Menubar>
+        </nav>
       </header>
     </>
   );
@@ -124,7 +126,7 @@ const DashboardMenu = () => {
   const { t } = useTranslation();
   const editorLink = useSelector(selectSketchPath);
   return (
-    <ul className="nav__items-left">
+    <ul className="nav__items-left" role="group">
       <li className="nav__item nav__item--no-icon">
         <Link to={editorLink} className="nav__back-link">
           <CaretLeftIcon
@@ -166,7 +168,7 @@ const ProjectMenu = () => {
     metaKey === 'Ctrl' ? `${metaKeyName}+Alt+N` : `${metaKeyName}+⌥+N`;
 
   return (
-    <ul className="nav__items-left" role="menubar">
+    <ul className="nav__items-left" role="group">
       <MenubarSubmenu id="file" title={t('Nav.File.Title')}>
         <MenubarItem id="file-new" onClick={newSketch}>
           {t('Nav.File.New')}
@@ -318,7 +320,7 @@ const LanguageMenu = () => {
 const UnauthenticatedUserMenu = () => {
   const { t } = useTranslation();
   return (
-    <ul className="nav__items-right" title="user-menu">
+    <ul className="nav__items-right" title="user-menu" role="group">
       <li className="nav__item">
         <Link to="/login" className="nav__auth-button">
           <span className="nav__item-header" title="Login">
@@ -347,7 +349,7 @@ const AuthenticatedUserMenu = () => {
   const dispatch = useDispatch();
 
   return (
-    <ul className="nav__items-right" title="user-menu">
+    <ul className="nav__items-right" title="user-menu" role="group">
       <MenubarSubmenu
         id="account"
         title={

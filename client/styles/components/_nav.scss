@@ -24,6 +24,13 @@
   // padding-left: #{math.div(20, $base-font-size)}rem;
 }
 
+.nav__menubar {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  justify-content: space-between;
+}
+
 .nav__items-left,
 .nav__items-right {
   list-style: none;
