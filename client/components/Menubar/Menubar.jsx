@@ -22,7 +22,7 @@ function Menubar({ children, className }) {
   const menuItemToId = useRef(new Map()).current;
 
   const timerRef = useRef(null);
-  const nodeRef = useRef(null);
+  // const nodeRef = useModalClose(handleClose);
 
   const registerTopLevelItem = useCallback(
     (ref, submenuId) => {
@@ -65,7 +65,8 @@ function Menubar({ children, className }) {
 
         if (menuOpen !== 'none') {
           const newMenuId = getMenuId(newIndex);
-          toggleMenuOpen(newMenuId);
+          // toggleMenuOpen(newMenuId);
+          setMenuOpen(newMenuId);
         }
       },
       ArrowRight: (e) => {
@@ -76,7 +77,8 @@ function Menubar({ children, className }) {
 
         if (menuOpen !== 'none') {
           const newMenuId = getMenuId(newIndex);
-          toggleMenuOpen(newMenuId);
+          // toggleMenuOpen(newMenuId);
+          setMenuOpen(newMenuId);
         }
       },
       Escape: (e) => {
@@ -101,10 +103,6 @@ function Menubar({ children, className }) {
 
   // useKeyDownHandlers(keyHandlers);
 
-  const handleClose = useCallback(() => {
-    setMenuOpen('none');
-  }, [setMenuOpen]);
-
   const clearHideTimeout = useCallback(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -112,17 +110,27 @@ function Menubar({ children, className }) {
     }
   }, [timerRef]);
 
+  const handleClose = useCallback(() => {
+    clearHideTimeout();
+    setMenuOpen('none');
+  }, [setMenuOpen]);
+
+  const nodeRef = useModalClose(handleClose);
+
   const handleFocus = useCallback(() => {
     setHasFocus(true);
   }, []);
 
   const handleBlur = useCallback(() => {
-    setHasFocus(false);
-    // timerRef.current = setTimeout(() => {
-    //   setMenuOpen('none');
-    //   setHasFocus(false);
-    // }, 10);
-  }, []);
+    const isInMenu = nodeRef.current?.contains(document.activeElement);
+
+    if (!isInMenu) {
+      timerRef.current = setTimeout(() => {
+        setMenuOpen('none');
+        setHasFocus(false);
+      }, 10);
+    }
+  }, [nodeRef]);
 
   useEffect(() => {
     if (activeIndex !== prevIndex) {
