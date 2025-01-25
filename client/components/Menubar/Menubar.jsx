@@ -218,7 +218,6 @@ function Menubar({ children, className }) {
           //   handler(e);
           // }
         }}
-        tabIndex="0"
       >
         <MenuOpenContext.Provider value={menuOpen}>
           {children}
