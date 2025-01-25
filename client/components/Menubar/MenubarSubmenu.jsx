@@ -17,7 +17,6 @@ import {
   SubmenuContext,
   ParentMenuContext
 } from './contexts';
-import useKeyDownHandlers from '../../common/useKeyDownHandlers';
 
 export function useMenuProps(id) {
   const activeMenu = useContext(MenuOpenContext);
@@ -201,9 +200,6 @@ function MenubarSubmenu({
         e.preventDefault();
         e.stopPropagation();
 
-        // setSubmenuActiveIndex(
-        //   (prev) => (prev - 1 + submenuItems.size) % submenuItems.size
-        // );
         const newIndex =
           submenuActiveIndex <= 0
             ? submenuItems.size - 1
@@ -242,12 +238,9 @@ function MenubarSubmenu({
             buttonRef.current.focus();
           }
         }
-        // if submenu is open, activate the focused item
-        // if submenu is closed, open it and focus the first item
       },
       ' ': (e) => {
         // same as Enter
-        if (!isOpen) return;
         if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
@@ -274,7 +267,6 @@ function MenubarSubmenu({
         e.stopPropagation();
         toggleMenuOpen(id);
 
-        //
         if (buttonRef.current) {
           buttonRef.current.focus();
         }

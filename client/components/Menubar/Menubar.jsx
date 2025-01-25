@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import useModalClose from '../../common/useModalClose';
 import { MenuOpenContext, MenubarContext } from './contexts';
-import useKeyDownHandlers from '../../common/useKeyDownHandlers';
 import usePrevious from '../../common/usePrevious';
 
 function Menubar({ children, className }) {
@@ -22,7 +21,6 @@ function Menubar({ children, className }) {
   const menuItemToId = useRef(new Map()).current;
 
   const timerRef = useRef(null);
-  // const nodeRef = useModalClose(handleClose);
 
   const registerTopLevelItem = useCallback(
     (ref, submenuId) => {
@@ -100,8 +98,6 @@ function Menubar({ children, className }) {
     }),
     [menuItems, activeIndex, menuOpen, toggleMenuOpen]
   );
-
-  // useKeyDownHandlers(keyHandlers);
 
   const clearHideTimeout = useCallback(() => {
     if (timerRef.current) {
@@ -214,9 +210,6 @@ function Menubar({ children, className }) {
           if (handler) {
             handler(e);
           }
-          // if (handler && (menuOpen !== 'none' || hasFocus)) {
-          //   handler(e);
-          // }
         }}
       >
         <MenuOpenContext.Provider value={menuOpen}>

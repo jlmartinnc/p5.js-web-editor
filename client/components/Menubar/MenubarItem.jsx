@@ -16,12 +16,7 @@ function MenubarItem({
     return null;
   }
 
-  const {
-    createMenuItemHandlers,
-    hasFocus,
-    menuItems,
-    setActiveIndex
-  } = useContext(MenubarContext);
+  const { createMenuItemHandlers, hasFocus } = useContext(MenubarContext);
 
   const {
     submenuItems,
