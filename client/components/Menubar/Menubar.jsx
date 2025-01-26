@@ -18,8 +18,53 @@ function Menubar({ children, className }) {
   const menuItems = useRef(new Set()).current;
   const menuItemToId = useRef(new Map()).current;
   const prevIndex = usePrevious(activeIndex);
-
   const timerRef = useRef(null);
+
+  const getMenuId = useCallback(
+    (index) => {
+      const items = Array.from(menuItems);
+      const itemNode = items[index];
+      return menuItemToId.get(itemNode);
+    },
+    [menuItems, menuItemToId, activeIndex]
+  );
+
+  const prev = useCallback(() => {
+    const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
+    setActiveIndex(newIndex);
+
+    if (menuOpen !== 'none') {
+      const newMenuId = getMenuId(newIndex);
+      setMenuOpen(newMenuId);
+    }
+  }, [activeIndex, menuItems, menuOpen, getMenuId]);
+
+  const next = useCallback(() => {
+    const newIndex = (activeIndex + 1) % menuItems.size;
+    setActiveIndex(newIndex);
+
+    if (menuOpen !== 'none') {
+      const newMenuId = getMenuId(newIndex);
+      setMenuOpen(newMenuId);
+    }
+  }, [activeIndex, menuItems, menuOpen, getMenuId]);
+
+  const first = useCallback(() => {
+    setActiveIndex(0);
+  }, []);
+
+  const last = useCallback(() => {
+    setActiveIndex(menuItems.size - 1);
+  }, []);
+
+  const close = useCallback(() => {
+    if (menuOpen === 'none') return;
+
+    const items = Array.from(menuItems);
+    const activeNode = items[activeIndex];
+    setMenuOpen('none');
+    activeNode.focus();
+  }, [activeIndex, menuItems, menuOpen]);
 
   const registerTopLevelItem = useCallback(
     (ref, submenuId) => {
@@ -36,15 +81,6 @@ function Menubar({ children, className }) {
       };
     },
     [menuItems, menuItemToId]
-  );
-
-  const getMenuId = useCallback(
-    (index) => {
-      const items = Array.from(menuItems);
-      const itemNode = items[index];
-      return menuItemToId.get(itemNode);
-    },
-    [menuItems, menuItemToId, activeIndex]
   );
 
   const toggleMenuOpen = useCallback((id) => {
@@ -85,38 +121,18 @@ function Menubar({ children, className }) {
       ArrowLeft: (e) => {
         e.preventDefault();
         e.stopPropagation();
-        // focus the previous item, wrapping around if we reach the beginning
-        const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
-        setActiveIndex(newIndex);
-
-        if (menuOpen !== 'none') {
-          const newMenuId = getMenuId(newIndex);
-          // toggleMenuOpen(newMenuId);
-          setMenuOpen(newMenuId);
-        }
+        prev();
       },
       ArrowRight: (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const newIndex = (activeIndex + 1) % menuItems.size;
-        setActiveIndex(newIndex);
-
-        if (menuOpen !== 'none') {
-          const newMenuId = getMenuId(newIndex);
-          // toggleMenuOpen(newMenuId);
-          setMenuOpen(newMenuId);
-        }
+        next();
       },
       Escape: (e) => {
         // close all submenus
         e.preventDefault();
         e.stopPropagation();
-        if (menuOpen !== 'none') {
-          const items = Array.from(menuItems);
-          const activeNode = items[activeIndex];
-          setMenuOpen('none');
-          activeNode.focus();
-        }
+        close();
       },
       Tab: (e) => {
         e.stopPropagation();
@@ -124,7 +140,7 @@ function Menubar({ children, className }) {
       }
       // support direct access keys
     }),
-    [menuItems, activeIndex, menuOpen, toggleMenuOpen]
+    [menuItems, activeIndex, menuOpen]
   );
 
   useEffect(() => {
@@ -173,26 +189,28 @@ function Menubar({ children, className }) {
           setMenuOpen(menu);
         }
       }),
-      toggleMenuOpen,
       menuItems,
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
+      setMenuOpen,
+      toggleMenuOpen,
       isFirstChild,
       hasFocus,
       setHasFocus
     }),
     [
-      menuOpen,
-      toggleMenuOpen,
-      clearHideTimeout,
-      handleBlur,
       menuItems,
       activeIndex,
       setActiveIndex,
       registerTopLevelItem,
+      menuOpen,
+      toggleMenuOpen,
       isFirstChild,
-      hasFocus
+      hasFocus,
+      setHasFocus,
+      clearHideTimeout,
+      handleBlur
     ]
   );
 

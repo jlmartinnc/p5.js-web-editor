@@ -65,7 +65,6 @@ const MenubarTrigger = React.forwardRef(
           if (!isOpen) {
             e.preventDefault();
             e.stopPropagation();
-            toggleMenuOpen(id);
             first();
           }
           break;
@@ -73,7 +72,6 @@ const MenubarTrigger = React.forwardRef(
           if (!isOpen) {
             e.preventDefault();
             e.stopPropagation();
-            toggleMenuOpen(id);
             last();
           }
           break;
@@ -82,7 +80,6 @@ const MenubarTrigger = React.forwardRef(
           if (!isOpen) {
             e.preventDefault();
             e.stopPropagation();
-            toggleMenuOpen(id);
             first();
           }
           break;
@@ -170,7 +167,7 @@ function MenubarSubmenu({
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
-  const { toggleMenuOpen } = useContext(MenubarContext);
+  const { setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
   const submenuItems = useRef(new Set()).current;
 
   const buttonRef = useRef(null);
@@ -180,17 +177,59 @@ function MenubarSubmenu({
   const listRole = customListRole || 'menu';
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
+  const prev = useCallback(() => {
+    const newIndex =
+      submenuActiveIndex <= 0 ? submenuItems.size - 1 : submenuActiveIndex - 1;
+    setSubmenuActiveIndex(newIndex);
+  }, [submenuActiveIndex, submenuItems]);
+
+  const next = useCallback(() => {
+    const newIndex =
+      submenuActiveIndex === submenuItems.size - 1 ? 0 : submenuActiveIndex + 1;
+    setSubmenuActiveIndex(newIndex);
+  }, [submenuActiveIndex, submenuItems]);
+
   const first = useCallback(() => {
+    toggleMenuOpen(id);
+
     if (submenuItems.size > 0) {
       setSubmenuActiveIndex(0);
     }
   }, [submenuItems]);
 
   const last = useCallback(() => {
+    toggleMenuOpen(id);
+
     if (submenuItems.size > 0) {
       setSubmenuActiveIndex(submenuItems.size - 1);
     }
   }, [submenuItems]);
+
+  const activate = useCallback(() => {
+    const items = Array.from(submenuItems);
+    const activeItem = items[submenuActiveIndex];
+
+    if (activeItem) {
+      const activeItemNode = activeItem.firstChild;
+      activeItemNode.click();
+
+      toggleMenuOpen(id);
+
+      // check if buttonRef is available and focus it
+      // we check because the button might be unmounted when activating a link or button
+      if (buttonRef.current) {
+        buttonRef.current.focus();
+      }
+    }
+  }, [submenuActiveIndex, submenuItems, buttonRef]);
+
+  const close = useCallback(() => {
+    setMenuOpen('none');
+
+    if (buttonRef.current) {
+      buttonRef.current.focus();
+    }
+  }, [buttonRef]);
 
   const registerSubmenuItem = useCallback(
     (ref) => {
@@ -217,82 +256,38 @@ function MenubarSubmenu({
         if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
-
-        const newIndex =
-          submenuActiveIndex <= 0
-            ? submenuItems.size - 1
-            : submenuActiveIndex - 1;
-        setSubmenuActiveIndex(newIndex);
+        prev();
       },
       ArrowDown: (e) => {
         if (!isOpen) return;
         e.stopPropagation();
         e.preventDefault();
-
-        const newIndex =
-          submenuActiveIndex === submenuItems.size - 1
-            ? 0
-            : submenuActiveIndex + 1;
-        setSubmenuActiveIndex(newIndex);
+        next();
       },
       Enter: (e) => {
         if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
-
-        const items = Array.from(submenuItems);
-        const activeItem = items[submenuActiveIndex];
-
-        if (activeItem) {
-          const activeItemNode = activeItem.firstChild;
-          activeItemNode.click();
-
-          toggleMenuOpen(id);
-
-          // check if buttonRef is available and focus it
-          // we check because the button might be unmounted when activating a link or button
-          if (buttonRef.current) {
-            buttonRef.current.focus();
-          }
-        }
+        activate();
       },
       ' ': (e) => {
         // same as Enter
         if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
-
-        const items = Array.from(submenuItems);
-        const activeItem = items[submenuActiveIndex];
-
-        if (activeItem) {
-          const activeItemNode = activeItem.firstChild;
-          activeItemNode.click();
-
-          toggleMenuOpen(id);
-
-          // check if buttonRef is available and focus it
-          // we check because the button might be unmounted when activating a link or button
-          if (buttonRef.current) {
-            buttonRef.current.focus();
-          }
-        }
+        activate();
       },
       Escape: (e) => {
         if (!isOpen) return;
         e.preventDefault();
         e.stopPropagation();
-        toggleMenuOpen(id);
-
-        if (buttonRef.current) {
-          buttonRef.current.focus();
-        }
+        close();
       },
       Tab: (e) => {
         // close
         if (!isOpen) return;
         e.preventDefault();
-        toggleMenuOpen(id);
+        setMenuOpen('none');
       }
       // support direct access keys
     }),
@@ -306,8 +301,6 @@ function MenubarSubmenu({
       const handler = keyHandlers[e.key];
 
       if (handler) {
-        e.stopPropagation();
-        e.preventDefault();
         handler(e);
       }
     },
@@ -323,11 +316,13 @@ function MenubarSubmenu({
 
   useEffect(() => {
     const el = listItemRef.current;
-    if (el) {
-      el.addEventListener('keydown', handleKeyDown);
-    }
-    return () => el.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+    if (!el) return () => {};
+
+    el.addEventListener('keydown', handleKeyDown);
+    return () => {
+      el.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, keyHandlers]);
 
   useEffect(() => {
     if (isOpen && submenuItems.size > 0) {
