@@ -187,6 +187,7 @@ function MenubarSubmenu({
 
   const next = useCallback(() => {
     const newIndex = (submenuActiveIndex + 1) % submenuItems.size;
+    console.log(newIndex);
     setSubmenuActiveIndex(newIndex);
   }, [submenuActiveIndex, submenuItems]);
 
@@ -309,10 +310,10 @@ function MenubarSubmenu({
 
   // reset submenu active index when submenu is closed
   useEffect(() => {
-    if (!isOpen || menuOpen !== id) {
+    if (!isOpen) {
       setSubmenuActiveIndex(-1);
     }
-  }, [isOpen, menuOpen, id]);
+  }, [isOpen]);
 
   useEffect(() => {
     const el = listItemRef.current;
