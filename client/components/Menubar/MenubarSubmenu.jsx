@@ -179,7 +179,7 @@ function MenubarSubmenu({
 
   const prev = useCallback(() => {
     const newIndex =
-      submenuActiveIndex === -1
+      submenuActiveIndex < 0
         ? submenuItems.size - 1
         : (submenuActiveIndex - 1 + submenuItems.size) % submenuItems.size;
     setSubmenuActiveIndex(newIndex);
@@ -187,7 +187,6 @@ function MenubarSubmenu({
 
   const next = useCallback(() => {
     const newIndex = (submenuActiveIndex + 1) % submenuItems.size;
-    console.log(newIndex);
     setSubmenuActiveIndex(newIndex);
   }, [submenuActiveIndex, submenuItems]);
 
