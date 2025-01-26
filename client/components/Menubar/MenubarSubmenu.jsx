@@ -286,7 +286,8 @@ function MenubarSubmenu({
       Tab: (e) => {
         // close
         if (!isOpen) return;
-        e.preventDefault();
+        // e.preventDefault();
+        e.stopPropagation();
         setMenuOpen('none');
       }
       // support direct access keys
