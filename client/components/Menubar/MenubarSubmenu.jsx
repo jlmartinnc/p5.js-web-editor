@@ -167,7 +167,7 @@ function MenubarSubmenu({
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
-  const { setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
+  const { menuOpen, setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
   const submenuItems = useRef(new Set()).current;
 
   const buttonRef = useRef(null);
@@ -179,13 +179,14 @@ function MenubarSubmenu({
 
   const prev = useCallback(() => {
     const newIndex =
-      submenuActiveIndex <= 0 ? submenuItems.size - 1 : submenuActiveIndex - 1;
+      submenuActiveIndex === -1
+        ? submenuItems.size - 1
+        : (submenuActiveIndex - 1 + submenuItems.size) % submenuItems.size;
     setSubmenuActiveIndex(newIndex);
   }, [submenuActiveIndex, submenuItems]);
 
   const next = useCallback(() => {
-    const newIndex =
-      submenuActiveIndex === submenuItems.size - 1 ? 0 : submenuActiveIndex + 1;
+    const newIndex = (submenuActiveIndex + 1) % submenuItems.size;
     setSubmenuActiveIndex(newIndex);
   }, [submenuActiveIndex, submenuItems]);
 
@@ -199,7 +200,6 @@ function MenubarSubmenu({
 
   const last = useCallback(() => {
     toggleMenuOpen(id);
-
     if (submenuItems.size > 0) {
       setSubmenuActiveIndex(submenuItems.size - 1);
     }
@@ -260,8 +260,8 @@ function MenubarSubmenu({
       },
       ArrowDown: (e) => {
         if (!isOpen) return;
-        e.stopPropagation();
         e.preventDefault();
+        e.stopPropagation();
         next();
       },
       Enter: (e) => {
@@ -309,10 +309,10 @@ function MenubarSubmenu({
 
   // reset submenu active index when submenu is closed
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen || menuOpen !== id) {
       setSubmenuActiveIndex(-1);
     }
-  }, [isOpen]);
+  }, [isOpen, menuOpen, id]);
 
   useEffect(() => {
     const el = listItemRef.current;
