@@ -174,6 +174,7 @@ MenubarTrigger.defaultProps = {
  * @param {React.ReactNode} props.children - MenubarItems that should be rendered in the list
  * @param {string} props.id - The unique id of the submenu
  * @param {string} [props.role='menu'] - The ARIA role of the list element
+ * @param {string} props.title - The title of the list element
  * @returns {JSX.Element}
  */
 
@@ -186,9 +187,14 @@ MenubarTrigger.defaultProps = {
  * </MenubarList>
  */
 
-function MenubarList({ children, id, role, ...props }) {
+function MenubarList({ children, id, role, title, ...props }) {
   return (
-    <ul className="nav__dropdown" role={role} {...props}>
+    <ul
+      className="nav__dropdown"
+      role={role}
+      aria-label={`${title} menu`}
+      {...props}
+    >
       <ParentMenuContext.Provider value={id}>
         {children}
       </ParentMenuContext.Provider>
@@ -197,9 +203,10 @@ function MenubarList({ children, id, role, ...props }) {
 }
 
 MenubarList.propTypes = {
-  id: PropTypes.string.isRequired,
   children: PropTypes.node,
-  role: PropTypes.oneOf(['menu', 'listbox'])
+  id: PropTypes.string.isRequired,
+  role: PropTypes.oneOf(['menu', 'listbox']),
+  title: PropTypes.string.isRequired
 };
 
 MenubarList.defaultProps = {
@@ -476,7 +483,7 @@ function MenubarSubmenu({
           {...props}
           tabIndex={-1}
         />
-        <MenubarList id={id} role={listRole}>
+        <MenubarList id={id} role={listRole} title={title}>
           {children}
         </MenubarList>
       </li>
