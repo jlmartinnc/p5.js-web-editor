@@ -36,6 +36,40 @@ export function useMenuProps(id) {
 /* -------------------------------------------------------------------------------------------------
  * MenubarTrigger
  * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * @component
+ * @param {Object} props
+ * @param {string} props.id - The id of submenu the trigger button controls
+ * @param {string} props.title - The title of the trigger button
+ * @param {string} [props.role='menuitem'] - The ARIA role of the trigger button
+ * @param {string} [props.hasPopup='menu'] - The ARIA property that indicates the presence of a popup
+ * @returns {JSX.Element}
+ */
+
+/**
+ * MenubarTrigger renders a button that toggles a submenu. It handles keyboard navigations and supports
+ * screen readers. It needs to be within a submenu context.
+ *
+ * @example
+ * <li
+ *  className={classNames('nav__item', isOpen && 'nav__item--open')}
+ *  ref={listItemRef}
+ * >
+ *  <MenubarTrigger
+ *    ref={buttonRef}
+ *    id={id}
+ *    title={title}
+ *    role={triggerRole}
+ *    hasPopup={hasPopup}
+ *    {...handlers}
+ *    {...props}
+ *    tabIndex={-1}
+ *  />
+ *  ... menubar list
+ * </li>
+ */
+
 const MenubarTrigger = React.forwardRef(
   ({ id, role, title, hasPopup, ...props }, ref) => {
     const { isOpen, handlers } = useMenuProps(id);
@@ -48,6 +82,7 @@ const MenubarTrigger = React.forwardRef(
     } = useContext(MenubarContext);
     const { first, last } = useContext(SubmenuContext);
 
+    // update active index when mouse enters the trigger and the menu has focus
     const handleMouseEnter = () => {
       if (hasFocus) {
         const items = Array.from(menuItems);
@@ -59,6 +94,7 @@ const MenubarTrigger = React.forwardRef(
       }
     };
 
+    // keyboard handlers
     const handleKeyDown = (e) => {
       switch (e.key) {
         case 'ArrowDown':
@@ -88,6 +124,7 @@ const MenubarTrigger = React.forwardRef(
       }
     };
 
+    // register trigger with parent menubar
     useEffect(() => {
       const unregister = registerTopLevelItem(ref, id);
       return unregister;
@@ -131,6 +168,24 @@ MenubarTrigger.defaultProps = {
  * MenubarList
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - MenubarItems that should be rendered in the list
+ * @param {string} props.id - The unique id of the submenu
+ * @param {string} [props.role='menu'] - The ARIA role of the list element
+ * @returns {JSX.Element}
+ */
+
+/**
+ * MenubarList renders the container for menu items in a submenu. It provides context and handles ARIA roles.
+ *
+ * @example
+ * <MenubarList id={id} role={listRole}>
+ *  ... <MenubarItem> elements
+ * </MenubarList>
+ */
+
 function MenubarList({ children, id, role, ...props }) {
   return (
     <ul className="nav__dropdown" role={role} {...props}>
@@ -156,6 +211,31 @@ MenubarList.defaultProps = {
  * MenubarSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - A list of menu items that will be rendered in the menubar
+ * @param {string} props.id - The unique id of the submenu
+ * @param {string} props.title - The title of the submenu
+ * @param {string} [props.triggerRole='menuitem'] - The ARIA role of the trigger button
+ * @param {string} [props.listRole='menu'] - The ARIA role of the list element
+ * @returns {JSX.Element}
+ */
+
+/**
+ * MenubarSubmenu manages a triggerable submenu within a menubar. It is a compound component
+ * that manages the state of the submenu and its items. It also provides keyboard navigation
+ * and screen reader support. Supports menu and listbox roles. Needs to be a direct child of Menubar.
+ *
+ * @example
+ * <Menubar>
+ *  <MenubarSubmenu id="file" title="File">
+ *    <MenubarItem id="file-new" onClick={handleNew}>New </MenubarItem>
+ *    <MenubarItem id="file-save" onClick={handleSave}>Save</MenubarItem>
+ *  </MenubarSubmenu>
+ * </Menubar>
+ */
+
 function MenubarSubmenu({
   children,
   id,
@@ -164,19 +244,25 @@ function MenubarSubmenu({
   listRole: customListRole,
   ...props
 }) {
+  // core state for submenu management
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const [isFirstChild, setIsFirstChild] = useState(false);
   const { menuOpen, setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
   const submenuItems = useRef(new Set()).current;
 
+  // refs for the button and list elements
   const buttonRef = useRef(null);
   const listItemRef = useRef(null);
 
+  // roles and properties for the button and list elements
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
   const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
 
+  /**
+   * navigation functions for the submenu
+   */
   const prev = useCallback(() => {
     const newIndex =
       submenuActiveIndex < 0
@@ -205,11 +291,13 @@ function MenubarSubmenu({
     }
   }, [submenuItems]);
 
+  // activate the selected item
   const activate = useCallback(() => {
     const items = Array.from(submenuItems);
-    const activeItem = items[submenuActiveIndex];
+    const activeItem = items[submenuActiveIndex]; // get the active item
 
     if (activeItem) {
+      // since active item is a <li> element, we need to get the button or link inside it
       const activeItemNode = activeItem.firstChild;
       activeItemNode.click();
 
@@ -231,6 +319,12 @@ function MenubarSubmenu({
     }
   }, [buttonRef]);
 
+  /**
+   * Register submenu items for keyboard navigation.
+   *
+   * @param {React.RefObject} ref - a ref to the DOM node of the menu item
+   *
+   */
   const registerSubmenuItem = useCallback(
     (ref) => {
       const submenuItemNode = ref.current;
@@ -250,6 +344,7 @@ function MenubarSubmenu({
     [submenuItems]
   );
 
+  // memoized key handlers for submenu navigation
   const keyHandlers = useMemo(
     () => ({
       ArrowUp: (e) => {
@@ -295,6 +390,7 @@ function MenubarSubmenu({
     [isOpen, submenuItems, submenuActiveIndex]
   );
 
+  // our custom keydown handler
   const handleKeyDown = useCallback(
     (e) => {
       if (!isOpen) return;
@@ -315,6 +411,7 @@ function MenubarSubmenu({
     }
   }, [isOpen]);
 
+  // add keydown event listener to list when submenu is open
   useEffect(() => {
     const el = listItemRef.current;
     if (!el) return () => {};
@@ -325,6 +422,7 @@ function MenubarSubmenu({
     };
   }, [isOpen, keyHandlers]);
 
+  // focus the active item when submenu is open
   useEffect(() => {
     if (isOpen && submenuItems.size > 0) {
       const items = Array.from(submenuItems);

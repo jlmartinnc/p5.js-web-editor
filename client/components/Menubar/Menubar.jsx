@@ -10,16 +10,42 @@ import useModalClose from '../../common/useModalClose';
 import { MenuOpenContext, MenubarContext } from './contexts';
 import usePrevious from '../../common/usePrevious';
 
+/**
+ * @component
+ * @param {object} props
+ * @param {React.ReactNode} props.children - Menu items that will be rendered in the menubar
+ * @param {string} [props.className='nav__menubar'] - CSS class name to apply to the menubar
+ * @returns {JSX.Element}
+ */
+
+/**
+ * Menubar manages a collection of menu items and their submenus. It provides keyboard navigation,
+ * focus and state management, and other accessibility features for the menu items and submenus.
+ *
+ * @example
+ * <Menubar>
+ *  <MenubarSubmenu id="file" title="File">
+ *  ... menu items
+ *  </MenubarSubmenu>
+ * </Menubar>
+ */
+
 function Menubar({ children, className }) {
+  // core state for menu management
   const [menuOpen, setMenuOpen] = useState('none');
   const [activeIndex, setActiveIndex] = useState(0);
+  const prevIndex = usePrevious(activeIndex);
   const [hasFocus, setHasFocus] = useState(false);
   const [isFirstChild, setIsFirstChild] = useState(false);
+
+  // refs for menu items and their ids
   const menuItems = useRef(new Set()).current;
   const menuItemToId = useRef(new Map()).current;
-  const prevIndex = usePrevious(activeIndex);
+
+  // ref for hiding submenus
   const timerRef = useRef(null);
 
+  // get the id of a menu item by its index
   const getMenuId = useCallback(
     (index) => {
       const items = Array.from(menuItems);
@@ -29,6 +55,9 @@ function Menubar({ children, className }) {
     [menuItems, menuItemToId, activeIndex]
   );
 
+  /**
+   * navigation functions
+   */
   const prev = useCallback(() => {
     const newIndex = (activeIndex - 1 + menuItems.size) % menuItems.size;
     setActiveIndex(newIndex);
@@ -57,6 +86,8 @@ function Menubar({ children, className }) {
     setActiveIndex(menuItems.size - 1);
   }, []);
 
+  // closes the menu and returns focus to the active menu item
+  // is called on Escape key press
   const close = useCallback(() => {
     if (menuOpen === 'none') return;
 
@@ -66,13 +97,27 @@ function Menubar({ children, className }) {
     activeNode.focus();
   }, [activeIndex, menuItems, menuOpen]);
 
+  // toggle the open state of a submenu
+  const toggleMenuOpen = useCallback((id) => {
+    setMenuOpen((prevState) => (prevState === id ? 'none' : id));
+  });
+
+  /**
+   * Register top level menu items. Stores both the DOM node and the id of the submenu.
+   * Access to the DOM node is needed for focus management and tabindex control,
+   * while the id is needed to toggle the submenu open and closed.
+   *
+   * @param {React.RefObject} ref - a ref to the DOM node of the menu item
+   * @param {string} submenuId - the id of the submenu that the menu item opens
+   *
+   */
   const registerTopLevelItem = useCallback(
     (ref, submenuId) => {
       const menuItemNode = ref.current;
 
       if (menuItemNode) {
         menuItems.add(menuItemNode);
-        menuItemToId.set(menuItemNode, submenuId);
+        menuItemToId.set(menuItemNode, submenuId); // store the id of the submenu
       }
 
       return () => {
@@ -83,10 +128,9 @@ function Menubar({ children, className }) {
     [menuItems, menuItemToId]
   );
 
-  const toggleMenuOpen = useCallback((id) => {
-    setMenuOpen((prevState) => (prevState === id ? 'none' : id));
-  });
-
+  /**
+   * focus and blur management
+   */
   const clearHideTimeout = useCallback(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -116,6 +160,7 @@ function Menubar({ children, className }) {
     }
   }, [nodeRef]);
 
+  // keyboard navigation
   const keyHandlers = useMemo(
     () => ({
       ArrowLeft: (e) => {
@@ -129,7 +174,6 @@ function Menubar({ children, className }) {
         next();
       },
       Escape: (e) => {
-        // close all submenus
         e.preventDefault();
         e.stopPropagation();
         close();
@@ -138,23 +182,26 @@ function Menubar({ children, className }) {
         e.stopPropagation();
         // close
       }
-      // support direct access keys
+      // to do: support direct access keys
     }),
     [menuItems, activeIndex, menuOpen]
   );
 
+  // focus the active menu item and set its tabindex
   useEffect(() => {
     if (activeIndex !== prevIndex) {
       const items = Array.from(menuItems);
       const activeNode = items[activeIndex];
       const prevNode = items[prevIndex];
 
+      // roving tabindex
       prevNode?.setAttribute('tabindex', '-1');
       activeNode?.setAttribute('tabindex', '0');
       activeNode.focus();
     }
   }, [activeIndex, prevIndex, menuItems]);
 
+  // context value for dropdowns and menu items
   const contextValue = useMemo(
     () => ({
       createMenuHandlers: (menu) => ({

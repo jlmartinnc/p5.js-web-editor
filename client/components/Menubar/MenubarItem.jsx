@@ -3,6 +3,43 @@ import React, { useEffect, useContext, useRef, useMemo } from 'react';
 import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
 import ButtonOrLink from '../../common/ButtonOrLink';
 
+/**
+ * @component
+ * @param {object} props
+ * @param {string} [props.className='nav__dropdown-item'] - CSS class name to apply to the list item
+ * @param {string} props.id - The id of the list item
+ * @param {string} [props.role='menuitem'] - The role of the list item
+ * @param {boolean} [props.hideIf=false] - Whether to hide the item
+ * @param {boolean} [props.selected=false] - Whether the item is selected
+ * @returns {JSX.Element}
+ */
+
+/**
+ * MenubarItem wraps a button or link in an accessible list item that
+ * integrates with keyboard navigation and other submenu behaviors.
+ *
+ * @example
+ * ```jsx
+ * // basic MenubarItem with click handler and keyboard shortcut
+ * <MenubarItem id="sketch-run" onClick={() => dispatch(startSketch())}>
+ *   Run
+ *   <span className="nav__keyboard-shortcut">{metaKeyName}+Enter</span>
+ * </MenubarItem>
+ *
+ * // as an option in a listbox
+ * <MenubarItem
+ *   id={key}
+ *   key={key}
+ *   value={key}
+ *   onClick={handleLangSelection}
+ *   role="option"
+ *   selected={key === language}
+ * >
+ *   {languageKeyToLabel(key)}
+ * </MenubarItem>
+ * ```
+ */
+
 function MenubarItem({
   className,
   id,
@@ -16,6 +53,7 @@ function MenubarItem({
     return null;
   }
 
+  // core context and state management
   const { createMenuItemHandlers, hasFocus } = useContext(MenubarContext);
   const {
     setSubmenuActiveIndex,
@@ -24,16 +62,21 @@ function MenubarItem({
     isFirstChild
   } = useContext(SubmenuContext);
   const parent = useContext(ParentMenuContext);
+
+  // ref for the list item
   const menuItemRef = useRef(null);
 
+  // handlers from parent menu
   const handlers = useMemo(() => createMenuItemHandlers(parent), [
     createMenuItemHandlers,
     parent
   ]);
 
+  // role and aria-selected
   const role = customRole || 'menuitem';
   const ariaSelected = role === 'option' ? { 'aria-selected': selected } : {};
 
+  // focus submenu item on mouse enter
   const handleMouseEnter = () => {
     if (hasFocus) {
       const items = Array.from(submenuItems);
@@ -44,6 +87,7 @@ function MenubarItem({
     }
   };
 
+  // register with parent submenu for keyboard navigation
   useEffect(() => {
     const unregister = registerSubmenuItem(menuItemRef);
     return unregister;
