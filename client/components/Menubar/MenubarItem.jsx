@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useContext, useRef, useMemo } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
 import ButtonOrLink from '../../common/ButtonOrLink';
 
