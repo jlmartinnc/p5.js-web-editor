@@ -36,7 +36,6 @@ function Menubar({ children, className }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const prevIndex = usePrevious(activeIndex);
   const [hasFocus, setHasFocus] = useState(false);
-  const [isFirstChild, setIsFirstChild] = useState(false);
 
   // refs for menu items and their ids
   const menuItems = useRef(new Set()).current;
@@ -161,31 +160,38 @@ function Menubar({ children, className }) {
   }, [nodeRef]);
 
   // keyboard navigation
-  const keyHandlers = useMemo(
-    () => ({
-      ArrowLeft: (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        prev();
-      },
-      ArrowRight: (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        next();
-      },
-      Escape: (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        close();
-      },
-      Tab: (e) => {
-        e.stopPropagation();
-        // close
-      }
-      // to do: support direct access keys
-    }),
-    [menuItems, activeIndex, menuOpen]
-  );
+  const keyHandlers = {
+    ArrowLeft: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      prev();
+    },
+    ArrowRight: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      next();
+    },
+    Escape: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      close();
+    },
+    Tab: (e) => {
+      e.stopPropagation();
+      // close
+    },
+    Home: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      first();
+    },
+    End: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      last();
+    }
+    // to do: support direct access keys
+  };
 
   // focus the active menu item and set its tabindex
   useEffect(() => {
@@ -242,7 +248,6 @@ function Menubar({ children, className }) {
       registerTopLevelItem,
       setMenuOpen,
       toggleMenuOpen,
-      isFirstChild,
       hasFocus,
       setHasFocus
     }),
@@ -253,7 +258,6 @@ function Menubar({ children, className }) {
       registerTopLevelItem,
       menuOpen,
       toggleMenuOpen,
-      isFirstChild,
       hasFocus,
       setHasFocus,
       clearHideTimeout,

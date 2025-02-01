@@ -89,7 +89,6 @@ describe('Menubar', () => {
     const openMenuItem = screen.getByRole('menuitem', { name: 'Open' });
 
     const editMenuTrigger = screen.getByRole('menuitem', { name: 'Edit' });
-    const tidyMenuItem = screen.getByRole('menuitem', { name: 'Tidy' });
 
     fireEvent.click(fileMenuTrigger);
     expect(fileMenuTrigger).toHaveAttribute('aria-expanded', 'true');

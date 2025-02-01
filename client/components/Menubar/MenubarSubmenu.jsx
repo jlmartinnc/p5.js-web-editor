@@ -40,8 +40,6 @@ export function useMenuProps(id) {
 /**
  * @component
  * @param {Object} props
- * @param {string} props.id - The id of submenu the trigger button controls
- * @param {string} props.title - The title of the trigger button
  * @param {string} [props.role='menuitem'] - The ARIA role of the trigger button
  * @param {string} [props.hasPopup='menu'] - The ARIA property that indicates the presence of a popup
  * @returns {JSX.Element}
@@ -58,8 +56,6 @@ export function useMenuProps(id) {
  * >
  *  <MenubarTrigger
  *    ref={buttonRef}
- *    id={id}
- *    title={title}
  *    role={triggerRole}
  *    hasPopup={hasPopup}
  *    {...handlers}
@@ -70,92 +66,87 @@ export function useMenuProps(id) {
  * </li>
  */
 
-const MenubarTrigger = React.forwardRef(
-  ({ id, role, title, hasPopup, ...props }, ref) => {
-    const { isOpen, handlers } = useMenuProps(id);
-    const {
-      setActiveIndex,
-      menuItems,
-      registerTopLevelItem,
-      hasFocus,
-      toggleMenuOpen
-    } = useContext(MenubarContext);
-    const { first, last } = useContext(SubmenuContext);
+const MenubarTrigger = React.forwardRef(({ role, hasPopup, ...props }, ref) => {
+  const {
+    setActiveIndex,
+    menuItems,
+    registerTopLevelItem,
+    hasFocus
+  } = useContext(MenubarContext);
+  const { id, title, first, last } = useContext(SubmenuContext);
+  const { isOpen, handlers } = useMenuProps(id);
 
-    // update active index when mouse enters the trigger and the menu has focus
-    const handleMouseEnter = () => {
-      if (hasFocus) {
-        const items = Array.from(menuItems);
-        const index = items.findIndex((item) => item === ref.current);
+  // update active index when mouse enters the trigger and the menu has focus
+  const handleMouseEnter = () => {
+    if (hasFocus) {
+      const items = Array.from(menuItems);
+      const index = items.findIndex((item) => item === ref.current);
 
-        if (index !== -1) {
-          setActiveIndex(index);
+      if (index !== -1) {
+        setActiveIndex(index);
+      }
+    }
+  };
+
+  // keyboard handlers
+  const handleKeyDown = (e) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        if (!isOpen) {
+          e.preventDefault();
+          e.stopPropagation();
+          first();
         }
-      }
-    };
+        break;
+      case 'ArrowUp':
+        if (!isOpen) {
+          e.preventDefault();
+          e.stopPropagation();
+          last();
+        }
+        break;
+      case 'Enter':
+      case ' ':
+        if (!isOpen) {
+          e.preventDefault();
+          e.stopPropagation();
+          first();
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
-    // keyboard handlers
-    const handleKeyDown = (e) => {
-      switch (e.key) {
-        case 'ArrowDown':
-          if (!isOpen) {
-            e.preventDefault();
-            e.stopPropagation();
-            first();
-          }
-          break;
-        case 'ArrowUp':
-          if (!isOpen) {
-            e.preventDefault();
-            e.stopPropagation();
-            last();
-          }
-          break;
-        case 'Enter':
-        case ' ':
-          if (!isOpen) {
-            e.preventDefault();
-            e.stopPropagation();
-            first();
-          }
-          break;
-        default:
-          break;
-      }
-    };
+  // register trigger with parent menubar
+  useEffect(() => {
+    const unregister = registerTopLevelItem(ref, id);
+    return unregister;
+  }, [menuItems, registerTopLevelItem]);
 
-    // register trigger with parent menubar
-    useEffect(() => {
-      const unregister = registerTopLevelItem(ref, id);
-      return unregister;
-    }, [menuItems, registerTopLevelItem]);
-
-    return (
-      <button
-        {...props}
-        {...handlers}
-        ref={ref}
-        role={role}
-        onMouseEnter={handleMouseEnter}
-        onKeyDown={handleKeyDown}
-        aria-haspopup={hasPopup}
-        aria-expanded={isOpen}
-      >
-        <span className="nav__item-header">{title}</span>
-        <TriangleIcon
-          className="nav__item-header-triangle"
-          focusable="false"
-          aria-hidden="true"
-        />
-      </button>
-    );
-  }
-);
+  return (
+    <button
+      {...props}
+      {...handlers}
+      ref={ref}
+      role={role}
+      onMouseEnter={handleMouseEnter}
+      onKeyDown={handleKeyDown}
+      aria-haspopup={hasPopup}
+      aria-expanded={isOpen}
+    >
+      <span className="nav__item-header">{title}</span>
+      <TriangleIcon
+        className="nav__item-header-triangle"
+        focusable="false"
+        aria-hidden="true"
+      />
+    </button>
+  );
+});
 
 MenubarTrigger.propTypes = {
-  id: PropTypes.string.isRequired,
   role: PropTypes.string,
-  title: PropTypes.node.isRequired,
   hasPopup: PropTypes.oneOf(['menu', 'listbox', 'true'])
 };
 
@@ -172,9 +163,7 @@ MenubarTrigger.defaultProps = {
  * @component
  * @param {Object} props
  * @param {React.ReactNode} props.children - MenubarItems that should be rendered in the list
- * @param {string} props.id - The unique id of the submenu
  * @param {string} [props.role='menu'] - The ARIA role of the list element
- * @param {string} props.title - The title of the list element
  * @returns {JSX.Element}
  */
 
@@ -182,12 +171,14 @@ MenubarTrigger.defaultProps = {
  * MenubarList renders the container for menu items in a submenu. It provides context and handles ARIA roles.
  *
  * @example
- * <MenubarList id={id} role={listRole}>
+ * <MenubarList role={listRole}>
  *  ... <MenubarItem> elements
  * </MenubarList>
  */
 
-function MenubarList({ children, id, role, title, ...props }) {
+function MenubarList({ children, role, ...props }) {
+  const { id, title } = useContext(SubmenuContext);
+
   return (
     <ul
       className="nav__dropdown"
@@ -204,7 +195,6 @@ function MenubarList({ children, id, role, title, ...props }) {
 
 MenubarList.propTypes = {
   children: PropTypes.node,
-  id: PropTypes.string.isRequired,
   role: PropTypes.oneOf(['menu', 'listbox']),
   title: PropTypes.string.isRequired
 };
@@ -237,7 +227,7 @@ MenubarList.defaultProps = {
  * @example
  * <Menubar>
  *  <MenubarSubmenu id="file" title="File">
- *    <MenubarItem id="file-new" onClick={handleNew}>New </MenubarItem>
+ *    <MenubarItem id="file-new" onClick={handleNew}>New</MenubarItem>
  *    <MenubarItem id="file-save" onClick={handleSave}>Save</MenubarItem>
  *  </MenubarSubmenu>
  * </Menubar>
@@ -254,8 +244,7 @@ function MenubarSubmenu({
   // core state for submenu management
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
-  const [isFirstChild, setIsFirstChild] = useState(false);
-  const { menuOpen, setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
+  const { setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
   const submenuItems = useRef(new Set()).current;
 
   // refs for the button and list elements
@@ -337,10 +326,6 @@ function MenubarSubmenu({
       const submenuItemNode = ref.current;
 
       if (submenuItemNode) {
-        if (submenuItems.size === 0) {
-          setIsFirstChild(true);
-        }
-
         submenuItems.add(submenuItemNode);
       }
 
@@ -351,51 +336,48 @@ function MenubarSubmenu({
     [submenuItems]
   );
 
-  // memoized key handlers for submenu navigation
-  const keyHandlers = useMemo(
-    () => ({
-      ArrowUp: (e) => {
-        if (!isOpen) return;
-        e.preventDefault();
-        e.stopPropagation();
-        prev();
-      },
-      ArrowDown: (e) => {
-        if (!isOpen) return;
-        e.preventDefault();
-        e.stopPropagation();
-        next();
-      },
-      Enter: (e) => {
-        if (!isOpen) return;
-        e.preventDefault();
-        e.stopPropagation();
-        activate();
-      },
-      ' ': (e) => {
-        // same as Enter
-        if (!isOpen) return;
-        e.preventDefault();
-        e.stopPropagation();
-        activate();
-      },
-      Escape: (e) => {
-        if (!isOpen) return;
-        e.preventDefault();
-        e.stopPropagation();
-        close();
-      },
-      Tab: (e) => {
-        // close
-        if (!isOpen) return;
-        // e.preventDefault();
-        e.stopPropagation();
-        setMenuOpen('none');
-      }
-      // support direct access keys
-    }),
-    [isOpen, submenuItems, submenuActiveIndex]
-  );
+  // key handlers for submenu navigation
+  const keyHandlers = {
+    ArrowUp: (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      e.stopPropagation();
+      prev();
+    },
+    ArrowDown: (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      e.stopPropagation();
+      next();
+    },
+    Enter: (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      e.stopPropagation();
+      activate();
+    },
+    ' ': (e) => {
+      // same as Enter
+      if (!isOpen) return;
+      e.preventDefault();
+      e.stopPropagation();
+      activate();
+    },
+    Escape: (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      e.stopPropagation();
+      close();
+    },
+    Tab: (e) => {
+      // close
+      if (!isOpen) return;
+      // e.preventDefault();
+      e.stopPropagation();
+      setMenuOpen('none');
+    }
+    // support direct access keys
+  };
 
   // our custom keydown handler
   const handleKeyDown = useCallback(
@@ -448,20 +430,22 @@ function MenubarSubmenu({
 
   const submenuContext = useMemo(
     () => ({
+      id,
+      title,
       submenuItems,
       submenuActiveIndex,
       setSubmenuActiveIndex,
       registerSubmenuItem,
-      isFirstChild,
       first,
       last
     }),
     [
+      id,
+      title,
       submenuItems,
       submenuActiveIndex,
       setSubmenuActiveIndex,
       registerSubmenuItem,
-      isFirstChild,
       first,
       last
     ]
@@ -475,17 +459,13 @@ function MenubarSubmenu({
       >
         <MenubarTrigger
           ref={buttonRef}
-          id={id}
-          title={title}
           role={triggerRole}
           hasPopup={hasPopup}
           {...handlers}
           {...props}
           tabIndex={-1}
         />
-        <MenubarList id={id} role={listRole} title={title}>
-          {children}
-        </MenubarList>
+        <MenubarList role={listRole}>{children}</MenubarList>
       </li>
     </SubmenuContext.Provider>
   );

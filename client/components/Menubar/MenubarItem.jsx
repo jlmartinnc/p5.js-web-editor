@@ -58,8 +58,7 @@ function MenubarItem({
   const {
     setSubmenuActiveIndex,
     submenuItems,
-    registerSubmenuItem,
-    isFirstChild
+    registerSubmenuItem
   } = useContext(SubmenuContext);
   const parent = useContext(ParentMenuContext);
 
@@ -67,10 +66,7 @@ function MenubarItem({
   const menuItemRef = useRef(null);
 
   // handlers from parent menu
-  const handlers = useMemo(() => createMenuItemHandlers(parent), [
-    createMenuItemHandlers,
-    parent
-  ]);
+  const handlers = createMenuItemHandlers(parent);
 
   // role and aria-selected
   const role = customRole || 'menuitem';
@@ -100,7 +96,7 @@ function MenubarItem({
         {...handlers}
         {...ariaSelected}
         role={role}
-        tabIndex={isFirstChild ? 0 : -1}
+        tabIndex={-1}
         id={id}
       />
     </li>
