@@ -109,7 +109,7 @@ function MenubarItem({
 
 MenubarItem.propTypes = {
   ...ButtonOrLink.propTypes,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   onClick: PropTypes.func,
   value: PropTypes.string,
   /**
@@ -127,6 +127,7 @@ MenubarItem.defaultProps = {
   hideIf: false,
   className: 'nav__dropdown-item',
   role: 'menuitem',
+  id: undefined,
   selected: false
 };
 
