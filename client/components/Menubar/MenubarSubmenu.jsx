@@ -195,8 +195,7 @@ function MenubarList({ children, role, ...props }) {
 
 MenubarList.propTypes = {
   children: PropTypes.node,
-  role: PropTypes.oneOf(['menu', 'listbox']),
-  title: PropTypes.string.isRequired
+  role: PropTypes.oneOf(['menu', 'listbox'])
 };
 
 MenubarList.defaultProps = {
