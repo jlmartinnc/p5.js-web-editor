@@ -259,7 +259,7 @@ class Editor extends React.Component {
       }
     } else if (this.getContent().content !== this.props.file.content) {
       // TODO: make this not break regular edits!
-      this._cm.setValue(this.props.file.content);
+      // this._cm.setValue(this.props.file.content);
     }
     if (this.props.fontSize !== prevProps.fontSize) {
       this._cm.getWrapperElement().style[

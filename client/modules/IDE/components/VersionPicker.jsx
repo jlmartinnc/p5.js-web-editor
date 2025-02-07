@@ -8,6 +8,7 @@ import { updateFileContent } from '../actions/files';
 
 const VersionPicker = () => {
   const { indexID, versionInfo } = useP5Version();
+  console.log(versionInfo);
   const dispatch = useDispatch();
   const dispatchReplaceVersion = useCallback(
     (version) => {
@@ -22,7 +23,7 @@ const VersionPicker = () => {
   }
 
   return (
-    <DropdownMenu anchor={<span>Version</span>} align="left">
+    <DropdownMenu anchor={<span>{versionInfo.version}</span>} align="left">
       {p5Versions.map((version) => (
         <MenuItem key={version} onClick={() => dispatchReplaceVersion(version)}>
           {version}
