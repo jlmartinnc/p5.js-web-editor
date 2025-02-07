@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 export const p5Versions = [
   '1.11.3',
   '2.0.0-beta.2',
-  '1.11.3',
   '1.11.2',
   '1.11.1',
   '1.11.0',
@@ -135,12 +134,14 @@ export const p5Versions = [
 
 export function useP5Version() {
   const files = useSelector((state) => state.files);
-  const indexSrc = files.find(
+  const indexFile = files.find(
     (file) =>
       file.fileType === 'file' &&
       file.name === 'index.html' &&
       file.filePath === ''
-  )?.content;
+  );
+  const indexSrc = indexFile?.content;
+  const indexID = indexFile?.id;
 
   // { version: string, minified: boolean, replaceVersion: (version: string) => string } | null
   const versionInfo = useMemo(() => {
@@ -180,5 +181,5 @@ export function useP5Version() {
     return null;
   }, [indexSrc]);
 
-  return versionInfo;
+  return { indexID, versionInfo };
 }

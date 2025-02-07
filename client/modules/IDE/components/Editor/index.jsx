@@ -257,6 +257,9 @@ class Editor extends React.Component {
       if (!prevProps.unsavedChanges) {
         setTimeout(() => this.props.setUnsavedChanges(false), 400);
       }
+    } else if (this.getContent().content !== this.props.file.content) {
+      // TODO: make this not break regular edits!
+      this._cm.setValue(this.props.file.content);
     }
     if (this.props.fontSize !== prevProps.fontSize) {
       this._cm.getWrapperElement().style[
