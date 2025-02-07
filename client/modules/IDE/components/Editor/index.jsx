@@ -210,9 +210,9 @@ class Editor extends React.Component {
         this.showHint(_cm);
       }
       if (e.key === 'Escape') {
-        console.log(this._cm);
         e.preventDefault();
         const selections = this._cm.listSelections();
+
         if (selections.length > 1) {
           const firstPos = selections[0].head || selections[0].anchor;
           this._cm.setSelection(firstPos);
