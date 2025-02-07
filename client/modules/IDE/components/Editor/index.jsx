@@ -211,7 +211,15 @@ class Editor extends React.Component {
       }
       if (e.key === 'Escape') {
         e.preventDefault();
-        this._cm.getInputField().blur();
+        const selections = this._cm.listSelections();
+
+        if (selections.length > 1) {
+          const firstPos = selections[0].head || selections[0].anchor;
+          this._cm.setSelection(firstPos);
+          this._cm.scrollIntoView(firstPos);
+        } else {
+          this._cm.getInputField().blur();
+        }
       }
     });
 
