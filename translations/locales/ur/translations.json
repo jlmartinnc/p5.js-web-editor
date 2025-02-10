@@ -67,7 +67,11 @@
       "UsernameOrEmailARIA": "ای میل یا اسم صارف",
       "Password": "پاس ورڈ",
       "PasswordARIA": "پاس ورڈ",
-      "Submit": "لاگ ان کریں"
+      "Submit": "لاگ ان کریں",
+      "Errors": {
+        "invalidCredentials": "غلط ای میل یا پاس ورڈ۔",
+        "networkError": "نیٹ ورک کی خرابی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔"
+      }
     },
     "LoginView": {
       "Title": "p5.js ویب ایڈیٹر | ",

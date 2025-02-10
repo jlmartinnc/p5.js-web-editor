@@ -67,7 +67,11 @@
     "UsernameOrEmailARIA": "Introduce Correo o Identificación",
     "Password": "Contraseña",
     "PasswordARIA": "Contraseña",
-    "Submit": "Ingresa"
+    "Submit": "Ingresa",
+    "Errors": {
+      "invalidCredentials": "Correo electrónico o contraseña inválidos.",
+      "networkError": "Error de red. Por favor intente de nuevo más tarde."
+    }
   },
   "LoginView": {
     "Title": " Editor Web p5.js  | Ingreso",

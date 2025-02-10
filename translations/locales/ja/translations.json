@@ -67,7 +67,11 @@
       "UsernameOrEmailARIA": "メールアドレスもしくはユーザー名",
       "Password": "パスワード",
       "PasswordARIA": "パスワード",
-      "Submit": "ログイン"
+      "Submit": "ログイン",
+      "Errors": {
+        "invalidCredentials": "無効なメールアドレスまたはパスワード。",
+        "networkError": "ネットワークエラー。後でもう一度お試しください。"
+      }
     },
     "LoginView": {
       "Title": "p5.js ウェブエディタ | ログイン",

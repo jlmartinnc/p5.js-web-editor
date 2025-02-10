@@ -53,7 +53,11 @@
     "UsernameOrEmailARIA": "이메일 또는 아이디",
     "Password": "비밀번호",
     "PasswordARIA": "비밀번호",
-    "Submit": "로그인"
+    "Submit": "로그인",
+    "Errors": {
+      "invalidCredentials": "유효하지 않은 이메일 또는 비밀번호입니다.",
+      "networkError": "네트워크 오류입니다. 나중에 다시 시도해주세요."
+    }
   },
   "LoginView": {
     "Title": "p5.js 웹에디터 | 로그인",

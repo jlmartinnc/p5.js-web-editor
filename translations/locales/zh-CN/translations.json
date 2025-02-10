@@ -67,7 +67,11 @@
     "UsernameOrEmailARIA": "邮箱或用户名",
     "Password": "密码",
     "PasswordARIA": "密码",
-    "Submit": "登陆"
+    "Submit": "登陆",
+    "Errors": {
+      "invalidCredentials": "电子邮件或密码无效。",
+      "networkError": "网络错误，请稍后再试。"
+    }
   },
   "LoginView": {
     "Title": "p5.js 在线编辑器 ｜ 登陆",

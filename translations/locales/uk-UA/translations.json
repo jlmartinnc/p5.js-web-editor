@@ -67,7 +67,11 @@
     "UsernameOrEmailARIA": "Електронна пошта або ім'я користувача",
     "Password": "Пароль",
     "PasswordARIA": "Пароль",
-    "Submit": "Увійти"
+    "Submit": "Увійти",
+    "Errors": {
+      "invalidCredentials": "Неправильна електронна адреса або пароль.",
+      "networkError": "Помилка мережі. Будь ласка, спробуйте пізніше."
+    }
   },
   "LoginView": {
     "Title": "p5.js веб-редактор | Вхід",
