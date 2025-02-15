@@ -91,6 +91,7 @@ export default function SideBar() {
             <ul className="sidebar__project-options">
               <li>
                 <button
+                  onMouseDown={(e) => e.preventDefault()} // prevents triggering the blur event before onClick
                   aria-label={t('Sidebar.AddFolderARIA')}
                   onClick={() => {
                     dispatch(newFolder(rootFile.id));
@@ -103,6 +104,7 @@ export default function SideBar() {
               </li>
               <li>
                 <button
+                  onMouseDown={(e) => e.preventDefault()} // prevents triggering the blur event before onClick
                   aria-label={t('Sidebar.AddFileARIA')}
                   onClick={() => {
                     dispatch(newFile(rootFile.id));
