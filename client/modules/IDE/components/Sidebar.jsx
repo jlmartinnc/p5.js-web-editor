@@ -118,6 +118,7 @@ export default function SideBar() {
               {isAuthenticated && (
                 <li>
                   <button
+                    onMouseDown={(e) => e.preventDefault()} // prevents triggering the blur event before onClick
                     aria-label={t('Sidebar.UploadFileARIA')}
                     onClick={() => {
                       dispatch(openUploadFileModal(rootFile.id));
