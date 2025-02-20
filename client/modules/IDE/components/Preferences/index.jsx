@@ -474,10 +474,8 @@ export default function Preferences() {
             <h4 className="preference__title">
               {t('Preferences.LibraryVersion')}
             </h4>
-            <div className="preference__options">
+            <div>
               <VersionPicker />
-            </div>
-            <div className="preference__subtitle">
               {versionInfo ? (
                 <p className="preference__paragraph">
                   {t('Preferences.LibraryVersionInfo')}
@@ -498,15 +496,122 @@ export default function Preferences() {
               )}
             </div>
           </div>
-          {versionInfo ? (
+          {versionInfo && (
             <>
-              <p>Test</p>
-              <p>Test</p>
-            </>
-          ) : (
-            <>
-              <p>Test</p>
-              <p>Test</p>
+              <div className="preference">
+                <h4 className="preference__title">
+                  {t('Preferences.SoundAddon')}
+                </h4>
+                <div className="preference__options">
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(true))}
+                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    name="soundaddon"
+                    id="soundaddon-on"
+                    className="preference__radio-button"
+                    value="On"
+                    checked={autosave}
+                  />
+                  <label htmlFor="soundaddon-on" className="preference__option">
+                    {t('Preferences.On')}
+                  </label>
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(false))}
+                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    name="soundaddon"
+                    id="soundaddon-off"
+                    className="preference__radio-button"
+                    value="Off"
+                    checked={!autosave}
+                  />
+                  <label
+                    htmlFor="soundaddon-off"
+                    className="preference__option"
+                  >
+                    {t('Preferences.Off')}
+                  </label>
+                </div>
+              </div>
+              <div className="preference">
+                <h4 className="preference__title">
+                  {t('Preferences.PreloadAddon')}
+                </h4>
+                <div className="preference__options">
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(true))}
+                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    name="preloadaddon"
+                    id="preloadaddon-on"
+                    className="preference__radio-button"
+                    value="On"
+                    checked={autosave}
+                  />
+                  <label
+                    htmlFor="preloadaddon-on"
+                    className="preference__option"
+                  >
+                    {t('Preferences.On')}
+                  </label>
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(false))}
+                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    name="preloadaddon"
+                    id="preloadaddon-off"
+                    className="preference__radio-button"
+                    value="Off"
+                    checked={!autosave}
+                  />
+                  <label
+                    htmlFor="preloadaddon-off"
+                    className="preference__option"
+                  >
+                    {t('Preferences.Off')}
+                  </label>
+                </div>
+              </div>
+              <div className="preference">
+                <h4 className="preference__title">
+                  {t('Preferences.ShapesAddon')}
+                </h4>
+                <div className="preference__options">
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(true))}
+                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    name="shapesaddon"
+                    id="shapesaddon-on"
+                    className="preference__radio-button"
+                    value="On"
+                    checked={autosave}
+                  />
+                  <label
+                    htmlFor="shapesaddon-on"
+                    className="preference__option"
+                  >
+                    {t('Preferences.On')}
+                  </label>
+                  <input
+                    type="radio"
+                    onChange={() => dispatch(setAutosave(false))}
+                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    name="shapesaddon"
+                    id="shapesaddon-off"
+                    className="preference__radio-button"
+                    value="Off"
+                    checked={!autosave}
+                  />
+                  <label
+                    htmlFor="shapesaddon-off"
+                    className="preference__option"
+                  >
+                    {t('Preferences.Off')}
+                  </label>
+                </div>
+              </div>
             </>
           )}
         </TabPanel>
