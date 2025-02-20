@@ -8,7 +8,6 @@ import { updateFileContent } from '../actions/files';
 
 const VersionPicker = () => {
   const { indexID, versionInfo } = useP5Version();
-  console.log(versionInfo);
   const dispatch = useDispatch();
   const dispatchReplaceVersion = useCallback(
     (version) => {
@@ -33,6 +32,6 @@ const VersionPicker = () => {
   );
 };
 
-VersionPicker.popTypes = {};
+VersionPicker.propTypes = {};
 
 export default VersionPicker;

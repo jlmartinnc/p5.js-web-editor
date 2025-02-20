@@ -16,7 +16,8 @@ import {
   setLintWarning,
   setAutocloseBracketsQuotes,
   setAutocompleteHinter,
-  setLinewrap
+  setLinewrap,
+  setPreferencesTab
 } from '../../actions/preferences';
 
 export default function Preferences() {
@@ -25,6 +26,7 @@ export default function Preferences() {
   const dispatch = useDispatch();
 
   const {
+    tabIndex,
     fontSize,
     autosave,
     linewrap,
@@ -78,6 +80,10 @@ export default function Preferences() {
     handleFontSize(newValue);
   }
 
+  function changeTab(index) {
+    dispatch(setPreferencesTab(index));
+  }
+
   const fontSizeInputRef = useRef(null);
 
   return (
@@ -85,7 +91,7 @@ export default function Preferences() {
       <Helmet>
         <title>p5.js Web Editor | Preferences</title>
       </Helmet>
-      <Tabs>
+      <Tabs selectedIndex={tabIndex} onSelect={changeTab}>
         <TabList>
           <div className="tabs__titles">
             <Tab>
@@ -95,6 +101,11 @@ export default function Preferences() {
             </Tab>
             <Tab>
               <h4 className="tabs__title">{t('Preferences.Accessibility')}</h4>
+            </Tab>
+            <Tab>
+              <h4 className="tabs__title">
+                {t('Preferences.LibraryManagement')}
+              </h4>
             </Tab>
           </div>
         </TabList>
@@ -455,6 +466,7 @@ export default function Preferences() {
             </div>
           </div>
         </TabPanel>
+        <TabPanel>TODO</TabPanel>
       </Tabs>
     </section>
   );

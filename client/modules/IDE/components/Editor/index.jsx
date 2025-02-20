@@ -72,6 +72,7 @@ import UnsavedChangesIndicator from '../UnsavedChangesIndicator';
 import { EditorContainer, EditorHolder } from './MobileEditor';
 import { FolderIcon } from '../../../../common/icons';
 import IconButton from '../../../../common/IconButton';
+import VersionIndicator from '../VersionIndicator';
 
 emmet(CodeMirror);
 
@@ -564,6 +565,9 @@ class Editor extends React.Component {
                     <UnsavedChangesIndicator />
                   </span>
                   <Timer />
+                </div>
+                <div className="editor__library-version">
+                  <VersionIndicator />
                 </div>
               </div>
               <article

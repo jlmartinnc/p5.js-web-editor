@@ -153,7 +153,9 @@
     "StopSketchARIA": "Stop sketch",
     "EditSketchARIA": "Edit sketch name",
     "NewSketchNameARIA": "New sketch name",
-    "By": " by "
+    "By": " by ",
+    "LibraryVersion": "p5.js Version:",
+    "CustomLibraryVersion": "Custom"
   },
   "Console": {
     "Title": "Console",
@@ -168,6 +170,7 @@
     "Settings": "Settings",
     "GeneralSettings": "General settings",
     "Accessibility": "Accessibility",
+    "LibraryManagement": "Library Management",
     "Theme": "Theme",
     "LightTheme": "Light",
     "LightThemeARIA": "light theme on",
