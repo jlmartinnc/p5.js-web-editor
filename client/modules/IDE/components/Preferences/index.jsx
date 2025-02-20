@@ -19,6 +19,8 @@ import {
   setLinewrap,
   setPreferencesTab
 } from '../../actions/preferences';
+import { useP5Version } from '../../hooks/useP5Version';
+import VersionPicker from '../VersionPicker';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -40,6 +42,7 @@ export default function Preferences() {
   } = useSelector((state) => state.preferences);
 
   const [state, setState] = useState({ fontSize });
+  const { versionInfo } = useP5Version();
 
   function onFontInputChange(event) {
     const INTEGER_REGEX = /^[0-9\b]+$/;
@@ -466,7 +469,47 @@ export default function Preferences() {
             </div>
           </div>
         </TabPanel>
-        <TabPanel>TODO</TabPanel>
+        <TabPanel>
+          <div className="preference">
+            <h4 className="preference__title">
+              {t('Preferences.LibraryVersion')}
+            </h4>
+            <div className="preference__options">
+              <VersionPicker />
+            </div>
+            <div className="preference__subtitle">
+              {versionInfo ? (
+                <p className="preference__paragraph">
+                  {t('Preferences.LibraryVersionInfo')}
+                </p>
+              ) : (
+                <>
+                  <p className="preference__paragraph">
+                    {t('Preferences.CustomVersionInfo')}
+                  </p>
+                  <p className="preference__paragraph">
+                    {t('Preferences.CustomVersionReset')}
+                  </p>
+                  <textarea className="preference__textarea">
+                    {'<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>\n' +
+                      '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>'}
+                  </textarea>
+                </>
+              )}
+            </div>
+          </div>
+          {versionInfo ? (
+            <>
+              <p>Test</p>
+              <p>Test</p>
+            </>
+          ) : (
+            <>
+              <p>Test</p>
+              <p>Test</p>
+            </>
+          )}
+        </TabPanel>
       </Tabs>
     </section>
   );

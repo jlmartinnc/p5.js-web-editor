@@ -212,7 +212,11 @@
     "PlainText": "Plain-text",
     "TextOutputARIA": "text output on",
     "TableText": "Table-text",
-    "TableOutputARIA": "table output on"
+    "TableOutputARIA": "table output on",
+    "LibraryVersion": "p5.js Version",
+    "LibraryVersionInfo": "TODO Add helpful info about the new p5.js version, compatibility, etc.",
+    "CustomVersionInfo": "It looks like you've changed the <script> tag to manage the version yourself. In that case, the version can't be managed from this tab, only from the code in index.html.",
+    "CustomVersionReset": "If you do want to use the default libraries, you can replace your script tags in index.html to the following:"
   },
   "KeyboardShortcuts": {
     "Title": " Keyboard Shortcuts",

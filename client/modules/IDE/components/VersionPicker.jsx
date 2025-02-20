@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import { useP5Version, p5Versions } from '../hooks/useP5Version';
 import MenuItem from '../../../components/Dropdown/MenuItem';
@@ -8,6 +9,7 @@ import { updateFileContent } from '../actions/files';
 
 const VersionPicker = () => {
   const { indexID, versionInfo } = useP5Version();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const dispatchReplaceVersion = useCallback(
     (version) => {
@@ -18,11 +20,18 @@ const VersionPicker = () => {
   );
 
   if (!versionInfo) {
-    return <p>Custom</p>;
+    return (
+      <button disabled className="versionPicker">
+        {t('Toolbar.CustomLibraryVersion')}
+      </button>
+    );
   }
 
   return (
-    <DropdownMenu anchor={<span>{versionInfo.version}</span>} align="left">
+    <DropdownMenu
+      anchor={<button className="versionPicker">{versionInfo.version}</button>}
+      align="left"
+    >
       {p5Versions.map((version) => (
         <MenuItem key={version} onClick={() => dispatchReplaceVersion(version)}>
           {version}

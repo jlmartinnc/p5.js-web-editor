@@ -67,6 +67,15 @@
   margin-top: 0;
 }
 
+.preference__paragraph {
+  margin-bottom: #{math.div(10, $base-font-size)}rem;
+}
+
+.preference__textarea {
+  width: 100%;
+  min-height: 8em;
+}
+
 .preference__value {
   @include themify() {
     border: #{math.div(1, $base-font-size)}rem solid
