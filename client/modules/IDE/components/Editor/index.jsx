@@ -168,6 +168,7 @@ class Editor extends React.Component {
       },
       Enter: 'emmetInsertLineBreak',
       Esc: 'emmetResetAbbreviation',
+      [`Shift-Tab`]: false,
       [`${metaKey}-Enter`]: () => null,
       [`Shift-${metaKey}-Enter`]: () => null,
       [`${metaKey}-F`]: 'findPersistent',
@@ -208,18 +209,6 @@ class Editor extends React.Component {
       const mode = this._cm.getOption('mode');
       if (/^[a-z]$/i.test(e.key) && (mode === 'css' || mode === 'javascript')) {
         this.showHint(_cm);
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        const selections = this._cm.listSelections();
-
-        if (selections.length > 1) {
-          const firstPos = selections[0].head || selections[0].anchor;
-          this._cm.setSelection(firstPos);
-          this._cm.scrollIntoView(firstPos);
-        } else {
-          this._cm.getInputField().blur();
-        }
       }
     });
 
