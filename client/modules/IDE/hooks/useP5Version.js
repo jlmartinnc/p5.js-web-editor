@@ -193,6 +193,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5SoundURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
+        return dom.documentElement.outerHTML;
       };
 
       const p5PreloadAddonNode = [
@@ -206,6 +207,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5PreloadAddonURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
+        return dom.documentElement.outerHTML;
       };
 
       const p5ShapesAddonNode = [
@@ -219,6 +221,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5ShapesAddonURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
+        return dom.documentElement.outerHTML;
       };
 
       return {
