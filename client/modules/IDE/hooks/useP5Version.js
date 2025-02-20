@@ -132,6 +132,11 @@ export const p5Versions = [
   '0.2.1'
 ];
 
+export const p5SoundURL =
+  'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js';
+export const p5PreloadAddonURL = 'https://TODO/preload.js';
+export const p5ShapesAddonURL = 'https://TODO/shapes.js';
+
 export function useP5Version() {
   const files = useSelector((state) => state.files);
   const indexFile = files.find(
@@ -176,7 +181,57 @@ export function useP5Version() {
         );
         return dom.documentElement.outerHTML;
       };
-      return { version, minified, replaceVersion };
+
+      const p5SoundNode = [
+        ...dom.documentElement.querySelectorAll('script')
+      ].find((s) => s.getAttribute('src') === p5SoundURL);
+      const setP5Sound = function (enabled) {
+        if (!enabled && p5SoundNode) {
+          p5SoundNode.parentNode.removeChild(p5SoundNode);
+        } else if (enabled && !p5SoundNode) {
+          const newNode = document.createElement('script');
+          newNode.setAttribute('src', p5SoundURL);
+          scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
+        }
+      };
+
+      const p5PreloadAddonNode = [
+        ...dom.documentElement.querySelectorAll('script')
+      ].find((s) => s.getAttribute('src') === p5PreloadAddonURL);
+      const setP5PreloadAddon = function (enabled) {
+        if (!enabled && p5PreloadAddonNode) {
+          p5PreloadAddonNode.parentNode.removeChild(p5PreloadAddonNode);
+        } else if (enabled && !p5PreloadAddonNode) {
+          const newNode = document.createElement('script');
+          newNode.setAttribute('src', p5PreloadAddonURL);
+          scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
+        }
+      };
+
+      const p5ShapesAddonNode = [
+        ...dom.documentElement.querySelectorAll('script')
+      ].find((s) => s.getAttribute('src') === p5ShapesAddonURL);
+      const setP5ShapesAddon = function (enabled) {
+        if (!enabled && p5ShapesAddonNode) {
+          p5ShapesAddonNode.parentNode.removeChild(p5ShapesAddonNode);
+        } else if (enabled && !p5ShapesAddonNode) {
+          const newNode = document.createElement('script');
+          newNode.setAttribute('src', p5ShapesAddonURL);
+          scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
+        }
+      };
+
+      return {
+        version,
+        minified,
+        replaceVersion,
+        p5Sound: !!p5SoundNode,
+        setP5Sound,
+        p5PreloadAddon: !!p5PreloadAddonNode,
+        setP5PreloadAddon,
+        p5ShapesAdddon: !!p5ShapesAddonNode,
+        setP5ShapesAddon
+      };
     }
     return null;
   }, [indexSrc]);

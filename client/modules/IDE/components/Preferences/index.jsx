@@ -21,6 +21,7 @@ import {
 } from '../../actions/preferences';
 import { useP5Version } from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
+import { updateFileContent } from '../../actions/files';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ export default function Preferences() {
   } = useSelector((state) => state.preferences);
 
   const [state, setState] = useState({ fontSize });
-  const { versionInfo } = useP5Version();
+  const { versionInfo, indexID } = useP5Version();
 
   function onFontInputChange(event) {
     const INTEGER_REGEX = /^[0-9\b]+$/;
@@ -476,7 +477,7 @@ export default function Preferences() {
             </h4>
             <div>
               <VersionPicker />
-              {versionInfo ? (
+              {versionInfo && indexID ? (
                 <p className="preference__paragraph">
                   {t('Preferences.LibraryVersionInfo')}
                 </p>
@@ -496,7 +497,7 @@ export default function Preferences() {
               )}
             </div>
           </div>
-          {versionInfo && (
+          {versionInfo && indexID && (
             <>
               <div className="preference">
                 <h4 className="preference__title">
@@ -505,26 +506,37 @@ export default function Preferences() {
                 <div className="preference__options">
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(true))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(indexID, versionInfo.setP5Sound(true))
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="soundaddon"
                     id="soundaddon-on"
                     className="preference__radio-button"
                     value="On"
-                    checked={autosave}
+                    checked={versionInfo.p5Sound}
                   />
                   <label htmlFor="soundaddon-on" className="preference__option">
                     {t('Preferences.On')}
                   </label>
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(false))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(
+                          indexID,
+                          versionInfo.setP5Sound(false)
+                        )
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="soundaddon"
                     id="soundaddon-off"
                     className="preference__radio-button"
                     value="Off"
-                    checked={!autosave}
+                    checked={!versionInfo.p5Sound}
                   />
                   <label
                     htmlFor="soundaddon-off"
@@ -541,13 +553,20 @@ export default function Preferences() {
                 <div className="preference__options">
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(true))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(
+                          indexID,
+                          versionInfo.setP5PreloadAddon(true)
+                        )
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="preloadaddon"
                     id="preloadaddon-on"
                     className="preference__radio-button"
                     value="On"
-                    checked={autosave}
+                    checked={versionInfo.p5PreloadAddon}
                   />
                   <label
                     htmlFor="preloadaddon-on"
@@ -557,13 +576,20 @@ export default function Preferences() {
                   </label>
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(false))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(
+                          indexID,
+                          versionInfo.setP5PreloadAddon(false)
+                        )
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="preloadaddon"
                     id="preloadaddon-off"
                     className="preference__radio-button"
                     value="Off"
-                    checked={!autosave}
+                    checked={!versionInfo.p5PreloadAddon}
                   />
                   <label
                     htmlFor="preloadaddon-off"
@@ -580,13 +606,20 @@ export default function Preferences() {
                 <div className="preference__options">
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(true))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(
+                          indexID,
+                          versionInfo.setP5ShapesAddon(true)
+                        )
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="shapesaddon"
                     id="shapesaddon-on"
                     className="preference__radio-button"
                     value="On"
-                    checked={autosave}
+                    checked={versionInfo.p5ShapesAdddon}
                   />
                   <label
                     htmlFor="shapesaddon-on"
@@ -596,13 +629,20 @@ export default function Preferences() {
                   </label>
                   <input
                     type="radio"
-                    onChange={() => dispatch(setAutosave(false))}
+                    onChange={() =>
+                      dispatch(
+                        updateFileContent(
+                          indexID,
+                          versionInfo.setP5ShapesAddon(false)
+                        )
+                      )
+                    }
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="shapesaddon"
                     id="shapesaddon-off"
                     className="preference__radio-button"
                     value="Off"
-                    checked={!autosave}
+                    checked={!versionInfo.p5ShapesAdddon}
                   />
                   <label
                     htmlFor="shapesaddon-off"

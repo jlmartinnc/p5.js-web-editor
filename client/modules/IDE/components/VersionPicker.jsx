@@ -21,15 +21,13 @@ const VersionPicker = () => {
 
   if (!versionInfo) {
     return (
-      <button disabled className="versionPicker">
-        {t('Toolbar.CustomLibraryVersion')}
-      </button>
+      <span className="versionPicker">{t('Toolbar.CustomLibraryVersion')}</span>
     );
   }
 
   return (
     <DropdownMenu
-      anchor={<button className="versionPicker">{versionInfo.version}</button>}
+      anchor={<span className="versionPicker">{versionInfo.version}</span>}
       align="left"
     >
       {p5Versions.map((version) => (
