@@ -118,7 +118,8 @@ userSchema.pre('save', function checkPassword(next) {
 userSchema.pre('save', function checkApiKey(next) {
   const user = this;
   if (!user.isModified('apiKeys')) {
-    return next();
+    next();
+    return;
   }
 
   let hasNew = false;
@@ -129,22 +130,28 @@ userSchema.pre('save', function checkApiKey(next) {
     if (nextCalled) return;
     if (err) {
       nextCalled = true;
-      return next(new Error(err)); // ✅ Pass Error object
+      next(err);
+      return;
     }
-    if (--pendingTasks === 0) {
+    pendingTasks -= 1;
+    if (pendingTasks === 0) {
       nextCalled = true;
-      return next();
+      next();
     }
   };
 
   user.apiKeys.forEach((k) => {
     if (k.isNew) {
       hasNew = true;
-      pendingTasks++;
+      pendingTasks += 1;
       bcrypt.genSalt(10, (err, salt) => {
-        if (err) return done(err);
+        if (err) {
+          done(err);
+        }
         bcrypt.hash(k.hashedKey, salt, (innerErr, hash) => {
-          if (innerErr) return done(innerErr);
+          if (innerErr) {
+            done(innerErr);
+          }
           k.hashedKey = hash;
           done();
         });
@@ -153,7 +160,7 @@ userSchema.pre('save', function checkApiKey(next) {
   });
 
   if (!hasNew) {
-    return next();
+    next();
   }
 });
 
