@@ -38,7 +38,6 @@ async function asyncValidate(fieldToValidate, value) {
   }
 }
 
-// Debounced Validators
 const debouncedAsyncValidate = debounce(asyncValidate, 300);
 
 function validateUsername(username) {
@@ -97,7 +96,9 @@ function SignupForm() {
                     {...input}
                   />
                   {meta.touched && meta.error && (
-                    <span className="form-error" aria-live="polite">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">
+                      {meta.error}
+                    </span>
                   )}
                 </div>
               )}
@@ -119,7 +120,9 @@ function SignupForm() {
                     {...input}
                   />
                   {meta.touched && meta.error && (
-                    <span className="form-error" aria-live="polite">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">
+                      {meta.error}
+                    </span>
                   )}
                 </div>
               )}
@@ -155,7 +158,9 @@ function SignupForm() {
                     </button>
                   </div>
                   {meta.touched && meta.error && (
-                    <span className="form-error" aria-live="polite">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">
+                      {meta.error}
+                    </span>
                   )}
                 </div>
               )}
@@ -190,7 +195,9 @@ function SignupForm() {
                     </button>
                   </div>
                   {meta.touched && meta.error && (
-                    <span className="form-error" aria-live="polite">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">
+                      {meta.error}
+                    </span>
                   )}
                 </div>
               )}
