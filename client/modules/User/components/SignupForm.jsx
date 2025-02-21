@@ -9,7 +9,6 @@ import Button from '../../../common/Button';
 import apiClient from '../../../utils/apiClient';
 import useSyncFormTranslations from '../../../common/useSyncFormTranslations';
 
-// Debounce utility function
 const debounce = (func, delay) => {
   let timer;
   return (...args) =>
@@ -134,6 +133,7 @@ function SignupForm() {
                   <div className="form__field__password">
                     <input
                       className="form__input"
+                      aria-label={t('SignupForm.PasswordARIA')}
                       type={showPassword ? 'text' : 'password'}
                       id="password"
                       autoComplete="new-password"
