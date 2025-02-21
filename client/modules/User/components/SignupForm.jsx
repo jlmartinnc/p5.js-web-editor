@@ -186,6 +186,7 @@ function SignupForm() {
                       className="form__eye__icon"
                       type="button"
                       onClick={handleConfirmVisibility}
+                      aria-hidden="true"
                     >
                       {showConfirmPassword ? (
                         <AiOutlineEyeInvisible />
