@@ -89,6 +89,7 @@ function SignupForm() {
                   </label>
                   <input
                     className="form__input"
+                    aria-label={t('SignupForm.TitleARIA')}
                     type="text"
                     id="username"
                     autoComplete="username"
@@ -96,7 +97,7 @@ function SignupForm() {
                     {...input}
                   />
                   {meta.touched && meta.error && (
-                    <span className="form-error">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">{meta.error}</span>
                   )}
                 </div>
               )}
@@ -111,13 +112,14 @@ function SignupForm() {
                   </label>
                   <input
                     className="form__input"
+                    aria-label={t('SignupForm.EmailARIA')}
                     type="email"
                     id="email"
                     autoComplete="email"
                     {...input}
                   />
                   {meta.touched && meta.error && (
-                    <span className="form-error">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">{meta.error}</span>
                   )}
                 </div>
               )}
@@ -143,6 +145,7 @@ function SignupForm() {
                       className="form__eye__icon"
                       type="button"
                       onClick={handleVisibility}
+                      aria-hidden="true"
                     >
                       {showPassword ? (
                         <AiOutlineEyeInvisible />
@@ -152,7 +155,7 @@ function SignupForm() {
                     </button>
                   </div>
                   {meta.touched && meta.error && (
-                    <span className="form-error">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">{meta.error}</span>
                   )}
                 </div>
               )}
@@ -168,6 +171,7 @@ function SignupForm() {
                   <div className="form__field__password">
                     <input
                       className="form__input"
+                      aria-label={t('SignupForm.ConfirmPasswordARIA')}
                       type={showConfirmPassword ? 'text' : 'password'}
                       id="confirmPassword"
                       autoComplete="new-password"
@@ -186,7 +190,7 @@ function SignupForm() {
                     </button>
                   </div>
                   {meta.touched && meta.error && (
-                    <span className="form-error">{meta.error}</span>
+                    <span className="form-error" aria-live="polite">{meta.error}</span>
                   )}
                 </div>
               )}
