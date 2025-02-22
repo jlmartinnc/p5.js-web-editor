@@ -367,7 +367,7 @@
     "InvalidTokenNull": "Der Link ist ungültig.",
     "Checking": "Überprüfe Token, bitte warten...",
     "Verified": "Geschafft, Deine E-Mailadresse wurde bestätigt.",
-    "InvalidState": "Token ist ungültig oder abgelaufen."
+    "InvalidState": "Etwas ist schief gelaufen."
   },
   "AssetList": {
     "Title": "p5.js Web Editor | Meine Assets",
