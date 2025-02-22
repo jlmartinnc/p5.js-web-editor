@@ -371,7 +371,7 @@
     "InvalidTokenNull": "Bağlantı geçersiz.",
     "Checking": "Bağlantı doğrulanıyor, lütfen bekleyin...",
     "Verified": "E-posta adresiniz doğrulandı.",
-    "InvalidState": "Token geçersiz veya süresi dolmuş."
+    "InvalidState": "Bir şeyler yanlış gitti."
   },
   "AssetList": {
     "Title": "p5.js Web Düzenleyicisi | Benim varlıklarım",
