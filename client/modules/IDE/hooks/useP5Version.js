@@ -161,7 +161,6 @@ export function useP5Version() {
         src = `${doctype}\n${src}`;
       }
 
-      console.log(src);
       return src;
     };
 

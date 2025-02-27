@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -22,6 +22,7 @@ import {
 import { useP5Version } from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
+import { CmControllerContext } from '../../pages/IDEView';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -44,6 +45,7 @@ export default function Preferences() {
 
   const [state, setState] = useState({ fontSize });
   const { versionInfo, indexID } = useP5Version();
+  const cmRef = useContext(CmControllerContext);
 
   function onFontInputChange(event) {
     const INTEGER_REGEX = /^[0-9\b]+$/;
@@ -89,6 +91,11 @@ export default function Preferences() {
   }
 
   const fontSizeInputRef = useRef(null);
+
+  const updateHTML = (src) => {
+    dispatch(updateFileContent(indexID, src));
+    cmRef.current?.updateFileContent(indexID, src);
+  };
 
   return (
     <section className="preferences">
@@ -506,11 +513,7 @@ export default function Preferences() {
                 <div className="preference__options">
                   <input
                     type="radio"
-                    onChange={() =>
-                      dispatch(
-                        updateFileContent(indexID, versionInfo.setP5Sound(true))
-                      )
-                    }
+                    onChange={() => updateHTML(versionInfo.setP5Sound(true))}
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="soundaddon"
                     id="soundaddon-on"
@@ -523,14 +526,7 @@ export default function Preferences() {
                   </label>
                   <input
                     type="radio"
-                    onChange={() =>
-                      dispatch(
-                        updateFileContent(
-                          indexID,
-                          versionInfo.setP5Sound(false)
-                        )
-                      )
-                    }
+                    onChange={() => updateHTML(versionInfo.setP5Sound(false))}
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="soundaddon"
                     id="soundaddon-off"
@@ -554,12 +550,7 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() =>
-                      dispatch(
-                        updateFileContent(
-                          indexID,
-                          versionInfo.setP5PreloadAddon(true)
-                        )
-                      )
+                      updateHTML(versionInfo.setP5PreloadAddon(true))
                     }
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="preloadaddon"
@@ -577,12 +568,7 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() =>
-                      dispatch(
-                        updateFileContent(
-                          indexID,
-                          versionInfo.setP5PreloadAddon(false)
-                        )
-                      )
+                      updateHTML(versionInfo.setP5PreloadAddon(false))
                     }
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="preloadaddon"
@@ -607,12 +593,7 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() =>
-                      dispatch(
-                        updateFileContent(
-                          indexID,
-                          versionInfo.setP5ShapesAddon(true)
-                        )
-                      )
+                      updateHTML(versionInfo.setP5ShapesAddon(true))
                     }
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="shapesaddon"
@@ -630,12 +611,7 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() =>
-                      dispatch(
-                        updateFileContent(
-                          indexID,
-                          versionInfo.setP5ShapesAddon(false)
-                        )
-                      )
+                      updateHTML(versionInfo.setP5ShapesAddon(false))
                     }
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="shapesaddon"

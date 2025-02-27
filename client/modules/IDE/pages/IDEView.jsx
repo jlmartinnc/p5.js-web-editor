@@ -281,7 +281,9 @@ const IDEView = () => {
           </SplitPane>
         </main>
       )}
-      <IDEOverlays />
+      <CmControllerContext.Provider value={cmRef}>
+        <IDEOverlays />
+      </CmControllerContext.Provider>
     </RootPage>
   );
 };

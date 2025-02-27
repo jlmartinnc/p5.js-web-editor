@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -6,17 +6,21 @@ import { useP5Version, p5Versions } from '../hooks/useP5Version';
 import MenuItem from '../../../components/Dropdown/MenuItem';
 import DropdownMenu from '../../../components/Dropdown/DropdownMenu';
 import { updateFileContent } from '../actions/files';
+import { CmControllerContext } from '../pages/IDEView';
 
 const VersionPicker = () => {
   const { indexID, versionInfo } = useP5Version();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const cmRef = useContext(CmControllerContext);
   const dispatchReplaceVersion = useCallback(
     (version) => {
       if (!indexID || !versionInfo) return;
-      dispatch(updateFileContent(indexID, versionInfo.replaceVersion(version)));
+      const src = versionInfo.replaceVersion(version);
+      dispatch(updateFileContent(indexID, src));
+      cmRef.current?.updateFileContent(indexID, src);
     },
-    [indexID, versionInfo]
+    [indexID, versionInfo, cmRef]
   );
 
   if (!versionInfo) {
