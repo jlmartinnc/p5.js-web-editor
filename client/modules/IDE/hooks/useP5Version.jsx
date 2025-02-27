@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 // Generated from https://www.npmjs.com/package/p5?activeTab=versions
 // Run this in the console:
@@ -138,7 +139,9 @@ export const p5SoundURL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${curren
 export const p5PreloadAddonURL = 'https://TODO/preload.js';
 export const p5ShapesAddonURL = 'https://TODO/shapes.js';
 
-export function useP5Version() {
+const P5VersionContext = React.createContext({});
+
+export function P5VersionProvider(props) {
   const files = useSelector((state) => state.files);
   const indexFile = files.find(
     (file) =>
@@ -148,6 +151,8 @@ export function useP5Version() {
   );
   const indexSrc = indexFile?.content;
   const indexID = indexFile?.id;
+
+  const [lastP5SoundURL, setLastP5SoundURL] = useState(undefined);
 
   // { version: string, minified: boolean, replaceVersion: (version: string) => string } | null
   const versionInfo = useMemo(() => {
@@ -261,6 +266,8 @@ export function useP5Version() {
         setP5Sound,
         setP5SoundURL,
         p5SoundURL: p5SoundNode?.getAttribute('src'),
+        lastP5SoundURL,
+        setLastP5SoundURL,
         p5PreloadAddon: !!p5PreloadAddonNode,
         setP5PreloadAddon,
         p5ShapesAdddon: !!p5ShapesAddonNode,
@@ -270,5 +277,19 @@ export function useP5Version() {
     return null;
   }, [indexSrc]);
 
-  return { indexID, versionInfo };
+  const value = { indexID, versionInfo };
+
+  return (
+    <P5VersionContext.Provider value={value}>
+      {props.children}
+    </P5VersionContext.Provider>
+  );
+}
+
+P5VersionProvider.propTypes = {
+  children: PropTypes.element.isRequired
+};
+
+export function useP5Version() {
+  return useContext(P5VersionContext);
 }

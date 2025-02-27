@@ -46,7 +46,6 @@ export default function Preferences() {
 
   const [state, setState] = useState({ fontSize });
   const { versionInfo, indexID } = useP5Version();
-  const [lastP5SoundURL, setLastP5SoundURL] = useState(undefined);
   const cmRef = useContext(CmControllerContext);
 
   function onFontInputChange(event) {
@@ -533,7 +532,7 @@ export default function Preferences() {
                       // default version that one will get via this toggle,
                       // record it so we can give the option to put it back
                       if (versionInfo.p5SoundURL !== p5SoundURL) {
-                        setLastP5SoundURL(versionInfo.p5SoundURL);
+                        versionInfo.setLastP5SoundURL(versionInfo.p5SoundURL);
                       }
                       updateHTML(versionInfo.setP5Sound(false));
                     }}
@@ -550,11 +549,13 @@ export default function Preferences() {
                   >
                     {t('Preferences.Off')}
                   </label>
-                  {lastP5SoundURL && (
+                  {versionInfo.lastP5SoundURL && (
                     <Button
                       onClick={() => {
-                        updateHTML(versionInfo.setP5SoundURL(lastP5SoundURL));
-                        setLastP5SoundURL(undefined);
+                        updateHTML(
+                          versionInfo.setP5SoundURL(versionInfo.lastP5SoundURL)
+                        );
+                        versionInfo.setLastP5SoundURL(undefined);
                       }}
                     >
                       {t('Preferences.UndoSoundVersion')}
