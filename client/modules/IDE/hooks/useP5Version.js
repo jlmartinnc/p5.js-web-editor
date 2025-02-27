@@ -152,6 +152,19 @@ export function useP5Version() {
   const versionInfo = useMemo(() => {
     if (!indexSrc) return null;
     const dom = new DOMParser().parseFromString(indexSrc, 'text/html');
+
+    const serializeResult = () => {
+      let src = dom.documentElement.outerHTML;
+
+      if (dom.doctype) {
+        const doctype = new XMLSerializer().serializeToString(dom.doctype);
+        src = `${doctype}\n${src}`;
+      }
+
+      console.log(src);
+      return src;
+    };
+
     const usedP5Versions = [...dom.documentElement.querySelectorAll('script')]
       .map((scriptNode) => {
         const src = scriptNode.getAttribute('src') || '';
@@ -179,7 +192,7 @@ export function useP5Version() {
           'src',
           `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${newVersion}/${file}`
         );
-        return dom.documentElement.outerHTML;
+        return serializeResult();
       };
 
       const p5SoundNode = [
@@ -193,7 +206,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5SoundURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
-        return dom.documentElement.outerHTML;
+        return serializeResult();
       };
 
       const p5PreloadAddonNode = [
@@ -207,7 +220,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5PreloadAddonURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
-        return dom.documentElement.outerHTML;
+        return serializeResult();
       };
 
       const p5ShapesAddonNode = [
@@ -221,7 +234,7 @@ export function useP5Version() {
           newNode.setAttribute('src', p5ShapesAddonURL);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
-        return dom.documentElement.outerHTML;
+        return serializeResult();
       };
 
       return {
