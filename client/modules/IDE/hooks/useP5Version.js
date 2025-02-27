@@ -132,8 +132,9 @@ export const p5Versions = [
   '0.2.1'
 ];
 
-export const p5SoundURL =
-  'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js';
+export const currentP5Version = p5Versions[0];
+
+export const p5SoundURL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/addons/p5.sound.min.js`;
 export const p5PreloadAddonURL = 'https://TODO/preload.js';
 export const p5ShapesAddonURL = 'https://TODO/shapes.js';
 
@@ -196,13 +197,29 @@ export function useP5Version() {
 
       const p5SoundNode = [
         ...dom.documentElement.querySelectorAll('script')
-      ].find((s) => s.getAttribute('src') === p5SoundURL);
+      ].find((s) =>
+        [
+          /^https?:\/\/cdnjs.cloudflare.com\/ajax\/libs\/p5.js\/(.+)\/addons\/p5\.sound\.min\.js$/,
+          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5@(.+)\/lib\/addons\/p5\.sound\.min\.js$/
+        ].some((regex) => regex.exec(s.getAttribute('src') || ''))
+      );
       const setP5Sound = function (enabled) {
         if (!enabled && p5SoundNode) {
           p5SoundNode.parentNode.removeChild(p5SoundNode);
         } else if (enabled && !p5SoundNode) {
           const newNode = document.createElement('script');
           newNode.setAttribute('src', p5SoundURL);
+          scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
+        }
+        return serializeResult();
+      };
+
+      const setP5SoundURL = function (url) {
+        if (p5SoundNode) {
+          p5SoundNode.setAttribute('src', url);
+        } else {
+          const newNode = document.createElement('script');
+          newNode.setAttribute('src', url);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
         return serializeResult();
@@ -242,6 +259,8 @@ export function useP5Version() {
         replaceVersion,
         p5Sound: !!p5SoundNode,
         setP5Sound,
+        setP5SoundURL,
+        p5SoundURL: p5SoundNode?.getAttribute('src'),
         p5PreloadAddon: !!p5PreloadAddonNode,
         setP5PreloadAddon,
         p5ShapesAdddon: !!p5ShapesAddonNode,

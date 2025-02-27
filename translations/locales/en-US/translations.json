@@ -219,7 +219,8 @@
     "CustomVersionReset": "If you do want to use the default libraries, you can replace your script tags in index.html to the following:",
     "SoundAddon": "p5.sound.js Addon",
     "PreloadAddon": "p5.js 2.0 Addon - Preload",
-    "ShapesAddon": "p5.js 2.0 Addon - Shapes"
+    "ShapesAddon": "p5.js 2.0 Addon - Shapes",
+    "UndoSoundVersion": "Put back previous p5.sound.js version"
   },
   "KeyboardShortcuts": {
     "Title": " Keyboard Shortcuts",

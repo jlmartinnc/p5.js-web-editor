@@ -379,7 +379,6 @@ class Editor extends React.Component {
   updateFileContent(id, src) {
     const file = this._docs[id];
     if (file) {
-      console.log(this._docs[id]);
       this._docs[id] = CodeMirror.Doc(src, this._docs[id].modeOption);
       if (id === this.props.file.id) {
         this._cm.swapDoc(this._docs[id]);

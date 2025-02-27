@@ -19,10 +19,11 @@ import {
   setLinewrap,
   setPreferencesTab
 } from '../../actions/preferences';
-import { useP5Version } from '../../hooks/useP5Version';
+import { p5SoundURL, useP5Version } from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
+import Button from '../../../../common/Button';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ export default function Preferences() {
 
   const [state, setState] = useState({ fontSize });
   const { versionInfo, indexID } = useP5Version();
+  const [lastP5SoundURL, setLastP5SoundURL] = useState(undefined);
   const cmRef = useContext(CmControllerContext);
 
   function onFontInputChange(event) {
@@ -526,7 +528,15 @@ export default function Preferences() {
                   </label>
                   <input
                     type="radio"
-                    onChange={() => updateHTML(versionInfo.setP5Sound(false))}
+                    onChange={() => {
+                      // If the previous p5.sound.js script tag is not the
+                      // default version that one will get via this toggle,
+                      // record it so we can give the option to put it back
+                      if (versionInfo.p5SoundURL !== p5SoundURL) {
+                        setLastP5SoundURL(versionInfo.p5SoundURL);
+                      }
+                      updateHTML(versionInfo.setP5Sound(false));
+                    }}
                     aria-label={t('Preferences.AutosaveOffARIA')}
                     name="soundaddon"
                     id="soundaddon-off"
@@ -540,6 +550,16 @@ export default function Preferences() {
                   >
                     {t('Preferences.Off')}
                   </label>
+                  {lastP5SoundURL && (
+                    <Button
+                      onClick={() => {
+                        updateHTML(versionInfo.setP5SoundURL(lastP5SoundURL));
+                        setLastP5SoundURL(undefined);
+                      }}
+                    >
+                      {t('Preferences.UndoSoundVersion')}
+                    </Button>
+                  )}
                 </div>
               </div>
               <div className="preference">
