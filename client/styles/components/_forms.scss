@@ -110,6 +110,10 @@
   margin-top: #{math.div(15, $base-font-size)}rem;
 }
 
+.form__status:first-child {
+  margin-bottom: #{math.div(10, $base-font-size)}rem; 
+}
+
 .form__status {
   @include themify() {
     color: getThemifyVariable("form-navigation-options-color");
