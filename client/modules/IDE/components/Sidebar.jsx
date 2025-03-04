@@ -34,7 +34,6 @@ export default function SideBar() {
 
   const sidebarOptionsRef = useRef(null);
 
-  /**  Close dropdown when clicking outside */
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -85,7 +84,10 @@ export default function SideBar() {
         />
       )}
       <section className={sidebarClass}>
-        <header className="sidebar__header">
+        <header
+          className="sidebar__header"
+          onContextMenu={toggleProjectOptions}
+        >
           <h3 className="sidebar__title">
             <span>{t('Sidebar.Title')}</span>
           </h3>
