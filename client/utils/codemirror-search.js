@@ -52,7 +52,8 @@ function SearchState() {
   this.caseInsensitive = true;
   this.wholeWord = false;
   this.replaceStarted = false;
-  this.lastFileName = 'sketch.js';
+  this.lastFileName =
+    document.querySelector('.editor__file-name span')?.innerText || null;
 }
 
 function getSearchState(cm) {
