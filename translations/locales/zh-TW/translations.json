@@ -67,11 +67,7 @@
     "UsernameOrEmailARIA": "電子郵件或使用者名稱",
     "Password": "密碼",
     "PasswordARIA": "密碼",
-    "Submit": "登入",
-    "Errors": {
-      "invalidCredentials": "電子郵件或密碼無效。",
-      "networkError": "網絡錯誤，請稍後再試。"
-    }
+    "Submit": "登入"
   },
   "LoginView": {
     "Title": "p5.js 網頁編輯器 | 登入",

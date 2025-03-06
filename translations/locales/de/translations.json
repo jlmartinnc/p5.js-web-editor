@@ -67,12 +67,7 @@
     "UsernameOrEmailARIA": "E-Mail oder Nutzername",
     "Password": "Passwort",
     "PasswordARIA": "Passwort",
-    "Submit": "Einloggen",
-    "Deutsch (German)": {
-    "Errors": {
-      "invalidCredentials": "Ungültige E-Mail oder Passwort.",
-      "networkError": "Netzwerkfehler. Bitte versuchen Sie es später erneut."
-    }
+    "Submit": "Einloggen"
   },
   "LoginView": {
     "Title": "p5.js Web Editor | Anmelden",

@@ -67,11 +67,7 @@
     "UsernameOrEmailARIA": "E-posta veya Kullanıcı Adı",
     "Password": "Parola",
     "PasswordARIA": "Parola",
-    "Submit": "Giriş Yap",
-    "Errors": {
-      "invalidCredentials": "Geçersiz e-posta veya şifre.",
-      "networkError": "Ağ hatası. Lütfen daha sonra tekrar deneyin."
-    }
+    "Submit": "Giriş Yap"
   },
   "LoginView": {
     "Title": "p5.js Web Editör | Giriş",

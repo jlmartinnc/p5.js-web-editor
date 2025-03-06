@@ -67,11 +67,7 @@
     "UsernameOrEmailARIA": "E-post eller användarnamn",
     "Password": "Lösenord",
     "PasswordARIA": "Lösenord",
-    "Submit": "Logga in",
-    "Errors": {
-      "invalidCredentials": "Ogiltig e-postadress eller lösenord.",
-      "networkError": "Nätverksfel. Försök igen senare."
-    }
+    "Submit": "Logga in"
   },
   "LoginView": {
     "Title": "p5.js Webb editor | Logga in",
