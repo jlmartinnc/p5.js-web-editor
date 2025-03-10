@@ -1,7 +1,7 @@
 import { resolvePathToFile } from '../utils/filePath';
+import { resolvePathsForElementsWithAttribute } from '../../shared_file/resolveUtils';
 
 import {
-  MEDIA_FILE_REGEX,
   STRING_REGEX,
   PLAINTEXT_FILE_REGEX,
   EXTERNAL_LINK_REGEX,
@@ -44,17 +44,9 @@ export function injectMediaUrls(filesToInject, allFiles, projectId) {
   });
 }
 
-export function resolvePathsForElementsWithAttribute(attr, sketchDoc, files) {
-  const elements = sketchDoc.querySelectorAll(`[${attr}]`);
-  const elementsArray = Array.prototype.slice.call(elements);
-  elementsArray.forEach((element) => {
-    if (element.getAttribute(attr).match(MEDIA_FILE_REGEX)) {
-      const resolvedFile = resolvePathToFile(element.getAttribute(attr), files);
-      if (resolvedFile && resolvedFile.url) {
-        element.setAttribute(attr, resolvedFile.url);
-      }
-    }
-  });
+// Wrapped the function in a proper call
+export function resolveMediaElements(sketchDoc, files) {
+  resolvePathsForElementsWithAttribute('src', sketchDoc, files);
 }
 
 export function resolveScripts(sketchDoc, files, projectId) {
