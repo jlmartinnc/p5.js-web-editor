@@ -67,7 +67,10 @@
     "UsernameOrEmailARIA": "ইমেইল অথবা ব্যবহারকারীর নাম",
     "Password": "পাসওয়ার্ড",
     "PasswordARIA": "পাসওয়ার্ড",
-    "Submit": "লগ ইন করুন"
+    "Submit": "লগ ইন করুন",
+    "Errors": {
+      "invalidCredentials": "অবৈধ ইমেল বা পাসওয়ার্ড।"
+    }
   },
   "LoginView": {
     "Title": "p5.js ওয়েব এডিটর | লগইন",
