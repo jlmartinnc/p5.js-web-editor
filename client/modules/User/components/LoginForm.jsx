@@ -24,16 +24,6 @@ function LoginForm() {
 
   useSyncFormTranslations(formRef, i18n.language);
 
-  const translateSubmitError = (error) => {
-    const errorMessages = {
-      'Invalid credentials': t('LoginForm.Errors.invalidCredentials'),
-      'Invalid username or password.': t('LoginForm.Errors.invalidCredentials'),
-      'Network error': t('LoginForm.Errors.networkError')
-      // Add more mappings as needed
-    };
-    return errorMessages[error] || error; // Fallback to the original error if no translation is found
-  };
-
   return (
     <Form
       fields={['email', 'password']}
@@ -112,8 +102,7 @@ function LoginForm() {
             </Field>
             {submitError && !modifiedSinceLastSubmit && (
               <span className="form-error">
-                {' '}
-                {translateSubmitError(submitError)}
+                {t('LoginForm.Errors.invalidCredentials')}
               </span>
             )}
             <Button type="submit" disabled={submitting}>

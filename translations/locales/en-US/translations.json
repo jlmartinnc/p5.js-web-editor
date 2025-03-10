@@ -69,8 +69,7 @@
     "PasswordARIA": "Password",
     "Submit": "Log In",
     "Errors": {
-      "invalidCredentials": "Invalid email or password.",
-      "networkError": "Network error. Please try again later."
+      "invalidCredentials": "Invalid email or password."
     }
   },
   "LoginView": {
