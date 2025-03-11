@@ -24,6 +24,7 @@ import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
 import Button from '../../../../common/Button';
+import Stars from '../Stars';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -47,6 +48,18 @@ export default function Preferences() {
   const [state, setState] = useState({ fontSize });
   const { versionInfo, indexID } = useP5Version();
   const cmRef = useContext(CmControllerContext);
+  const [showStars, setShowStars] = useState(null);
+  const timerRef = useRef(null);
+  const pickerRef = useRef(null);
+  const onChangeVersion = (version) => {
+    const shouldShowStars = version.startsWith('2.');
+    const box = pickerRef.current?.getBoundingClientRect();
+    if (shouldShowStars) {
+      setShowStars({ left: box?.left || 0, top: box?.top || 0 });
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setShowStars(null), 3000);
+    }
+  };
 
   function onFontInputChange(event) {
     const INTEGER_REGEX = /^[0-9\b]+$/;
@@ -484,7 +497,11 @@ export default function Preferences() {
               {t('Preferences.LibraryVersion')}
             </h4>
             <div>
-              <VersionPicker />
+              {showStars && <Stars top={showStars.top} left={showStars.left} />}
+              <VersionPicker
+                ref={pickerRef}
+                onChangeVersion={onChangeVersion}
+              />
               {versionInfo && indexID ? (
                 <p className="preference__paragraph">
                   {t('Preferences.LibraryVersionInfo')}

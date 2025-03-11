@@ -20,7 +20,6 @@ import PlayIcon from '../../../../images/play.svg';
 import StopIcon from '../../../../images/stop.svg';
 import PreferencesIcon from '../../../../images/preferences.svg';
 import ProjectName from './ProjectName';
-import VersionPicker from '../VersionPicker';
 
 const Toolbar = (props) => {
   const { isPlaying, infiniteLoop, preferencesIsVisible } = useSelector(
@@ -97,9 +96,6 @@ const Toolbar = (props) => {
         <label htmlFor="autorefresh" className="toolbar__autorefresh-label">
           {t('Toolbar.Auto-refresh')}
         </label>
-      </div>
-      <div className="toolbar__version-picker">
-        <VersionPicker />
       </div>
       <div className="toolbar__project-name-container">
         <ProjectName />
