@@ -41,6 +41,7 @@ const VersionPicker = React.forwardRef(({ onChangeVersion }, ref) => {
         </span>
       }
       align="left"
+      maxHeight="50vh"
     >
       {p5Versions.map((version) => (
         <MenuItem key={version} onClick={() => dispatchReplaceVersion(version)}>
