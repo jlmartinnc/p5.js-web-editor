@@ -204,8 +204,8 @@ export function P5VersionProvider(props) {
         ...dom.documentElement.querySelectorAll('script')
       ].find((s) =>
         [
-          /^https?:\/\/cdnjs.cloudflare.com\/ajax\/libs\/p5.js\/(.+)\/addons\/p5\.sound\.min\.js$/,
-          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5@(.+)\/lib\/addons\/p5\.sound\.min\.js$/
+          /^https?:\/\/cdnjs.cloudflare.com\/ajax\/libs\/p5.js\/(.+)\/addons\/p5\.sound(?:\.min)?\.js$/,
+          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5@(.+)\/lib\/addons\/p5\.sound(?:\.min)?\.js$/
         ].some((regex) => regex.exec(s.getAttribute('src') || ''))
       );
       const setP5Sound = function (enabled) {
