@@ -23,7 +23,6 @@ import { p5SoundURL, useP5Version } from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
-import Button from '../../../../common/Button';
 import Stars from '../Stars';
 
 export default function Preferences() {
@@ -531,7 +530,19 @@ export default function Preferences() {
                 <div className="preference__options">
                   <input
                     type="radio"
-                    onChange={() => updateHTML(versionInfo.setP5Sound(true))}
+                    onChange={() => {
+                      if (versionInfo.lastP5SoundURL) {
+                        // If the sketch previously used a nonstandard p5.sound
+                        // URL, restore that URL
+                        updateHTML(
+                          versionInfo.setP5SoundURL(versionInfo.lastP5SoundURL)
+                        );
+                        versionInfo.setLastP5SoundURL(undefined);
+                      } else {
+                        // Otherwise, turn on the default p5.sound URL
+                        updateHTML(versionInfo.setP5Sound(true));
+                      }
+                    }}
                     aria-label={t('Preferences.AutosaveOnARIA')}
                     name="soundaddon"
                     id="soundaddon-on"
@@ -567,16 +578,9 @@ export default function Preferences() {
                     {t('Preferences.Off')}
                   </label>
                   {versionInfo.lastP5SoundURL && (
-                    <Button
-                      onClick={() => {
-                        updateHTML(
-                          versionInfo.setP5SoundURL(versionInfo.lastP5SoundURL)
-                        );
-                        versionInfo.setLastP5SoundURL(undefined);
-                      }}
-                    >
+                    <span className="preference__warning">
                       {t('Preferences.UndoSoundVersion')}
-                    </Button>
+                    </span>
                   )}
                 </div>
               </div>

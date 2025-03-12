@@ -137,6 +137,13 @@
   }
 }
 
+.preference__warning {
+  @include themify() {
+    font-weight: bold;
+    color: getThemifyVariable("preferences-warning-color");
+  }
+}
+
 .preference__radio-button {
   @extend %hidden-element;
 }
