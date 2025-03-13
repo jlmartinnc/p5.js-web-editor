@@ -17,7 +17,7 @@ import {
 import { getAllScriptOffsets } from '../../utils/consoleUtils';
 import { registerFrame } from '../../utils/dispatcher';
 import { createBlobUrl } from './filesReducer';
-import resolvePathsForElementsWithAttribute from '../../../common_utils/resolveUtils';
+import resolvePathsForElementsWithAttribute from '../../../server/utils/resolveUtils';
 
 let objectUrls = {};
 let objectPaths = {};

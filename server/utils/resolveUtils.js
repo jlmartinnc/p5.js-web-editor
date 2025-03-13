@@ -1,5 +1,5 @@
-import { resolvePathToFile } from '../server/utils/filePath';
-import { MEDIA_FILE_REGEX } from '../server/utils/fileUtils';
+import { resolvePathToFile } from './filePath';
+import { MEDIA_FILE_REGEX } from './fileUtils';
 
 /**
  * Resolves paths for elements with a specific attribute.
