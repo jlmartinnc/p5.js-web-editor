@@ -1,5 +1,5 @@
 import { resolvePathToFile } from '../utils/filePath';
-import { resolvePathsForElementsWithAttribute } from '../../shared_file/resolveUtils';
+import { resolvePathsForElementsWithAttribute } from '../../common_utils/resolveUtils';
 
 import {
   STRING_REGEX,
@@ -44,7 +44,6 @@ export function injectMediaUrls(filesToInject, allFiles, projectId) {
   });
 }
 
-// Wrapped the function in a proper call
 export function resolveMediaElements(sketchDoc, files) {
   resolvePathsForElementsWithAttribute('src', sketchDoc, files);
 }

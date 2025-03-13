@@ -1,6 +1,6 @@
 // resolveUtils.unit.test.jsx
 
-import resolvePathsForElementsWithAttribute from '../../../../../shared_file/resolveUtils';
+import resolvePathsForElementsWithAttribute from '../../../../../common_utils/resolveUtils';
 import { resolvePathToFile } from '../../../../../server/utils/filePath';
 
 // Mock the dependencies

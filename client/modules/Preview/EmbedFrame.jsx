@@ -17,7 +17,7 @@ import {
 import { getAllScriptOffsets } from '../../utils/consoleUtils';
 import { registerFrame } from '../../utils/dispatcher';
 import { createBlobUrl } from './filesReducer';
-import resolvePathsForElementsWithAttribute from '../../../shared_file/resolveUtils';
+import resolvePathsForElementsWithAttribute from '../../../common_utils/resolveUtils';
 
 let objectUrls = {};
 let objectPaths = {};
@@ -205,12 +205,7 @@ function injectLocalFiles(files, htmlFile, options) {
   base.href = `${window.origin}${basePath}${basePath.length > 1 && '/'}`;
   sketchDoc.head.appendChild(base);
 
-  // Resolve paths for elements with the 'src' attribute
-  // This updates the 'src' attribute of elements (e.g., <img>, <script>) to their resolved URLs
   resolvePathsForElementsWithAttribute('src', sketchDoc, resolvedFiles);
-
-  // Resolve paths for elements with the 'href' attribute
-  // This updates the 'href' attribute of elements (e.g., <a>, <link>) to their resolved URLs
   resolvePathsForElementsWithAttribute('href', sketchDoc, resolvedFiles);
   // should also include background, data, poster, but these are used way less often
 
