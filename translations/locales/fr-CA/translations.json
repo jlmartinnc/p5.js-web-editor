@@ -362,7 +362,8 @@
       "Description": "S'inscrire",
       "Or": "Ou",
       "AlreadyHave": "Vous avez déjà un compte?",
-      "Login": "Se connecter"
+      "Login": "Se connecter",
+      "Warning" : "En vous inscrivant, vous acceptez les <0>Conditions d'utilisation</0> et la <1>Politique de confidentialité</1> de l'éditeur p5.js."
     },
     "EmailVerificationView": {
       "Title": "Éditeur web p5.js | Vérification du courriel",
@@ -370,7 +371,7 @@
       "InvalidTokenNull": "Ce lien n'est pas valide.",
       "Checking": "Validation du jeton, veuillez patienter...",
       "Verified": "Ça y est, votre adresse courriel a été vérifiée.",
-      "InvalidState": "Quelque chose a mal tourné."
+      "InvalidState": "Le jeton est invalide ou expiré."
     },
     "AssetList": {
       "Title": "Éditeur web p5.js | Mes ressources",
