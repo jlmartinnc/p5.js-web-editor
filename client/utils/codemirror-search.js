@@ -18,7 +18,6 @@ import upArrow from '../images/up-arrow.svg?byContent';
 import exitIcon from '../images/exit.svg?byContent';
 
 function searchOverlay(query, caseInsensitive) {
-  // if the query is a string, we need to convert it into a regular expression
   if (typeof query == 'string') {
     query = new RegExp(
       query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'),
@@ -44,7 +43,6 @@ function searchOverlay(query, caseInsensitive) {
   };
 }
 
-// SearchState is a constructor function that initializes an object to keep track of search-related settings
 function SearchState() {
   this.posFrom = this.posTo = this.lastQuery = this.query = null;
   this.overlay = null;
@@ -98,7 +96,6 @@ function watchFileChanges(cm, searchState, searchField) {
 
   setupObserver();
 
-  // continuously check for the dialog's existence (every 500ms)
   setInterval(() => {
     var searchDialog = document.querySelector('.CodeMirror-dialog');
     if (!searchDialog && observer) {
@@ -140,11 +137,9 @@ function persistentDialog(cm, text, deflt, onEnter, replaceOpened, onKeyDown) {
 
     watchFileChanges(cm, getSearchState(cm), searchField);
 
-    // this runs when the user types in the search box
     CodeMirror.on(searchField, 'keyup', function (e) {
       state.replaceStarted = false;
       if (e.keyCode !== 13 && searchField.value.length > 1) {
-        // not enter and more than 1 character to search
         startSearch(cm, getSearchState(cm), searchField.value);
       } else if (searchField.value.length < 1) {
         cm.display.wrapper.querySelector(
@@ -376,7 +371,6 @@ function parseString(string) {
 function parseQuery(query, state) {
   var emptyQuery = 'x^'; // matches nothing
   if (query === '') {
-    // empty string matches nothing
     query = emptyQuery;
   } else {
     if (state.regexp === false) {
@@ -409,7 +403,7 @@ function startSearch(cm, state, query) {
       ?.innerText;
 
     if (state.lastFileName !== currentFileName) {
-      state.lastFileName = currentFileName; // update stored filename
+      state.lastFileName = currentFileName;
       state.queryText = null;
       state.lastQuery = null;
       state.query = null;
@@ -440,16 +434,14 @@ function startSearch(cm, state, query) {
       );
     }
 
-    // Updating the UI everytime the search input changes
     var cursor = getSearchCursor(cm, state.query);
     cursor.findNext();
     var num_match = cm.state.search.annotate.matches.length;
-    // no matches found
     if (num_match == 0) {
       cm.display.wrapper.querySelector(
         '.CodeMirror-search-results'
       ).innerText = i18n.t('CodemirrorFindAndReplace.NoResults');
-      cm.removeOverlay(state.overlay, state.caseInsensitive); // removes any existing search highlights
+      cm.removeOverlay(state.overlay, state.caseInsensitive);
     } else {
       var next =
         cm.state.search.annotate.matches.findIndex((s) => {
