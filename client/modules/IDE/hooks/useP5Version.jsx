@@ -138,6 +138,7 @@ export const currentP5Version = p5Versions[0];
 export const p5SoundURL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/addons/p5.sound.min.js`;
 export const p5PreloadAddonURL = 'https://TODO/preload.js';
 export const p5ShapesAddonURL = 'https://TODO/shapes.js';
+export const p5URL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/p5.js`;
 
 const P5VersionContext = React.createContext({});
 

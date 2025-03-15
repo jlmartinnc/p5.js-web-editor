@@ -19,7 +19,7 @@ import {
   setLinewrap,
   setPreferencesTab
 } from '../../actions/preferences';
-import { p5SoundURL, useP5Version } from '../../hooks/useP5Version';
+import { p5SoundURL, p5URL, useP5Version } from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
@@ -521,8 +521,8 @@ export default function Preferences() {
                 <TextArea
                   className="preference__textarea"
                   src={
-                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>\n' +
-                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>'
+                    `<script src="${p5URL}"></script>\n` +
+                    `<script src="${p5SoundURL}"></script>`
                   }
                 />
               </div>
