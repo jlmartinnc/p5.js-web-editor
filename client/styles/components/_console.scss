@@ -89,7 +89,7 @@
 		@extend %link;
 		color: getThemifyVariable('secondary-text-color');
 		&:hover {
-			color: getThemifyVariable('heavy-text-color');
+			color: $p5-light-pink; // Use the pink color directly for hover
 		}
 	}
 	background: transparent;
