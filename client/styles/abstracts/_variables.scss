@@ -126,6 +126,10 @@ $themes: (
     hint-item-active-outline-offset: 0,
     hint-inline-text-color-light: $middle-light,
     hint-inline-text-color: $middle-gray,
+
+    admonition-border: #ED225D,
+    admonition-background: #FFE4EC,
+    admonition-text: #AF0E3D,
   ),
   dark: (
     logo-color: $p5js-pink,
@@ -221,6 +225,10 @@ $themes: (
     hint-item-active-outline-offset: 0,
     hint-inline-text-color-light: $middle-gray,
     hint-inline-text-color: #cfcfcf,
+
+    admonition-border: #ED225D,
+    admonition-background: #FFE4EC,
+    admonition-text: #AF0E3D,
   ),
   contrast: (
     logo-color: $yellow,
@@ -316,6 +324,10 @@ $themes: (
     hint-item-active-outline-offset: -2px,
     hint-inline-text-color-light: $middle-gray,
     hint-inline-text-color: #cfcfcf,
+
+    admonition-border: #ED225D,
+    admonition-background: $white,
+    admonition-text: #AF0E3D,
   )
 );
 

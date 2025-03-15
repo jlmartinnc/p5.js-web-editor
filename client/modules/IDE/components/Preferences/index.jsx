@@ -24,6 +24,8 @@ import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
 import Stars from '../Stars';
+import Admonition from '../Admonition';
+import TextArea from '../TextArea';
 
 export default function Preferences() {
   const { t } = useTranslation();
@@ -492,34 +494,39 @@ export default function Preferences() {
         </TabPanel>
         <TabPanel>
           <div className="preference">
-            <h4 className="preference__title">
-              {t('Preferences.LibraryVersion')}
-            </h4>
-            <div>
-              {showStars && <Stars top={showStars.top} left={showStars.left} />}
-              <VersionPicker
-                ref={pickerRef}
-                onChangeVersion={onChangeVersion}
-              />
-              {versionInfo && indexID ? (
+            {showStars && <Stars top={showStars.top} left={showStars.left} />}
+            {versionInfo && indexID ? (
+              <>
+                <h4 className="preference__title">
+                  {t('Preferences.LibraryVersion')}
+                </h4>
+                <div>
+                  <VersionPicker
+                    ref={pickerRef}
+                    onChangeVersion={onChangeVersion}
+                  />
+                  <p className="preference__paragraph">
+                    {t('Preferences.LibraryVersionInfo')}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <Admonition>
+                  <p>{t('Preferences.CustomVersionInfo')}</p>
+                </Admonition>
                 <p className="preference__paragraph">
-                  {t('Preferences.LibraryVersionInfo')}
+                  {t('Preferences.CustomVersionReset')}
                 </p>
-              ) : (
-                <>
-                  <p className="preference__paragraph">
-                    {t('Preferences.CustomVersionInfo')}
-                  </p>
-                  <p className="preference__paragraph">
-                    {t('Preferences.CustomVersionReset')}
-                  </p>
-                  <textarea className="preference__textarea">
-                    {'<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>\n' +
-                      '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>'}
-                  </textarea>
-                </>
-              )}
-            </div>
+                <TextArea
+                  className="preference__textarea"
+                  src={
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>\n' +
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>'
+                  }
+                />
+              </div>
+            )}
           </div>
           {versionInfo && indexID && (
             <>
