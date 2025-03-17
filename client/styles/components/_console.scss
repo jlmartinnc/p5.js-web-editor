@@ -86,19 +86,23 @@
 
 .preview-console__clear {
 	@include themify() {
-		@extend %link;
-		color: getThemifyVariable('secondary-text-color');
-		&:hover {
-			color: $p5-light-pink; // Use the pink color directly for hover
+	  @extend %link;
+	  color: getThemifyVariable('secondary-text-color');
+	  &:hover {
+		color: $p5-light-pink; 
+  
+		@if (getThemifyVariable('logo-color') == $yellow) {
+		  color: $yellow; 
 		}
+	  }
 	}
 	background: transparent;
 	border: none;
 	padding-right: #{math.div(10, $base-font-size)}rem;
 	.preview-console--collapsed & {
-		display: none;
+	  display: none;
 	}
-}
+  }
 
 .preview-console__body {
 	display: flex;
