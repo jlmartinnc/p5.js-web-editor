@@ -1,23 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
 
-export default function Admonition({ children }) {
-  const { t } = useTranslation();
+export default function Admonition({ children, title }) {
   return (
     <div className="admonition">
-      <h3 className="admonition__title">
-        <span role="img" aria-label="Flower" className="admonition__icon">
-          🌸
-        </span>
-        {t('Admonition.Note')}
-      </h3>
+      <p className="admonition__title">
+        <strong>{title}</strong>
+      </p>
       {children}
     </div>
   );
 }
 
 Admonition.propTypes = {
+  title: PropTypes.string.isRequired,
   children: PropTypes.node
 };
 

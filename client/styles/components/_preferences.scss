@@ -69,6 +69,15 @@
 
 .preference__paragraph {
   margin-bottom: #{math.div(10, $base-font-size)}rem;
+
+  & a {
+    @include themify() {
+      color: getThemifyVariable('button-background-hover-color');
+    }
+  }
+  & a:hover {
+    text-decoration: underline;
+  }
 }
 
 .preference__textarea {

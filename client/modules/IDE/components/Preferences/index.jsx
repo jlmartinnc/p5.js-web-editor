@@ -1,8 +1,10 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
+import PropTypes from 'prop-types';
 import PlusIcon from '../../../../images/plus.svg';
 import MinusIcon from '../../../../images/minus.svg';
 import beepUrl from '../../../../sounds/audioAlert.mp3';
@@ -111,6 +113,37 @@ export default function Preferences() {
     dispatch(updateFileContent(indexID, src));
     cmRef.current?.updateFileContent(indexID, src);
   };
+
+  const markdownComponents = useMemo(() => {
+    const ExternalLink = ({ children, ...props }) => (
+      <a {...props} target="_blank">
+        {children}
+      </a>
+    );
+    ExternalLink.propTypes = {
+      children: PropTypes.node
+    };
+    ExternalLink.defaultProps = {
+      children: undefined
+    };
+
+    const Paragraph = ({ children, ...props }) => (
+      <p className="preference__paragraph" {...props}>
+        {children}
+      </p>
+    );
+    Paragraph.propTypes = {
+      children: PropTypes.node
+    };
+    Paragraph.defaultProps = {
+      children: undefined
+    };
+
+    return {
+      a: ExternalLink,
+      p: Paragraph
+    };
+  }, []);
 
   return (
     <section className="preferences">
@@ -505,14 +538,14 @@ export default function Preferences() {
                     ref={pickerRef}
                     onChangeVersion={onChangeVersion}
                   />
-                  <p className="preference__paragraph">
+                  <ReactMarkdown components={markdownComponents}>
                     {t('Preferences.LibraryVersionInfo')}
-                  </p>
+                  </ReactMarkdown>
                 </div>
               </>
             ) : (
               <div>
-                <Admonition>
+                <Admonition title={t('Preferences.CustomVersionTitle')}>
                   <p>{t('Preferences.CustomVersionInfo')}</p>
                 </Admonition>
                 <p className="preference__paragraph">
