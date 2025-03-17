@@ -35,6 +35,9 @@ function Menubar({ children, className }) {
   const contextValue = useMemo(
     () => ({
       createMenuHandlers: (menu) => ({
+        onMouseOver: () => {
+          setMenuOpen((prevState) => (prevState === 'none' ? 'none' : menu));
+        },
         onClick: () => {
           toggleMenuOpen(menu);
         },
