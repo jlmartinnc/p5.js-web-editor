@@ -583,7 +583,9 @@ export default function Preferences() {
                         updateHTML(versionInfo.setP5Sound(true));
                       }
                     }}
-                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    aria-label={`${t('Preferences.SoundAddon')} ${t(
+                      'Preferences.AddonOn'
+                    )}`}
                     name="soundaddon"
                     id="soundaddon-on"
                     className="preference__radio-button"
@@ -604,7 +606,9 @@ export default function Preferences() {
                       }
                       updateHTML(versionInfo.setP5Sound(false));
                     }}
-                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    aria-label={`${t('Preferences.SoundAddon')} ${t(
+                      'Preferences.AddonOff'
+                    )}`}
                     name="soundaddon"
                     id="soundaddon-off"
                     className="preference__radio-button"
@@ -634,7 +638,9 @@ export default function Preferences() {
                     onChange={() =>
                       updateHTML(versionInfo.setP5PreloadAddon(true))
                     }
-                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    aria-label={`${t('Preferences.PreloadAddon')} ${t(
+                      'Preferences.AddonOn'
+                    )}`}
                     name="preloadaddon"
                     id="preloadaddon-on"
                     className="preference__radio-button"
@@ -652,7 +658,9 @@ export default function Preferences() {
                     onChange={() =>
                       updateHTML(versionInfo.setP5PreloadAddon(false))
                     }
-                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    aria-label={`${t('Preferences.PreloadAddon')} ${t(
+                      'Preferences.AddonOff'
+                    )}`}
                     name="preloadaddon"
                     id="preloadaddon-off"
                     className="preference__radio-button"
@@ -677,12 +685,14 @@ export default function Preferences() {
                     onChange={() =>
                       updateHTML(versionInfo.setP5ShapesAddon(true))
                     }
-                    aria-label={t('Preferences.AutosaveOnARIA')}
+                    aria-label={`${t('Preferences.ShapesAddon')} ${t(
+                      'Preferences.AddonOn'
+                    )}`}
                     name="shapesaddon"
                     id="shapesaddon-on"
                     className="preference__radio-button"
                     value="On"
-                    checked={versionInfo.p5ShapesAdddon}
+                    checked={versionInfo.p5ShapesAddon}
                   />
                   <label
                     htmlFor="shapesaddon-on"
@@ -695,17 +705,60 @@ export default function Preferences() {
                     onChange={() =>
                       updateHTML(versionInfo.setP5ShapesAddon(false))
                     }
-                    aria-label={t('Preferences.AutosaveOffARIA')}
+                    aria-label={`${t('Preferences.ShapesAddon')} ${t(
+                      'Preferences.AddonOff'
+                    )}`}
                     name="shapesaddon"
                     id="shapesaddon-off"
                     className="preference__radio-button"
                     value="Off"
-                    checked={!versionInfo.p5ShapesAdddon}
+                    checked={!versionInfo.p5ShapesAddon}
                   />
                   <label
                     htmlFor="shapesaddon-off"
                     className="preference__option"
                   >
+                    {t('Preferences.Off')}
+                  </label>
+                </fieldset>
+              </div>
+              <div className="preference">
+                <h4 className="preference__title">
+                  {t('Preferences.DataAddon')}
+                </h4>
+                <fieldset className="preference__options">
+                  <input
+                    type="radio"
+                    onChange={() =>
+                      updateHTML(versionInfo.setP5DataAddon(true))
+                    }
+                    aria-label={`${t('Preferences.DataAddon')} ${t(
+                      'Preferences.AddonOn'
+                    )}`}
+                    name="dataaddon"
+                    id="dataaddon-on"
+                    className="preference__radio-button"
+                    value="On"
+                    checked={versionInfo.p5DataAddon}
+                  />
+                  <label htmlFor="dataaddon-on" className="preference__option">
+                    {t('Preferences.On')}
+                  </label>
+                  <input
+                    type="radio"
+                    onChange={() =>
+                      updateHTML(versionInfo.setP5DataAddon(false))
+                    }
+                    aria-label={`${t('Preferences.DataAddon')} ${t(
+                      'Preferences.AddonOff'
+                    )}`}
+                    name="dataaddon"
+                    id="dataaddon-off"
+                    className="preference__radio-button"
+                    value="Off"
+                    checked={!versionInfo.p5DataAddon}
+                  />
+                  <label htmlFor="dataaddon-off" className="preference__option">
                     {t('Preferences.Off')}
                   </label>
                 </fieldset>

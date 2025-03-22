@@ -136,8 +136,12 @@ export const p5Versions = [
 export const currentP5Version = p5Versions[0];
 
 export const p5SoundURL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/addons/p5.sound.min.js`;
-export const p5PreloadAddonURL = 'https://TODO/preload.js';
-export const p5ShapesAddonURL = 'https://TODO/shapes.js';
+export const p5PreloadAddonURL =
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/preload.js';
+export const p5ShapesAddonURL =
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/shapes.js';
+export const p5DataAddonURL =
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/data.js';
 export const p5URL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/p5.js`;
 
 const P5VersionContext = React.createContext({});
@@ -259,6 +263,20 @@ export function P5VersionProvider(props) {
         return serializeResult();
       };
 
+      const p5DataAddonNode = [
+        ...dom.documentElement.querySelectorAll('script')
+      ].find((s) => s.getAttribute('src') === p5DataAddonURL);
+      const setP5DataAddon = function (enabled) {
+        if (!enabled && p5DataAddonNode) {
+          p5DataAddonNode.parentNode.removeChild(p5DataAddonNode);
+        } else if (enabled && !p5DataAddonNode) {
+          const newNode = document.createElement('script');
+          newNode.setAttribute('src', p5DataAddonURL);
+          scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
+        }
+        return serializeResult();
+      };
+
       return {
         version,
         minified,
@@ -271,8 +289,10 @@ export function P5VersionProvider(props) {
         setLastP5SoundURL,
         p5PreloadAddon: !!p5PreloadAddonNode,
         setP5PreloadAddon,
-        p5ShapesAdddon: !!p5ShapesAddonNode,
-        setP5ShapesAddon
+        p5ShapesAddon: !!p5ShapesAddonNode,
+        setP5ShapesAddon,
+        p5DataAddon: !!p5DataAddonNode,
+        setP5DataAddon
       };
     }
     return null;
