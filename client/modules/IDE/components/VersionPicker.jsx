@@ -38,7 +38,7 @@ const VersionDropdownMenu = styled(DropdownMenu)`
     padding: 0;
   }
 
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const VersionPicker = React.forwardRef(({ onChangeVersion }, ref) => {

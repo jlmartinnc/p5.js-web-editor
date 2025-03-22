@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { openPreferences } from '../actions/ide';
 import { setPreferencesTab } from '../actions/preferences';
 import { prop } from '../../../theme';
-import EditIcon from '../../../images/pencil.svg';
+import EditIcon from '../../../images/preferences.svg';
 
 import { useP5Version } from '../hooks/useP5Version';
 
@@ -19,6 +19,9 @@ const VersionPickerButton = styled.button`
   & svg {
     vertical-align: middle;
     margin-bottom: 2px;
+    margin-left: 0.5rem;
+    width: 1rem;
+    height: 1rem;
   }
 
   &:hover path {
@@ -41,11 +44,7 @@ const VersionIndicator = () => {
       {t('Toolbar.LibraryVersion')}
       &nbsp;
       {versionInfo?.version || t('Toolbar.CustomLibraryVersion')}
-      <EditIcon
-        className="editable-input__icon"
-        focusable="false"
-        aria-hidden="true"
-      />
+      <EditIcon focusable="false" aria-hidden="true" />
     </VersionPickerButton>
   );
 };
