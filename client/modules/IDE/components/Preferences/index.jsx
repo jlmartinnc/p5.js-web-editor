@@ -171,7 +171,7 @@ export default function Preferences() {
         <TabPanel>
           <div className="preference">
             <h4 className="preference__title">{t('Preferences.Theme')}</h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setTheme('light'))}
@@ -214,7 +214,7 @@ export default function Preferences() {
               >
                 {t('Preferences.HighContrastTheme')}
               </label>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">{t('Preferences.TextSize')}</h4>
@@ -266,7 +266,7 @@ export default function Preferences() {
           </div>
           <div className="preference">
             <h4 className="preference__title">{t('Preferences.Autosave')}</h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setAutosave(true))}
@@ -293,13 +293,13 @@ export default function Preferences() {
               <label htmlFor="autosave-off" className="preference__option">
                 {t('Preferences.Off')}
               </label>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">
               {t('Preferences.AutocloseBracketsQuotes')}
             </h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setAutocloseBracketsQuotes(true))}
@@ -332,13 +332,13 @@ export default function Preferences() {
               >
                 {t('Preferences.Off')}
               </label>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">
               {t('Preferences.AutocompleteHinter')}
             </h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setAutocompleteHinter(true))}
@@ -371,11 +371,11 @@ export default function Preferences() {
               >
                 {t('Preferences.Off')}
               </label>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">{t('Preferences.WordWrap')}</h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setLinewrap(true))}
@@ -402,7 +402,7 @@ export default function Preferences() {
               <label htmlFor="linewrap-off" className="preference__option">
                 {t('Preferences.Off')}
               </label>
-            </div>
+            </fieldset>
           </div>
         </TabPanel>
         <TabPanel>
@@ -410,7 +410,7 @@ export default function Preferences() {
             <h4 className="preference__title">
               {t('Preferences.LineNumbers')}
             </h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setLineNumbers(true))}
@@ -437,13 +437,13 @@ export default function Preferences() {
               <label htmlFor="line-numbers-off" className="preference__option">
                 {t('Preferences.Off')}
               </label>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">
               {t('Preferences.LintWarningSound')}
             </h4>
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="radio"
                 onChange={() => dispatch(setLintWarning(true))}
@@ -477,7 +477,7 @@ export default function Preferences() {
               >
                 {t('Preferences.PreviewSound')}
               </button>
-            </div>
+            </fieldset>
           </div>
           <div className="preference">
             <h4 className="preference__title">
@@ -487,7 +487,7 @@ export default function Preferences() {
               {t('Preferences.UsedScreenReader')}
             </h6>
 
-            <div className="preference__options">
+            <fieldset className="preference__options">
               <input
                 type="checkbox"
                 onChange={(event) => {
@@ -522,7 +522,7 @@ export default function Preferences() {
               >
                 {t('Preferences.TableText')}
               </label>
-            </div>
+            </fieldset>
           </div>
         </TabPanel>
         <TabPanel>
@@ -567,7 +567,7 @@ export default function Preferences() {
                 <h4 className="preference__title">
                   {t('Preferences.SoundAddon')}
                 </h4>
-                <div className="preference__options">
+                <fieldset className="preference__options">
                   <input
                     type="radio"
                     onChange={() => {
@@ -618,17 +618,17 @@ export default function Preferences() {
                     {t('Preferences.Off')}
                   </label>
                   {versionInfo.lastP5SoundURL && (
-                    <span className="preference__warning">
+                    <legend className="preference__warning">
                       {t('Preferences.UndoSoundVersion')}
-                    </span>
+                    </legend>
                   )}
-                </div>
+                </fieldset>
               </div>
               <div className="preference">
                 <h4 className="preference__title">
                   {t('Preferences.PreloadAddon')}
                 </h4>
-                <div className="preference__options">
+                <fieldset className="preference__options">
                   <input
                     type="radio"
                     onChange={() =>
@@ -665,13 +665,13 @@ export default function Preferences() {
                   >
                     {t('Preferences.Off')}
                   </label>
-                </div>
+                </fieldset>
               </div>
               <div className="preference">
                 <h4 className="preference__title">
                   {t('Preferences.ShapesAddon')}
                 </h4>
-                <div className="preference__options">
+                <fieldset className="preference__options">
                   <input
                     type="radio"
                     onChange={() =>
@@ -708,7 +708,7 @@ export default function Preferences() {
                   >
                     {t('Preferences.Off')}
                   </label>
-                </div>
+                </fieldset>
               </div>
             </>
           )}
