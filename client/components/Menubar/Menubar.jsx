@@ -203,7 +203,7 @@ function Menubar({ children, className }) {
       // roving tabindex
       prevNode?.setAttribute('tabindex', '-1');
       activeNode?.setAttribute('tabindex', '0');
-      activeNode.focus();
+      activeNode?.focus();
     }
   }, [activeIndex, prevIndex, menuItems]);
 
