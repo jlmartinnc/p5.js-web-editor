@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -29,21 +29,51 @@ const VersionPickerButton = styled.button`
   }
 `;
 
+const NotificationDot = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: ${prop('colors.dodgerblue')};
+  margin-left: 0.25rem;
+`;
+
+const CLICKED_LIBRARY_VERSION_KEY = 'clickedLibraryVersionIndicator';
+
 const VersionIndicator = () => {
   const { versionInfo } = useP5Version();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [showNotificationDot, setShowNotificationDot] = useState(false);
+
+  useEffect(() => {
+    const hasHiddenDot = window.localStorage.getItem(
+      CLICKED_LIBRARY_VERSION_KEY
+    );
+    setShowNotificationDot(!hasHiddenDot);
+  }, []);
 
   const openVersionSettings = useCallback(() => {
     dispatch(openPreferences());
     dispatch(setPreferencesTab(2));
+    setShowNotificationDot(false);
+    window.localStorage.setItem(CLICKED_LIBRARY_VERSION_KEY, true);
   }, []);
 
+  const label = t('Toolbar.LibraryVersion');
+  const currentVersion =
+    versionInfo?.version || t('Toolbar.CustomLibraryVersion');
+  let ariaLabel = `${label}: ${currentVersion}`;
+  if (showNotificationDot) {
+    ariaLabel = `${t('Toolbar.Notification')} - ${ariaLabel}`;
+  }
+
   return (
-    <VersionPickerButton onClick={openVersionSettings}>
-      {t('Toolbar.LibraryVersion')}
-      &nbsp;
-      {versionInfo?.version || t('Toolbar.CustomLibraryVersion')}
+    <VersionPickerButton onClick={openVersionSettings} ariaLabel={ariaLabel}>
+      {label}:&nbsp;
+      {currentVersion}
+      {showNotificationDot && <NotificationDot />}
       <EditIcon focusable="false" aria-hidden="true" />
     </VersionPickerButton>
   );

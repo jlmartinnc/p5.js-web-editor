@@ -157,8 +157,9 @@
     "EditSketchARIA": "Edit sketch name",
     "NewSketchNameARIA": "New sketch name",
     "By": " by ",
-    "LibraryVersion": "p5.js version:",
-    "CustomLibraryVersion": "Custom"
+    "LibraryVersion": "p5.js version",
+    "CustomLibraryVersion": "Custom",
+    "Notification": "New"
   },
   "Console": {
     "Title": "Console",
