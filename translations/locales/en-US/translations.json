@@ -159,7 +159,8 @@
     "By": " by ",
     "LibraryVersion": "p5.js version",
     "CustomLibraryVersion": "Custom",
-    "Notification": "New"
+    "VersionPickerARIA": "Version picker",
+    "NewVersionPickerARIA": "Version picker"
   },
   "Console": {
     "Title": "Console",

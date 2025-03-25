@@ -64,10 +64,12 @@ const VersionIndicator = () => {
   const label = t('Toolbar.LibraryVersion');
   const currentVersion =
     versionInfo?.version || t('Toolbar.CustomLibraryVersion');
-  let ariaLabel = `${label}: ${currentVersion}`;
-  if (showNotificationDot) {
-    ariaLabel = `${t('Toolbar.Notification')} - ${ariaLabel}`;
-  }
+  const description = t(
+    showNotificationDot
+      ? 'Toolbar.NewVersionPickerARIA'
+      : 'Toolbar.VersionPickerARIA'
+  );
+  const ariaLabel = `${label}: ${currentVersion} - ${description}`;
 
   return (
     <VersionPickerButton onClick={openVersionSettings} ariaLabel={ariaLabel}>
