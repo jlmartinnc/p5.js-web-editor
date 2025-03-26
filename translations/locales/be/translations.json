@@ -5,7 +5,7 @@
       "New": "নতুন",
       "Share": "শেয়ার",
       "Duplicate": "ডুপ্লিকেট",
-      "Open": "খোলা",
+      "Open": "খুলুন",
       "Download": "ডাউনলোড",
       "AddToCollection": "সংগ্রহে যোগ করুন",
       "Examples": "উদাহরণ সমূহ"
@@ -31,7 +31,7 @@
     },
     "Lang": "ভাষা",
     "BackEditor": "এডিটরে ফিরুন",
-    "WarningUnsavedChanges": "কি আপনি এই পেইজ ছাড়তে চান? আপনি ফাইল সেইভ করেননি।",
+    "WarningUnsavedChanges": "আপনি কি এই পেইজ ছাড়তে চান? আপনি ফাইল সেইভ করেননি।",
     "Login": "লগ ইন",
     "LoginOr": "অথবা",
     "SignUp": "সাইন আপ করুন",
@@ -245,7 +245,7 @@
     "SubmitFeedbackARIA": "মন্তব্য জমা দিন",
     "AddCollectionTitle": "সংগ্রহে যোগ করুন",
     "AddCollectionARIA": "সংগ্রহে যোগ করুন",
-    "ShareTitle": "শেয়ার  করুন",
+    "ShareTitle": "শেয়ার করুন",
     "ShareARIA": "শেয়ার করুন"
   },
   "NewFileModal": {
@@ -261,7 +261,7 @@
   "NewFolderModal": {
     "Title": "ফোল্ডার তৈরি করুন",
     "CloseButtonARIA": "নতুন ফোল্ডার মোডাল বন্ধ করুন",
-    "EnterName": "নাম লিখুন ",
+    "EnterName": "নাম লিখুন",
     "EmptyName": "ফোল্ডার নাম খালি থাকতে পারবে না",
     "InvalidExtension": "ফোল্ডার নামে একটি এক্সটেনশন থাকতে পারবে না"
   },
@@ -280,7 +280,7 @@
     "Submitted": "আপনার পাসওয়ার্ড রিসেট ইমেল শীঘ্রই আসবে। আপনি যদি তা দেখতে না পান তবে দয়া করে\n            আপনার স্প্যাম ফোল্ডারে চেক করুন।",
     "Login": "লগ ইন",
     "LoginOr": "অথবা",
-    "SignUp": " সাইন আপ করুন"
+    "SignUp": "সাইন আপ করুন"
   },
   "ReduxFormUtils": {
     "errorInvalidEmail": "দয়া করে একটি সঠিক ই-মেইল লিখুন",
@@ -330,7 +330,7 @@
     "Summary": "ব্যক্তিগত অ্যাক্সেস টোকেনগুলি এটির API এ অটোমেটেড\n          স্ক্রিপ্টগুলির একটি পাসওয়ার্ড হিসেবে কাজ করে। যেগুলি অ্যাক্সেস করতে প্রয়োজন,\n          সেগুলির জন্য একটি টোকেন তৈরি করুন।",
     "CreateToken": "নতুন টোকেন তৈরি করুন",
     "TokenLabel": "এই টোকেনটি কি জন্য?",
-    "TokenPlaceholder": " উদাহরণস্বরূপ: টেস্টিং স্ক্রিপ্ট",
+    "TokenPlaceholder": "উদাহরণস্বরূপ: টেস্টিং স্ক্রিপ্ট",
     "CreateTokenSubmit": "তৈরি করুন",
     "NoTokens": "আপনার কোনও টোকেন নেই।",
     "NewTokenTitle": "আপনার নতুন অ্যাক্সেস টোকেন",
@@ -392,7 +392,7 @@
   "Feedback": {
     "Title": "p5.js ওয়েব এডিটর | মন্তব্য করুন",
     "ViaGithubHeader": "গিটহাব ইস্যু'র মাধ্যমে",
-    "ViaGithubDescription": " গিটহাবে বাগ রিপোর্ট  পদ্ধতি।",
+    "ViaGithubDescription": "গিটহাবে বাগ রিপোর্ট পদ্ধতি।",
     "GoToGithub": "গিটহাবে যান",
     "ViaGoogleHeader": "গুগল ফর্মের মাধ্যমে",
     "ViaGoogleDescription": "আপনি এই ফর্ম জমা দিতে পারেন।",
