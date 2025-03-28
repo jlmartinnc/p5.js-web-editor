@@ -576,9 +576,6 @@ class Editor extends React.Component {
                   </span>
                   <Timer />
                 </div>
-                <div className="editor__library-version">
-                  <VersionIndicator />
-                </div>
               </div>
               <article
                 ref={(element) => {

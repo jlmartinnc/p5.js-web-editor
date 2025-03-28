@@ -157,8 +157,7 @@
     "EditSketchARIA": "Edit sketch name",
     "NewSketchNameARIA": "New sketch name",
     "By": " by ",
-    "LibraryVersion": "p5.js version",
-    "CustomLibraryVersion": "Custom",
+    "CustomLibraryVersion": "Custom p5.js version",
     "VersionPickerARIA": "Version picker",
     "NewVersionPickerARIA": "Version picker"
   },

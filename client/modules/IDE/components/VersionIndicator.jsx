@@ -5,12 +5,13 @@ import { useDispatch } from 'react-redux';
 import { openPreferences } from '../actions/ide';
 import { setPreferencesTab } from '../actions/preferences';
 import { prop } from '../../../theme';
-import EditIcon from '../../../images/preferences.svg';
+import EditIcon from '../../../images/pencil.svg';
 
 import { useP5Version } from '../hooks/useP5Version';
 
 const VersionPickerButton = styled.button`
   color: ${prop('Button.primary.default.foreground')};
+  margin-right: 1rem;
 
   &:hover {
     color: ${prop('Button.primary.hover.background')} !important;
@@ -19,9 +20,8 @@ const VersionPickerButton = styled.button`
   & svg {
     vertical-align: middle;
     margin-bottom: 2px;
-    margin-left: 0.5rem;
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   &:hover path {
@@ -61,22 +61,21 @@ const VersionIndicator = () => {
     window.localStorage.setItem(CLICKED_LIBRARY_VERSION_KEY, true);
   }, []);
 
-  const label = t('Toolbar.LibraryVersion');
-  const currentVersion =
-    versionInfo?.version || t('Toolbar.CustomLibraryVersion');
+  const currentVersion = versionInfo?.version
+    ? `p5.js ${versionInfo.version}`
+    : t('Toolbar.CustomLibraryVersion');
   const description = t(
     showNotificationDot
       ? 'Toolbar.NewVersionPickerARIA'
       : 'Toolbar.VersionPickerARIA'
   );
-  const ariaLabel = `${label}: ${currentVersion} - ${description}`;
+  const ariaLabel = `${currentVersion} - ${description}`;
 
   return (
     <VersionPickerButton onClick={openVersionSettings} ariaLabel={ariaLabel}>
-      {label}:&nbsp;
       {currentVersion}
-      {showNotificationDot && <NotificationDot />}
       <EditIcon focusable="false" aria-hidden="true" />
+      {showNotificationDot && <NotificationDot />}
     </VersionPickerButton>
   );
 };
