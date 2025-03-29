@@ -89,20 +89,16 @@
 	  @extend %link;
 	  color: getThemifyVariable('secondary-text-color');
 	  &:hover {
-		color: $p5-light-pink; 
-  
-		@if (getThemifyVariable('logo-color') == $yellow) {
-		  color: $yellow; 
-		}
+		color: getThemifyVariable('logo-color');
 	  }
 	}
 	background: transparent;
 	border: none;
 	padding-right: #{math.div(10, $base-font-size)}rem;
 	.preview-console--collapsed & {
-	  display: none;
+	display: none;
 	}
-  }
+}
 
 .preview-console__body {
 	display: flex;
