@@ -86,10 +86,10 @@
 
 .preview-console__clear {
 	@include themify() {
-	  @extend %link;
-	  color: getThemifyVariable('secondary-text-color');
-	  &:hover {
-		color: getThemifyVariable('logo-color');
+	@extend %link;
+	color: getThemifyVariable('secondary-text-color');
+	&:hover {
+	    color: getThemifyVariable('logo-color');
 	  }
 	}
 	background: transparent;
