@@ -86,17 +86,20 @@
 
 .preview-console__clear {
 	@include themify() {
-	@extend %link;
-	color: getThemifyVariable('secondary-text-color');
-	&:hover {
-	    color: getThemifyVariable('logo-color');
-	  }
+		@extend %link;
+		color: getThemifyVariable('secondary-text-color');
+
+		&:hover {
+			color: getThemifyVariable('logo-color');
+		}
 	}
+
 	background: transparent;
 	border: none;
 	padding-right: #{math.div(10, $base-font-size)}rem;
+
 	.preview-console--collapsed & {
-	display: none;
+		display: none;
 	}
 }
 
