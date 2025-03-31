@@ -6,31 +6,46 @@ import { stopSketch, expandConsole } from '../actions/ide';
 export default function useHandleMessageEvent() {
   const dispatch = useDispatch();
 
-  // Function to safely convert objects to strings (handles circular references)
-  const safeStringify = (obj) => {
-    const seen = new WeakSet();
-    return JSON.stringify(obj, (key, value) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) return '[Circular Reference]';
-        seen.add(value);
-      }
-      return value;
-    });
+  const safeStringify = (
+    obj,
+    depth = 0,
+    maxDepth = 10,
+    seen = new WeakMap()
+  ) => {
+    if (typeof obj !== 'object' || obj === null) return obj;
+
+    if (depth >= maxDepth) {
+      if (seen.has(obj)) return '[Circular Reference]';
+    }
+
+    seen.set(obj, true);
+
+    return Array.isArray(obj)
+      ? obj.map((item) => safeStringify(item, depth + 1, maxDepth, seen))
+      : Object.fromEntries(
+          Object.entries(obj).map(([key, value]) => [
+            key,
+            safeStringify(value, depth + 1, maxDepth, seen)
+          ])
+        );
   };
 
   const handleMessageEvent = (data) => {
     if (!data || typeof data !== 'object') return;
     const { source, messages } = data;
     if (source !== 'sketch' || !Array.isArray(messages)) return;
+
     const decodedMessages = messages.map((message) => {
       try {
-        return JSON.parse(safeStringify(Decode(message.log)));
+        const decoded = Decode(message.log) ?? '[Unknown Message]'; // Ensure decoding works
+        return safeStringify(decoded);
       } catch (error) {
         console.error('Error decoding message:', error);
         return { error: 'Failed to decode message' };
       }
     });
 
+    // Detect infinite loop warnings
     const hasInfiniteLoop = decodedMessages.some(
       (message) =>
         message?.data &&
