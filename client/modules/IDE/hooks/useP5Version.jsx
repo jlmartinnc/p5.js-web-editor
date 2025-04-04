@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 // JSON.stringify([...document.querySelectorAll('._132722c7')].map(n => n.innerText), null, 2)
 // TODO: use their API for this to grab these at build time?
 export const p5Versions = [
+  '2.0.0',
   '1.11.3',
-  '2.0.0-beta.2',
   '1.11.2',
   '1.11.1',
   '1.11.0',
@@ -133,15 +133,17 @@ export const p5Versions = [
   '0.2.1'
 ];
 
-export const currentP5Version = p5Versions[0];
+export const currentP5Version = '1.11.3'; // Don't update to 2.x until 2026
 
-export const p5SoundURL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/addons/p5.sound.min.js`;
+export const p5SoundURLOld = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js`;
+export const p5SoundURL =
+  'https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js';
 export const p5PreloadAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/preload.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/preload.js';
 export const p5ShapesAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/shapes.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/shapes.js';
 export const p5DataAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.0.1/src/data.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/data.js';
 export const p5URL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/p5.js`;
 
 const P5VersionContext = React.createContext({});
@@ -200,7 +202,7 @@ export function P5VersionProvider(props) {
         const file = minified ? 'p5.min.js' : 'p5.js';
         scriptNode.setAttribute(
           'src',
-          `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${newVersion}/${file}`
+          `https://cdn.jsdelivr.net/npm/p5@${newVersion}/lib/${file}`
         );
         return serializeResult();
       };
@@ -210,7 +212,8 @@ export function P5VersionProvider(props) {
       ].find((s) =>
         [
           /^https?:\/\/cdnjs.cloudflare.com\/ajax\/libs\/p5.js\/(.+)\/addons\/p5\.sound(?:\.min)?\.js$/,
-          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5@(.+)\/lib\/addons\/p5\.sound(?:\.min)?\.js$/
+          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5@(.+)\/lib\/addons\/p5\.sound(?:\.min)?\.js$/,
+          /^https?:\/\/cdn.jsdelivr.net\/npm\/p5.sound@(.+)\/dist\/p5\.sound(?:\.min)?\.js$/
         ].some((regex) => regex.exec(s.getAttribute('src') || ''))
       );
       const setP5Sound = function (enabled) {
@@ -218,7 +221,10 @@ export function P5VersionProvider(props) {
           p5SoundNode.parentNode.removeChild(p5SoundNode);
         } else if (enabled && !p5SoundNode) {
           const newNode = document.createElement('script');
-          newNode.setAttribute('src', p5SoundURL);
+          newNode.setAttribute(
+            'src',
+            version.startsWith('2') ? p5SoundURL : p5SoundURLOld
+          );
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
         return serializeResult();
