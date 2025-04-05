@@ -5,13 +5,13 @@ import { useDispatch } from 'react-redux';
 import { openPreferences } from '../actions/ide';
 import { setPreferencesTab } from '../actions/preferences';
 import { prop } from '../../../theme';
-import EditIcon from '../../../images/pencil.svg';
+import EditIcon from '../../../images/preferences.svg';
 
 import { useP5Version } from '../hooks/useP5Version';
 
 const VersionPickerButton = styled.button`
   color: ${prop('Button.primary.default.foreground')};
-  margin-right: 1rem;
+  margin-left: 1rem;
 
   &:hover {
     color: ${prop('Button.primary.hover.background')} !important;
@@ -20,8 +20,9 @@ const VersionPickerButton = styled.button`
   & svg {
     vertical-align: middle;
     margin-bottom: 2px;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    margin-left: 0.25rem;
   }
 
   &:hover path {

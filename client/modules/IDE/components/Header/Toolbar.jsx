@@ -114,8 +114,8 @@ const Toolbar = (props) => {
           return null;
         })()}
       </div>
-      <div style={{ flex: 1 }} />
       <VersionIndicator />
+      <div style={{ flex: 1 }} />
       <button
         className={preferencesButtonClass}
         onClick={() => dispatch(openPreferences())}

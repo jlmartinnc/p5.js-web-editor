@@ -72,7 +72,6 @@ import UnsavedChangesIndicator from '../UnsavedChangesIndicator';
 import { EditorContainer, EditorHolder } from './MobileEditor';
 import { FolderIcon } from '../../../../common/icons';
 import IconButton from '../../../../common/IconButton';
-import VersionIndicator from '../VersionIndicator';
 
 emmet(CodeMirror);
 
