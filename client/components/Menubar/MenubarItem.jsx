@@ -9,7 +9,7 @@ import ButtonOrLink from '../../common/ButtonOrLink';
  * @param {string} [props.className='nav__dropdown-item'] - CSS class name to apply to the list item
  * @param {string} props.id - The id of the list item
  * @param {string} [props.role='menuitem'] - The role of the list item
- * @param {boolean} [props.hideIf=false] - Whether to hide the item
+ * @param {boolean} [props.isDisabled=false] - Whether to hide the item
  * @param {boolean} [props.selected=false] - Whether the item is selected
  * @returns {JSX.Element}
  */
@@ -44,15 +44,10 @@ function MenubarItem({
   className,
   id,
   role: customRole,
-  hideIf,
+  isDisabled,
   selected,
   ...rest
 }) {
-  // moved to top bc of rules of hooks error, may remove if not needed
-  if (hideIf) {
-    return null;
-  }
-
   // core context and state management
   const { createMenuItemHandlers, hasFocus } = useContext(MenubarContext);
   const {
@@ -90,7 +85,13 @@ function MenubarItem({
   }, [submenuItems, registerSubmenuItem]);
 
   return (
-    <li className={className} ref={menuItemRef} onMouseEnter={handleMouseEnter}>
+    <li
+      className={`${className} ${
+        isDisabled ? 'nav__dropdown-item--disabled' : ''
+      }`}
+      ref={menuItemRef}
+      onMouseEnter={handleMouseEnter}
+    >
       <ButtonOrLink
         {...rest}
         {...handlers}
@@ -98,6 +99,8 @@ function MenubarItem({
         role={role}
         tabIndex={-1}
         id={id}
+        isDisabled={isDisabled}
+        // disabled={isDisabled}
       />
     </li>
   );
@@ -111,7 +114,7 @@ MenubarItem.propTypes = {
   /**
    * Provides a way to deal with optional items.
    */
-  hideIf: PropTypes.bool,
+  isDisabled: PropTypes.bool,
   className: PropTypes.string,
   role: PropTypes.oneOf(['menuitem', 'option']),
   selected: PropTypes.bool
@@ -120,7 +123,7 @@ MenubarItem.propTypes = {
 MenubarItem.defaultProps = {
   onClick: null,
   value: null,
-  hideIf: false,
+  isDisabled: false,
   className: 'nav__dropdown-item',
   role: 'menuitem',
   id: undefined,

@@ -175,7 +175,7 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem
           id="file-save"
-          hideIf={
+          isDisabled={
             !getConfig('LOGIN_ENABLED') || (project?.owner && !isUserOwner)
           }
           onClick={() => saveSketch(cmRef.current)}
@@ -185,31 +185,35 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem
           id="file-duplicate"
-          hideIf={isUnsaved || !user.authenticated}
+          isDisabled={isUnsaved || !user.authenticated}
           onClick={() => dispatch(cloneProject())}
         >
           {t('Nav.File.Duplicate')}
         </MenubarItem>
-        <MenubarItem id="file-share" hideIf={isUnsaved} onClick={shareSketch}>
+        <MenubarItem
+          id="file-share"
+          isDisabled={isUnsaved}
+          onClick={shareSketch}
+        >
           {t('Nav.File.Share')}
         </MenubarItem>
         <MenubarItem
           id="file-download"
-          hideIf={isUnsaved}
+          isDisabled={isUnsaved}
           onClick={downloadSketch}
         >
           {t('Nav.File.Download')}
         </MenubarItem>
         <MenubarItem
           id="file-open"
-          hideIf={!user.authenticated}
+          isDisabled={!user.authenticated}
           href={`/${user.username}/sketches`}
         >
           {t('Nav.File.Open')}
         </MenubarItem>
         <MenubarItem
           id="file-add-to-collection"
-          hideIf={
+          isDisabled={
             !getConfig('UI_COLLECTIONS_ENABLED') ||
             !user.authenticated ||
             isUnsaved
@@ -220,7 +224,7 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem
           id="file-examples"
-          hideIf={!getConfig('EXAMPLES_ENABLED')}
+          isDisabled={!getConfig('EXAMPLES_ENABLED')}
           href="/p5/sketches"
         >
           {t('Nav.File.Examples')}
@@ -364,7 +368,7 @@ const AuthenticatedUserMenu = () => {
         <MenubarItem
           id="account-collections"
           href={`/${username}/collections`}
-          hideIf={!getConfig('UI_COLLECTIONS_ENABLED')}
+          isDisabled={!getConfig('UI_COLLECTIONS_ENABLED')}
         >
           {t('Nav.Auth.MyCollections')}
         </MenubarItem>

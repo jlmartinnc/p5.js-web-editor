@@ -6,33 +6,36 @@ import PropTypes from 'prop-types';
  * Helper for switching between <button>, <a>, and <Link>
  */
 
-const ButtonOrLink = React.forwardRef(({ href, children, ...props }, ref) => {
-  if (href) {
-    if (href.startsWith('http')) {
+const ButtonOrLink = React.forwardRef(
+  ({ href, children, isDisabled, ...props }, ref) => {
+    if (href) {
+      if (href.startsWith('http')) {
+        return (
+          <a
+            ref={ref}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled={isDisabled}
+            {...props}
+          >
+            {children}
+          </a>
+        );
+      }
       return (
-        <a
-          ref={ref}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          {...props}
-        >
+        <Link ref={ref} to={href} aria-disabled={isDisabled} {...props}>
           {children}
-        </a>
+        </Link>
       );
     }
     return (
-      <Link ref={ref} to={href} {...props}>
+      <button ref={ref} aria-disabled={isDisabled} {...props}>
         {children}
-      </Link>
+      </button>
     );
   }
-  return (
-    <button ref={ref} {...props}>
-      {children}
-    </button>
-  );
-});
+);
 
 /**
  * Accepts all the props of an HTML <a> or <button> tag.
@@ -45,6 +48,7 @@ ButtonOrLink.propTypes = {
    * External links should start with 'http' or 'https' and will open in a new window.
    */
   href: PropTypes.string,
+  isDisabled: PropTypes.bool,
   /**
    * Content of the button/link.
    * Can be either a string or a complex element.
@@ -53,7 +57,8 @@ ButtonOrLink.propTypes = {
 };
 
 ButtonOrLink.defaultProps = {
-  href: null
+  href: null,
+  isDisabled: false
 };
 
 export default ButtonOrLink;
