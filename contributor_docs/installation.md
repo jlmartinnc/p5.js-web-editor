@@ -6,27 +6,27 @@ Follow these instructions to set up your development environment, which you need
 
 _Note_: The installation steps assume you are using a Unix-like shell. If you are using Windows, you will need to use `copy` instead of `cp`.
 
-1. Install Node.js. The recommended way is to Node through [nvm](https://github.com/nvm-sh/nvm). You can also install [node.js](https://nodejs.org/download/release/v16.14.2/) version 16.14.2 directly from the Node.js website.
-2. [Fork](https://help.github.com/articles/fork-a-repo) the [p5.js Web Editor repository](https://github.com/processing/p5.js-web-editor) into your own GitHub account.
-3. [Clone](https://help.github.com/articles/cloning-a-repository/) your new fork of the repository from GitHub onto your local computer.
+1. Install Node.js. The recommended way is to Node through [nvm](https://github.com/nvm-sh/nvm). You can also install [node.js](https://nodejs.org/download/release/v16.14.2/) version 16.14.2 directly from the Node.js website. To check if you already have Node installed on your computer, run `$ node -v`.
+3. [Fork](https://help.github.com/articles/fork-a-repo) the [p5.js Web Editor repository](https://github.com/processing/p5.js-web-editor) into your own GitHub account.
+4. [Clone](https://help.github.com/articles/cloning-a-repository/) your new fork of the repository from GitHub onto your local computer.
 
    ```
    $ git clone https://github.com/YOUR_USERNAME/p5.js-web-editor.git
    ```
 
-4. If you are using nvm, run `$ nvm use 16.14.2` to set your Node version to 16.14.2
-5. Ensure your npm version is set to 8.5.0. If it isn't, run `npm install -g npm@8.5.0` to install it. 
-6. Navigate into the project folder and install all its necessary dependencies with npm.
+5. If you are using nvm, run `$ nvm use 16.14.2` to set your Node version to 16.14.2
+6. Ensure your npm version is set to 8.5.0. If it isn't, run `npm install -g npm@8.5.0` to install it. 
+7. Navigate into the project folder and install all its necessary dependencies with npm.
 
    ```
    $ cd p5.js-web-editor
    $ npm install
    ```
-7. Install MongoDB and make sure it is running
+8. Install MongoDB and make sure it is running
    * For Mac OSX with [homebrew](http://brew.sh/): `brew tap mongodb/brew` then `brew install mongodb-community` and finally start the server with `brew services start mongodb-community` or you can visit the installation guide here [Installation Guide For MacOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
    * For Windows and Linux: [MongoDB Installation](https://docs.mongodb.com/manual/installation/)
-8. `$ cp .env.example .env`
-9. (Optional) Update `.env` with necessary keys to enable certain app behaviors, i.e. add Github ID and Github Secret if you want to be able to log in with Github.
+9. `$ cp .env.example .env`
+10. (Optional) Update `.env` with necessary keys to enable certain app behaviors, i.e. add Github ID and Github Secret if you want to be able to log in with Github.
    * See the [GitHub API Configuration](#github-api-configuration) section for information on how to authenticate with Github.
    * See the [S3 Bucket Configuration](#s3-bucket-configuration) section for information on how to set up an S3 bucket
 11. Run `$ npm run fetch-examples` to download the example sketches into a user called 'p5'. Note that you need to configure your GitHub Credentials, which you can do by following the [Github API Configuration](#github-api-configuration) section.
