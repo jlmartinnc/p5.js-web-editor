@@ -179,6 +179,13 @@ export default function Preferences() {
                 onClick={() => {
                   fontSizeInputRef.current?.select();
                 }}
+                onKeyDown={(event) => {
+                  if (event.key === 'ArrowUp') {
+                    increaseFontSize();
+                  } else if (event.key === 'ArrowDown') {
+                    decreaseFontSize();
+                  }
+                }}
               />
             </form>
             <button
