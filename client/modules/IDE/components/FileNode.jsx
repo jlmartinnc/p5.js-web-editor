@@ -271,6 +271,7 @@ const FileNode = ({
             aria-label={updatedName}
             className="sidebar__file-item-name"
             onClick={handleFileClick}
+            onDoubleClick={handleClickRename}
             data-testid="file-name"
           >
             <FileName name={updatedName} />
