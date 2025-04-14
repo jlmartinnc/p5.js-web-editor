@@ -100,7 +100,6 @@ function MenubarItem({
         tabIndex={-1}
         id={id}
         isDisabled={isDisabled}
-        // disabled={isDisabled}
       />
     </li>
   );

@@ -148,16 +148,19 @@ function Menubar({ children, className }) {
     setHasFocus(true);
   }, []);
 
-  const handleBlur = useCallback(() => {
-    const isInMenu = nodeRef.current?.contains(document.activeElement);
+  const handleBlur = useCallback(
+    (e) => {
+      const isInMenu = nodeRef.current?.contains(e.relatedTarget);
 
-    if (!isInMenu) {
-      timerRef.current = setTimeout(() => {
-        setMenuOpen('none');
-        setHasFocus(false);
-      }, 10);
-    }
-  }, [nodeRef]);
+      if (!isInMenu) {
+        timerRef.current = setTimeout(() => {
+          setMenuOpen('none');
+          setHasFocus(false);
+        }, 10);
+      }
+    },
+    [nodeRef]
+  );
 
   // keyboard navigation
   const keyHandlers = {
@@ -234,6 +237,16 @@ function Menubar({ children, className }) {
           if (e.button === 2) {
             return;
           }
+
+          const isDisabled =
+            e.currentTarget.getAttribute('aria-disabled') === 'true';
+
+          if (isDisabled) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
           setMenuOpen('none');
         },
         onBlur: handleBlur,

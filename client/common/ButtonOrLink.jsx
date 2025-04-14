@@ -7,7 +7,18 @@ import PropTypes from 'prop-types';
  */
 
 const ButtonOrLink = React.forwardRef(
-  ({ href, children, isDisabled, ...props }, ref) => {
+  ({ href, children, isDisabled, onClick, ...props }, ref) => {
+    const handleClick = (e) => {
+      if (isDisabled) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (onClick) {
+        onClick(e);
+      }
+    };
+
     if (href) {
       if (href.startsWith('http')) {
         return (
@@ -18,19 +29,31 @@ const ButtonOrLink = React.forwardRef(
             rel="noopener noreferrer"
             aria-disabled={isDisabled}
             {...props}
+            onClick={handleClick}
           >
             {children}
           </a>
         );
       }
       return (
-        <Link ref={ref} to={href} aria-disabled={isDisabled} {...props}>
+        <Link
+          ref={ref}
+          to={href}
+          aria-disabled={isDisabled}
+          {...props}
+          onClick={handleClick}
+        >
           {children}
         </Link>
       );
     }
     return (
-      <button ref={ref} aria-disabled={isDisabled} {...props}>
+      <button
+        ref={ref}
+        aria-disabled={isDisabled}
+        {...props}
+        onClick={handleClick}
+      >
         {children}
       </button>
     );
@@ -53,12 +76,14 @@ ButtonOrLink.propTypes = {
    * Content of the button/link.
    * Can be either a string or a complex element.
    */
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func
 };
 
 ButtonOrLink.defaultProps = {
   href: null,
-  isDisabled: false
+  isDisabled: false,
+  onClick: null
 };
 
 export default ButtonOrLink;

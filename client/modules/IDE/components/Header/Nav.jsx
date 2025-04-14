@@ -176,7 +176,9 @@ const ProjectMenu = () => {
         <MenubarItem
           id="file-save"
           isDisabled={
-            !getConfig('LOGIN_ENABLED') || (project?.owner && !isUserOwner)
+            !user.authenticated ||
+            !getConfig('LOGIN_ENABLED') ||
+            (project?.owner && !isUserOwner)
           }
           onClick={() => saveSketch(cmRef.current)}
         >

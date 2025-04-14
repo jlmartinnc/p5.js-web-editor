@@ -123,7 +123,6 @@
   &.nav__dropdown-item--disabled {
     & button,
     & a {
-      pointer-events: none;
       @include themify() {
         color: getThemifyVariable('button-nav-inactive-color');
       }

@@ -294,6 +294,14 @@ function MenubarSubmenu({
     if (activeItem) {
       // since active item is a <li> element, we need to get the button or link inside it
       const activeItemNode = activeItem.firstChild;
+
+      const isDisabled =
+        activeItemNode.getAttribute('aria-disabled') === 'true';
+
+      if (isDisabled) {
+        return;
+      }
+
       activeItemNode.click();
 
       toggleMenuOpen(id);
