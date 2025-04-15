@@ -139,11 +139,11 @@ export const p5SoundURLOld = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.
 export const p5SoundURL =
   'https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js';
 export const p5PreloadAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/preload.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/preload.js';
 export const p5ShapesAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/shapes.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/shapes.js';
 export const p5DataAddonURL =
-  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.1/src/data.js';
+  'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/data.js';
 export const p5URL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/p5.js`;
 
 const P5VersionContext = React.createContext({});
