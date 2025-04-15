@@ -44,15 +44,6 @@
   @include icon();
 }
 
-// .nav__items-left,
-// .nav__items-right {
-//   & button, & a {
-//     @include themify() {
-//       color: getThemifyVariable('primary-text-color');
-//     }
-//   }
-// }
-
 .nav__item {
   position: relative;
   display: flex;
@@ -66,53 +57,34 @@
 }
 
 // base focus styles
-.nav__item button:focus {
-  outline: none;
+.nav__item button:focus {  
+  @include themify() {
+    background-color: getThemifyVariable('nav-hover-color');
+  }
   
   .nav__item-header {
     @include themify() {
-      color: getThemifyVariable('nav-hover-color');
+      color: getThemifyVariable('button-hover-color');
     }
   }
-  
-  & g, & path {
+
+  .nav__item-header-triangle polygon,
+  .nav__item-header-triangle path {
     @include themify() {
-      fill: getThemifyVariable('nav-hover-color');
+      fill: getThemifyVariable('button-hover-color');
     }
-  }
+  }  
 }
 
-// for keyboard navigation
-.nav__item button:focus-visible {
-  @include themify() {
-    box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
-  }
-}
-
-// focus styles for mouse interactions
-.nav__item button:focus:not(:focus-visible) {
-  @include themify() {
-    box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
-  }
-}
 
 .nav__dropdown-item {
   & button:focus,
   & a:focus {
-    outline: none;
     @include themify() {
       color: getThemifyVariable('button-hover-color');
       background-color: getThemifyVariable('nav-hover-color');
     }
   }
-
-  & button:focus-visible,
-  & a:focus-visible {
-    @include themify() {
-      box-shadow: 0 0 0 2px getThemifyVariable('nav-hover-color');
-    }
-  }
-
   & button:focus .nav__keyboard-shortcut,
   & a:focus .nav__keyboard-shortcut {
     @include themify() {
@@ -142,9 +114,13 @@
 }
 
 .nav__item:hover {
+  @include themify() {
+    background-color: getThemifyVariable('nav-hover-color');
+  }
+
   .nav__item-header {
     @include themify() {
-      color: getThemifyVariable('nav-hover-color');
+      color: getThemifyVariable('button-hover-color');
     }
   }
   
@@ -157,7 +133,7 @@
   .nav__item-header-triangle polygon,
   .nav__item-header-triangle path {
     @include themify() {
-      fill: getThemifyVariable('nav-hover-color');
+      fill: getThemifyVariable('button-hover-color');
     }
   }
 }
