@@ -98,6 +98,12 @@
       @include themify() {
         color: getThemifyVariable('button-nav-inactive-color');
       }
+
+      & .nav__keyboard-shortcut {
+        @include themify() {
+          color: getThemifyVariable('button-nav-inactive-color');
+        }
+      }
     }
   }
 }
