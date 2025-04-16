@@ -461,6 +461,32 @@ exports[`Nav renders editor version for desktop 1`] = `
               <li>
                 New
               </li>
+              <li>
+                Save
+                <span
+                  class="nav__keyboard-shortcut"
+                >
+                  Ctrl+S
+                </span>
+              </li>
+              <li>
+                Duplicate
+              </li>
+              <li>
+                Share
+              </li>
+              <li>
+                Download
+              </li>
+              <li>
+                Open
+              </li>
+              <li>
+                Add to Collection
+              </li>
+              <li>
+                Examples
+              </li>
             </ul>
           </li>
           <li
