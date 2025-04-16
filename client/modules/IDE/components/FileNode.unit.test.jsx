@@ -1,4 +1,7 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import {
   fireEvent,
@@ -8,6 +11,8 @@ import {
   within
 } from '../../../test-utils';
 import { FileNode } from './FileNode';
+
+const mockStore = configureStore([thunk]);
 
 describe('<FileNode />', () => {
   const changeName = (newFileName) => {
@@ -45,7 +50,20 @@ describe('<FileNode />', () => {
       setProjectName: jest.fn()
     };
 
-    render(<FileNode {...props} />);
+    const mockFiles = [
+      { id: '0', name: props.name, parentId: null },
+      { id: '1', name: 'sketch.js', parentId: '0', isSelectedFile: true }
+    ];
+
+    const store = mockStore({
+      files: mockFiles
+    });
+
+    render(
+      <Provider store={store}>
+        <FileNode {...props} />
+      </Provider>
+    );
 
     return props;
   };
