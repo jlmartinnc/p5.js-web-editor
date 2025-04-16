@@ -51,8 +51,28 @@ describe('<FileNode />', () => {
     };
 
     const mockFiles = [
-      { id: '0', name: props.name, parentId: null },
-      { id: '1', name: 'sketch.js', parentId: '0', isSelectedFile: true }
+      {
+        id: '0',
+        name: props.name,
+        parentId: 'parent-folder-id'
+      },
+      {
+        id: '1',
+        name: 'sketch.js',
+        parentId: '0',
+        isSelectedFile: true
+      },
+      {
+        id: 'parent-folder-id',
+        name: 'parent',
+        parentId: null,
+        children: ['0', 'some-other-file-id']
+      },
+      {
+        id: 'some-other-file-id',
+        name: 'duplicate.js',
+        parentId: 'parent-folder-id'
+      }
     ];
 
     const store = mockStore({
