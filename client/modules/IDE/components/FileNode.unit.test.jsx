@@ -37,6 +37,7 @@ describe('<FileNode />', () => {
       fileType,
       canEdit: true,
       children: [],
+      parentId: 'parent-folder-id',
       authenticated: false,
       setSelectedFile: jest.fn(),
       deleteFile: jest.fn(),
