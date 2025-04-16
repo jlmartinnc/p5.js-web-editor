@@ -154,8 +154,10 @@ function Menubar({ children, className }) {
 
       if (!isInMenu) {
         timerRef.current = setTimeout(() => {
-          setMenuOpen('none');
-          setHasFocus(false);
+          if (nodeRef.current) {
+            setMenuOpen('none');
+            setHasFocus(false);
+          }
         }, 10);
       }
     },
@@ -212,6 +214,10 @@ function Menubar({ children, className }) {
       }
     }
   }, [activeIndex, prevIndex, menuItems]);
+
+  useEffect(() => {
+    clearHideTimeout();
+  }, [clearHideTimeout]);
 
   // context value for dropdowns and menu items
   const contextValue = useMemo(
