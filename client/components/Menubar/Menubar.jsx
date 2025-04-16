@@ -150,7 +150,7 @@ function Menubar({ children, className }) {
 
   const handleBlur = useCallback(
     (e) => {
-      const isInMenu = nodeRef.current?.contains(e.relatedTarget);
+      const isInMenu = nodeRef.current?.contains(document.activeElement);
 
       if (!isInMenu) {
         timerRef.current = setTimeout(() => {
@@ -206,7 +206,10 @@ function Menubar({ children, className }) {
       // roving tabindex
       prevNode?.setAttribute('tabindex', '-1');
       activeNode?.setAttribute('tabindex', '0');
-      activeNode?.focus();
+
+      if (hasFocus) {
+        activeNode?.focus();
+      }
     }
   }, [activeIndex, prevIndex, menuItems]);
 
