@@ -94,7 +94,9 @@
 
   &.nav__dropdown-item--disabled {
     & button,
-    & a {
+    & a,
+    & button:hover,
+    & a:hover {
       @include themify() {
         color: getThemifyVariable('button-nav-inactive-color');
       }
