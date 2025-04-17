@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import React, { useContext, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -315,7 +316,7 @@ export function P5VersionProvider(props) {
 }
 
 P5VersionProvider.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.node.isRequired
 };
 
 export function useP5Version() {
