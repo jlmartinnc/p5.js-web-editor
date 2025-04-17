@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import React, { useContext, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,6 +9,7 @@ import PropTypes from 'prop-types';
 // TODO: use their API for this to grab these at build time?
 export const p5Versions = [
   '2.0.0',
+  '1.11.5',
   '1.11.4',
   '1.11.3',
   '1.11.2',
@@ -134,7 +136,7 @@ export const p5Versions = [
   '0.2.1'
 ];
 
-export const currentP5Version = '1.11.4'; // Don't update to 2.x until 2026
+export const currentP5Version = '1.11.3'; // Don't update to 2.x until 2026
 
 export const p5SoundURLOld = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js`;
 export const p5SoundURL =
@@ -315,7 +317,7 @@ export function P5VersionProvider(props) {
 }
 
 P5VersionProvider.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.node.isRequired
 };
 
 export function useP5Version() {
