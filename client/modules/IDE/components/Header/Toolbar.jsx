@@ -15,11 +15,12 @@ import {
   setGridOutput,
   setTextOutput
 } from '../../actions/preferences';
+import { changeVisibility } from '../../actions/project';
 import PlayIcon from '../../../../images/play.svg';
 import StopIcon from '../../../../images/stop.svg';
 import PreferencesIcon from '../../../../images/preferences.svg';
 import ProjectName from './ProjectName';
-import { changeVisibility } from '../../actions/project';
+import VersionIndicator from '../VersionIndicator';
 
 const Toolbar = (props) => {
   const { isPlaying, infiniteLoop, preferencesIsVisible } = useSelector(
@@ -131,7 +132,7 @@ const Toolbar = (props) => {
           }
           if (project?.owner && !userIsOwner) {
             return (
-              <p className="toolbar__project-project.owner">
+              <p className="toolbar__project-owner">
                 {t('Toolbar.By')}{' '}
                 <Link to={`/${project.owner.username}/sketches`}>
                   {project.owner.username}
@@ -141,7 +142,9 @@ const Toolbar = (props) => {
           }
           return null;
         })()}
+        <VersionIndicator />
       </div>
+      <div style={{ flex: 1 }} />
       <button
         className={preferencesButtonClass}
         onClick={() => dispatch(openPreferences())}
