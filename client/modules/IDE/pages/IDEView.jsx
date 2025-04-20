@@ -37,7 +37,7 @@ function isAuth(pathname) {
 }
 
 function isOverlay(pathname) {
-  return pathname === '/about' || pathname === '/feedback';
+  return pathname === '/feedback';
 }
 
 function WarnIfUnsavedChanges() {
@@ -95,6 +95,7 @@ const IDEView = () => {
   const project = useSelector((state) => state.project);
   const isUserOwner = useSelector(getIsUserOwner);
   const dispatch = useDispatch();
+
   const { t } = useTranslation();
 
   const params = useParams();
@@ -123,13 +124,6 @@ const IDEView = () => {
       dispatch(getProject(id, username));
     }
   }, [dispatch, params, project.id]);
-
-  useEffect(() => {
-    if (!isUserOwner && project.visibility === 'Private') {
-      // TODO: we might want to have a 'Sorry, this sketch is private' page for this
-      history.push('/');
-    }
-  }, [isUserOwner, project.visibility, history]);
 
   const autosaveAllowed = isUserOwner && project.id && preferences.autosave;
   const shouldAutosave = autosaveAllowed && ide.unsavedChanges;

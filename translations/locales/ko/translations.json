@@ -269,6 +269,7 @@
     "errorShortPassword": "Password must be at least 6 characters",
     "errorConfirmPassword": "Please confirm your password",
     "errorNewPassword": "Please enter a new password or leave the current password empty.",
+    "errorNewPasswordRepeat":"Your New Password must differ from the current one.",
     "errorEmptyUsername": "Please enter a username.",
     "errorLongUsername": "Username must be less than 20 characters.",
     "errorValidUsername": "Username must only consist of numbers, letters, periods, dashes, and underscores."
@@ -346,7 +347,8 @@
     "Description": "회원가입",
     "Or": "또는",
     "AlreadyHave": "이미 계정이 있나요?",
-    "Login": "로그인"
+    "Login": "로그인",
+    "Warning" : "가입하면 p5.js 편집기의 <0>이용 약관</0> 및 <1>개인정보 보호정책</1>에 동의하는 것입니다."
   },
   "EmailVerificationView": {
     "Title": "p5.js 웹에디터 | 이메일 확인",
@@ -354,7 +356,7 @@
     "InvalidTokenNull": "이 링크는 유효하지 않습니다.",
     "Checking": "Validating token, please wait...",
     "Verified": "All done, your email address has been verified.",
-    "InvalidState": "Something went wrong."
+    "InvalidState": "토큰이 유효하지 않거나 만료되었습니다."
   },
   "AssetList": {
     "Title": "p5.js Web Editor | My assets",
@@ -539,10 +541,6 @@
     "35Seconds": "35 seconds ago",
     "Ago": "{{timeAgo}} ago"
   },
-  "AddRemoveButton": {
-    "AltAddARIA": "Add to collection",
-    "AltRemoveARIA": "Remove from collection"
-  },
   "CopyableInput": {
     "CopiedARIA": "Copied to Clipboard!",
     "OpenViewTabARIA": "Open {{label}} view in new tab"
@@ -576,14 +574,6 @@
   "PreferenceCreators": {
     "On": "On",
     "Off": "Off"
-  },
-  "MobileIDEView":{
-    "Preferences": "Preferences",
-    "MyStuff": "My Stuff",
-    "Examples": "Examples",
-    "OriginalEditor": "Original Editor",
-    "Login": "Login",
-    "Logout": "Logout"
   },
   "MobileDashboardView": {
     "Examples": "Examples",

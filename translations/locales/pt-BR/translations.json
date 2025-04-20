@@ -281,6 +281,7 @@
     "errorShortPassword": "Senha deve ter no mínimo 6 caracteres",
     "errorConfirmPassword": "Por favor coloque a senha de confirmação",
     "errorNewPassword": "Por favor, adicione uma senha nova ou deixe a atual em branco.",
+    "errorNewPasswordRepeat":"Your New Password must differ from the current one.",
     "errorEmptyUsername": "Por favor coloque um nome de usuário",
     "errorLongUsername": "Nome de usuário deve ter menos de 20 caracteres.",
     "errorValidUsername": "Nome de usuário pode apenas consistir de números, letras, pontos, Hífens e linha sublinhada."
@@ -358,7 +359,8 @@
     "Description": "Criar Conta",
     "Or": "Ou",
     "AlreadyHave": "Já tem uma conta?",
-    "Login": "Entrar"
+    "Login": "Entrar",
+    "Warning" : "Ao se inscrever, você concorda com os <0>Termos de Uso</0> e a <1>Política de Privacidade</1> do editor p5.js."
   },
   "EmailVerificationView": {
     "Title": "Editor de Web p5.js | Verificação de Email",
@@ -366,7 +368,7 @@
     "InvalidTokenNull": "Link Inválido.",
     "Checking": "Validando token, aguarde...",
     "Verified": "Tudo pronto, seu endereço de email foi verificado!",
-    "InvalidState": "Algo deu errado."
+    "InvalidState": "O token é inválido ou expirou."
   },
   "AssetList": {
     "Title": "Editor de Web p5.js | Meus recursos",
@@ -551,10 +553,6 @@
     "35Seconds": "35 segundos atrás",
     "Ago": "{{timeAgo}} atrás"
   },
-  "AddRemoveButton": {
-    "AltAddARIA": "Adicionar à coleção",
-    "AltRemoveARIA": "Remover da coleção"
-  },
   "CopyableInput": {
     "CopiedARIA": "Copiado para a Área de Transferência!",
     "OpenViewTabARIA": "Abrir a vista {{label}} em nova aba"
@@ -588,14 +586,6 @@
   "PreferenceCreators": {
     "On": "Ligado",
     "Off": "Desligado"
-  },
-  "MobileIDEView":{
-    "Preferences": "Preferências",
-    "MyStuff": "Minhas Coisas",
-    "Examples": "Exemplos",
-    "OriginalEditor": "Editor Original",
-    "Login": "Entrar",
-    "Logout": "Sair"
   },
   "MobileDashboardView": {
     "Examples": "Exemplos",

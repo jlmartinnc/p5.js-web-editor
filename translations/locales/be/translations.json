@@ -67,7 +67,10 @@
     "UsernameOrEmailARIA": "ইমেইল অথবা ব্যবহারকারীর নাম",
     "Password": "পাসওয়ার্ড",
     "PasswordARIA": "পাসওয়ার্ড",
-    "Submit": "লগ ইন করুন"
+    "Submit": "লগ ইন করুন",
+    "Errors": {
+      "invalidCredentials": "অবৈধ ইমেল বা পাসওয়ার্ড।"
+    }
   },
   "LoginView": {
     "Title": "p5.js ওয়েব এডিটর | লগইন",
@@ -287,6 +290,7 @@
     "errorShortPassword": "পাসওয়ার্ডটি কমপক্ষে 6 টি অক্ষর হতে হবে",
     "errorConfirmPassword": "আপনার পাসওয়ার্ড নিশ্চিত করুন",
     "errorNewPassword": "দয়া করে একটি নতুন পাসওয়ার্ড লিখুন বা বর্তমান পাসওয়ার্ডটি ফাঁকা রাখুন।",
+    "errorNewPasswordRepeat":"Your New Password must differ from the current one.",
     "errorEmptyUsername": "দয়া করে একটি ইউজারনেম লিখুন",
     "errorLongUsername": "ইউজারনেম সর্বাধিক 20 অক্ষর হতে হবে",
     "errorValidUsername": "ইউজারনেম কেবলমাত্র সংখ্যা, অক্ষর, দোতলা, ড্যাশ, এবং আন্ডারস্কোর থাকতে পারে"
@@ -373,7 +377,7 @@
     "InvalidTokenNull": "সেই লিঙ্কটি অবৈধ।",
     "Checking": "টোকেন যাচাই করা হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...",
     "Verified": "সব হয়ে গেছে, আপনার ইমেল ঠিকানা যাচাই হয়েছে।",
-    "InvalidState": "কিছু ভুল হয়েছে।"
+    "InvalidState": "টোকেন অবৈধ বা মেয়াদ উত্তীর্ণ হয়েছে।"
   },
   "AssetList": {
     "Title": "p5.js ওয়েব এডিটর | আমার সম্পত্তি",
@@ -558,10 +562,6 @@
     "35Seconds": "35 সেকেন্ড আগে",
     "Ago": "{{timeAgo}} আগে"
   },
-  "AddRemoveButton": {
-    "AltAddARIA": "সংগ্রহে যোগ করুন",
-    "AltRemoveARIA": "সংগ্রহ থেকে সরান"
-  },
   "CopyableInput": {
     "CopiedARIA": "ক্লিপবোর্ডে কপি করা হয়েছে!",
     "OpenViewTabARIA": "{{label}} দেখুন নতুন ট্যাবে"
@@ -596,14 +596,6 @@
   "PreferenceCreators": {
     "On": "চালু",
     "Off": "বন্ধ"
-  },
-  "MobileIDEView": {
-    "Preferences": "পছন্দ",
-    "MyStuff": "আমার জিনিসপত্র",
-    "Examples": "উদাহরণ",
-    "OriginalEditor": "মৌলিক এডিটর",
-    "Login": "লগইন",
-    "Logout": "লগআউট"
   },
   "MobileDashboardView": {
     "Examples": "উদাহরণ",

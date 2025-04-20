@@ -99,7 +99,6 @@
 	margin-right: #{math.div(30, $base-font-size)}rem;
 
 	@include themify() {
-
 		& g,
 		& path {
 			fill: getThemifyVariable('logo-color');
@@ -127,21 +126,20 @@
 	width: 60%;
 }
 
-
 .toolbar__project-name-container {
 	margin-left: #{math.div(10, $base-font-size)}rem;
 	padding-left: #{math.div(10, $base-font-size)}rem;
 	display: flex;
 	align-items: center;
+	gap: #{math.div(16, $base-font-size)}rem; 
 
-	>section {
+	> section {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 30px;
 		width: 30px;
 	}
-
 }
 
 .toolbar .editable-input__label {
@@ -159,8 +157,7 @@
 }
 
 .toolbar__project-owner {
-	margin-left: #{math.div(5, $base-font-size)}rem;
-
+	margin: 0; 
 	@include themify() {
 		color: getThemifyVariable('secondary-text-color');
 	}
@@ -194,11 +191,10 @@
 	}
 }
 
-
 .toolbar__makeprivate {
 	display: flex;
-	gap: 2px;
 	align-items: center;
+	gap: #{math.div(4, $base-font-size)}rem;
 }
 
 .toolbar__togglevisibility {

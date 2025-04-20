@@ -430,11 +430,14 @@ export function changeVisibility(projectId, projectName, visibility) {
 
           if (state.project.id === response.data.id) {
             dispatch({
+              type: ActionTypes.SET_PROJECT_VISIBILITY,
+              visibility: newVisibility
+            });
+            dispatch({
               type: ActionTypes.SET_PROJECT_NAME,
               name: response.data.name
             });
           }
-
           dispatch(
             setToastText(`${projectName} is now ${newVisibility.toLowerCase()}`)
           );

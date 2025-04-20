@@ -11,7 +11,7 @@ const sketches = (state = [], action) => {
         if (sketch.id === action.payload.id) {
           return { ...sketch, visibility: action.payload.visibility };
         }
-        return { ...sketch };
+        return sketch;
       });
     }
     case ActionTypes.RENAME_PROJECT: {
@@ -19,7 +19,7 @@ const sketches = (state = [], action) => {
         if (sketch.id === action.payload.id) {
           return { ...sketch, name: action.payload.name };
         }
-        return { ...sketch };
+        return sketch;
       });
     }
     default:

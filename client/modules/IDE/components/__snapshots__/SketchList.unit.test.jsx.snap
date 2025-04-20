@@ -162,6 +162,7 @@ exports[`<Sketchlist /> snapshot testing 1`] = `
             class="sketch-list__dropdown-column"
           >
             <div
+              aria-haspopup="menu"
               class="c0"
             >
               <button
@@ -239,6 +240,7 @@ exports[`<Sketchlist /> snapshot testing 1`] = `
             class="sketch-list__dropdown-column"
           >
             <div
+              aria-haspopup="menu"
               class="c0"
             >
               <button

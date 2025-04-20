@@ -31,7 +31,6 @@ const Toolbar = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  console.log(project.visibility);
   const userIsOwner = user?.username === project.owner?.username;
   const toggleVisibility = (e) => {
     try {
@@ -78,6 +77,7 @@ const Toolbar = (props) => {
       </button>
       <button
         className={playButtonClass}
+        id="play-sketch"
         onClick={() => {
           props.syncFileContent();
           dispatch(startSketch());
