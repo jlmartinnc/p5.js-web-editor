@@ -8,7 +8,9 @@ import PropTypes from 'prop-types';
 // JSON.stringify([...document.querySelectorAll('._132722c7')].map(n => n.innerText), null, 2)
 // TODO: use their API for this to grab these at build time?
 export const p5Versions = [
+  '2.0.1',
   '2.0.0',
+  '1.11.5',
   '1.11.4',
   '1.11.3',
   '1.11.2',
@@ -135,7 +137,7 @@ export const p5Versions = [
   '0.2.1'
 ];
 
-export const currentP5Version = '1.11.4'; // Don't update to 2.x until 2026
+export const currentP5Version = '1.11.5'; // Don't update to 2.x until 2026
 
 export const p5SoundURLOld = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js`;
 export const p5SoundURL =
@@ -146,7 +148,7 @@ export const p5ShapesAddonURL =
   'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/shapes.js';
 export const p5DataAddonURL =
   'https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/data.js';
-export const p5URL = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${currentP5Version}/p5.js`;
+export const p5URL = `https://cdn.jsdelivr.net/npm/p5@${currentP5Version}/lib/p5.js`;
 
 const P5VersionContext = React.createContext({});
 
