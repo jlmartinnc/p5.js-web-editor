@@ -83,7 +83,7 @@ const userSchema = new Schema(
       default: 'none'
     },
     banned: { type: Boolean, default: false },
-    lastLoginTimestamp: { type: Date } // or should it be last active?
+    lastLoginTimestamp: { type: Date }
   },
   { timestamps: true, usePushEach: true }
 );

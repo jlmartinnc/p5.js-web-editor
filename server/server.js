@@ -167,8 +167,6 @@ app.get('/', (req, res) => {
   res.sendFile(renderIndex());
 });
 
-// if we want to see when a user was last active, should we put in some middleware here?
-
 // Handle API errors
 app.use('/api', (error, req, res, next) => {
   if (error && error.code && !res.headersSent) {
