@@ -95,7 +95,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 28 // 4 weeks
+      maxAge: 1000 * 60 * 60 * 24 * 28 // 4 weeks in milliseconds
     },
     store: new MongoStore({
       clientPromise,
