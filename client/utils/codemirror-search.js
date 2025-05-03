@@ -515,6 +515,7 @@ function doSearch(cm, rev, persistent, immediate, ignoreQuery) {
       startSearch(cm, state, q);
       findNext(cm, rev);
     }
+
   } else {
     dialog(cm, queryDialog, 'Search for:', q, function (query) {
       if (query && !state.query)
