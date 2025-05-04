@@ -204,6 +204,11 @@ input[type="number"]::-webkit-outer-spin-button {
     font-weight: bold;
   }
 }
+.preference__radio-button:focus-visible + .preference__option {
+  outline: 2px solid #3B99FC;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 .preference--hidden {
   @extend %hidden-element;
