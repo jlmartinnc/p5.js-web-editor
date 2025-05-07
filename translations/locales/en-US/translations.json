@@ -334,6 +334,7 @@
   "ReduxFormUtils": {
     "errorInvalidEmail": "Please enter a valid email address",
     "errorEmptyEmail": "Please enter an email",
+    "errorEmptyEmailorUserName": "Please enter an email or username",
     "errorPasswordMismatch": "Passwords must match",
     "errorEmptyPassword": "Please enter a password",
     "errorShortPassword": "Password must be at least 6 characters",
