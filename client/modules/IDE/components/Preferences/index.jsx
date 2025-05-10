@@ -386,7 +386,7 @@ export default function Preferences() {
               <input
                 type="radio"
                 onChange={() => dispatch(setLinewrap(true))}
-                aria-label={t('Preferences.LineWrapOnARIA')}
+                aria-label={t('Preferences.WordWrapOnARIA')}
                 name="linewrap"
                 id="linewrap-on"
                 className="preference__radio-button"
@@ -399,7 +399,7 @@ export default function Preferences() {
               <input
                 type="radio"
                 onChange={() => dispatch(setLinewrap(false))}
-                aria-label={t('Preferences.LineWrapOffARIA')}
+                aria-label={t('Preferences.WordWrapOffARIA')}
                 name="linewrap"
                 id="linewrap-off"
                 className="preference__radio-button"
