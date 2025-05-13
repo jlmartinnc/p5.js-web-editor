@@ -2,11 +2,13 @@
 
 Follow these instructions to set up your development environment, which you need to do before you start contributing code to this project.
 
-There are two ways to install the project locally:
+Before you dive in, note that there are two ways to install the project locally:
 
-Manual Installation is great if you're comfortable managing dependencies like Node.js and MongoDB directly on your machine. It's more hands-on and gives you finer control, which can be helpful for debugging or learning how each part works.
+- **Manual Installation** is great if you're comfortable managing dependencies like Node.js and MongoDB directly on your machine. It's more hands-on and gives you finer control, which can be helpful for debugging or learning how each part works.
 
-Docker Installation is ideal if you want a faster setup with all dependencies (Node, MongoDB, etc.) isolated in containers. This avoids version conflicts and works consistently across environments especially helpful if you're new to backend setup or don't want to alter your local setup.
+- **Docker Installation** is ideal if you want a faster setup with all dependencies (Node, MongoDB, etc.) isolated in containers. This avoids version conflicts and works consistently across environments especially helpful if you're new to backend setup or don't want to alter your local setup.
+
+If you're just getting started, try going with the **Manual Installation** Method! Once you get comfortable, feel free to try out both and see which one you feel more comfortable with. 
 
 ## Manual Installation
 
