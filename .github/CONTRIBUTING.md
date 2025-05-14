@@ -75,6 +75,7 @@ The best way to verify if an issue is ready to be worked on is checking if it ha
 
 ### Before Submitting a Pull Request
 Before submitting a pull request, make sure that: 
+- Your work is related to an issue. **Pull requests that do not have an associated issue will not be accepted.** 
 - Your work adheres to the style guidelines and fits in with the rest of the codebase. 
 - You ran the project locally and tested your changes. Pay special attention to any specific areas of the p5.js editor that may be affected by your changes. Does everything still work as before? Great!
 - You reference the [Preparing a Pull Request Guide](https://github.com/processing/p5.js-web-editor/blob/develop/contributor_docs/preparing_a_pull_request.md) for more details!
