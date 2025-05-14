@@ -51,6 +51,7 @@ Issues with these labels are a great place to start!
 - [Help Wanted](https://github.com/processing/p5.js-web-editor/labels/Help%20Wanted)
 - [Good First Issue](https://github.com/processing/p5.js-web-editor/labels/Good%20First%20Issue)
 - [Need Steps to Reproduce](https://github.com/processing/p5.js-web-editor/labels/Needs%20Steps%20to%20Reproduce)
+- [Ready for Work](https://github.com/processing/p5.js-web-editor/labels/Ready%20for%20Work)
 
 A breakdown of what each label means can be found in the [Preparing an Issue Guide](#preparing-an-issue). 
 
@@ -64,7 +65,9 @@ Before beginning work on a code contribution, please make sure that:
 
 ### Choosing an Issue
 
-- **Please do not open a pull request for an issue that is already assigned to someone else**. We follow a “first assigned, first served” approach to avoid duplicated work. If you open a PR for an issue that someone else is already working on, your PR will be closed.
+The best way to verify if an issue is ready to be worked on is checking if it has the [Ready for Work](https://github.com/processing/p5.js-web-editor/labels/Ready%20for%20Work) label. However, here are a few other suggestions to keep in mind as you explore the issues:
+
+-  **Please do not open a pull request for an issue that is already assigned to someone else**. We follow a “first assigned, first served” approach to avoid duplicated work. If you open a PR for an issue that someone else is already working on, your PR will be closed.
 
 - If an issue has been inactive for a long time, you’re welcome to check in politely by commenting to see if the assignee still plans to work on it or would be open to someone else taking over.
 
