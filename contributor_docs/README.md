@@ -9,7 +9,8 @@ These guides aren't exhaustive, and do not cover all the possible ways you can c
 * [Installation](installation.md) - A guide for setting up your development environment.
 * [Development](development.md) - A guide for contributing code to the codebase.
 * [Testing](./testing.md) - A guide for writing and running tests in the codebase. 
-* [Preparing a pull-request](preparing_a_pull_request.md) - Instructions for making a pull-request.
+* [Preparing an Issue](preparing_an_issue.md) - Instructions for creating and navigating issues.
+* [Preparing a Pull Request](preparing_a_pull_request.md) - Instructions for making a pull-request.
 * [Accessibility Guidelines](accessibility.md) - Guidelines for writing code to create an accessible application. 
 * [Translations Guidelines](translations.md) - Guidelines for translating the p5.js editor. 
 * [Deployment](deployment.md) - A guide to production deployment, and all platforms that are being used.
@@ -18,5 +19,4 @@ These guides aren't exhaustive, and do not cover all the possible ways you can c
 
 ## Documents to Create
 * Software Design Principles - reference [p5.js software design principles](https://github.com/processing/p5.js/blob/eb61f7a260531d17930de3c987949558ce242d35/contributor_docs/contributor_guidelines.md#software-design-principles)
-* Issue Templates - reference [p5.js issue templates](https://github.com/processing/p5.js/blob/main/contributor_docs/contributor_guidelines.md#issue-templates)
 * File Structure - An explanation of the file structure of this application.

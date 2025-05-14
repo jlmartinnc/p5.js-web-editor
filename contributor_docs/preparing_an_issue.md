@@ -14,6 +14,7 @@ To file a new issue:
 
 4. Fill out the form as in-depth as you can. It helps to be as clear and specific as you can in your language and supporting information. Some ways to achieve that is by including screenshots, code snippets, or steps to exactly reproduce a scenario! Doing this helps maintainers and other contributors understand and respond to your issue more quickly and accurately.
 
+More in-depth information about filing an issue can be found within the [p5.js Library Documentation for Issue Templates](https://github.com/processing/p5.js/blob/main/contributor_docs/contributor_guidelines.md#issue-templates).
 
 ## Navigating Existing Issues
 
