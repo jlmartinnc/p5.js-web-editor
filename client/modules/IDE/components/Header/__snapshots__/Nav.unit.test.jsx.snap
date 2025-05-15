@@ -362,52 +362,105 @@ exports[`Nav renders dashboard version for mobile 1`] = `
             File
           </b>
           <li>
-            New
+            <button
+              aria-disabled="false"
+            >
+              New
+            </button>
           </li>
           <li>
-            Save
+            <button
+              aria-disabled="false"
+            >
+              Save
+            </button>
           </li>
           <li>
-            Examples
+            <a
+              aria-disabled="false"
+              href="/p5/sketches"
+            >
+              Examples
+            </a>
           </li>
           <b>
             Edit
           </b>
           <li>
-            Tidy Code
+            <button
+              aria-disabled="false"
+            >
+              Tidy Code
+            </button>
           </li>
           <li>
-            Find
+            <button
+              aria-disabled="false"
+            >
+              Find
+            </button>
           </li>
           <b>
             Sketch
           </b>
           <li>
-            Add File
+            <button
+              aria-disabled="false"
+            >
+              Add File
+            </button>
           </li>
           <li>
-            Add Folder
+            <button
+              aria-disabled="false"
+            >
+              Add Folder
+            </button>
           </li>
           <b>
             Settings
           </b>
           <li>
-            Preferences
+            <button
+              aria-disabled="false"
+            >
+              Preferences
+            </button>
           </li>
           <li>
-            Language
+            <button
+              aria-disabled="false"
+            >
+              Language
+            </button>
           </li>
           <b>
             Help
           </b>
           <li>
-            Keyboard Shortcuts
+            <button
+              aria-disabled="false"
+            >
+              Keyboard Shortcuts
+            </button>
           </li>
           <li>
-            Reference
+            <a
+              aria-disabled="false"
+              href="https://p5js.org/reference/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Reference
+            </a>
           </li>
           <li>
-            About
+            <a
+              aria-disabled="false"
+              href="/about"
+            >
+              About
+            </a>
           </li>
         </ul>
       </div>
@@ -904,52 +957,105 @@ exports[`Nav renders editor version for mobile 1`] = `
             File
           </b>
           <li>
-            New
+            <button
+              aria-disabled="false"
+            >
+              New
+            </button>
           </li>
           <li>
-            Save
+            <button
+              aria-disabled="false"
+            >
+              Save
+            </button>
           </li>
           <li>
-            Examples
+            <a
+              aria-disabled="false"
+              href="/p5/sketches"
+            >
+              Examples
+            </a>
           </li>
           <b>
             Edit
           </b>
           <li>
-            Tidy Code
+            <button
+              aria-disabled="false"
+            >
+              Tidy Code
+            </button>
           </li>
           <li>
-            Find
+            <button
+              aria-disabled="false"
+            >
+              Find
+            </button>
           </li>
           <b>
             Sketch
           </b>
           <li>
-            Add File
+            <button
+              aria-disabled="false"
+            >
+              Add File
+            </button>
           </li>
           <li>
-            Add Folder
+            <button
+              aria-disabled="false"
+            >
+              Add Folder
+            </button>
           </li>
           <b>
             Settings
           </b>
           <li>
-            Preferences
+            <button
+              aria-disabled="false"
+            >
+              Preferences
+            </button>
           </li>
           <li>
-            Language
+            <button
+              aria-disabled="false"
+            >
+              Language
+            </button>
           </li>
           <b>
             Help
           </b>
           <li>
-            Keyboard Shortcuts
+            <button
+              aria-disabled="false"
+            >
+              Keyboard Shortcuts
+            </button>
           </li>
           <li>
-            Reference
+            <a
+              aria-disabled="false"
+              href="https://p5js.org/reference/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Reference
+            </a>
           </li>
           <li>
-            About
+            <a
+              aria-disabled="false"
+              href="/about"
+            >
+              About
+            </a>
           </li>
         </ul>
       </div>
