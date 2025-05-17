@@ -150,6 +150,7 @@
       "Settings": "सेटिंग्स",
       "GeneralSettings": "सामान्य सेटिंग्स",
       "Accessibility": "ऐक्सेसबिलिटी",
+      "LibraryManagement": "लाइब्रेरी प्रबंधन",
       "Theme": "थीम",
       "LightTheme": "लाइट",
       "LightThemeARIA": "लाइट थीम चालू",
@@ -191,7 +192,13 @@
       "PlainText": "प्लेन-टेक्स्ट",
       "TextOutputARIA": "टेक्स्ट आउटपुट चालू",
       "TableText": "टेबल-टेक्स्ट",
-      "TableOutputARIA": "टेबल आउटपुट चालू"
+      "TableOutputARIA": "टेबल आउटपुट चालू",
+      "LibraryVersion": "p5.js संस्करण",
+      "LibraryVersionInfo": "p5.js का एक [नया 2.0 संस्करण](https://github.com/processing/p5.js/releases/) उपलब्ध है! यह अगस्त 2026 में डिफ़ॉल्ट बन जाएगा, इसलिए इस समय का उपयोग इसे आज़माने और बग्स की रिपोर्ट करने के लिए करें। क्या आप 1.x से 2.0 में स्केच को स्थानांतरित करने में रुचि रखते हैं? [संगतता और स्थानांतरण संसाधनों](https://github.com/processing/p5.js-compatibility) को देखें।",
+      "SoundAddon": "p5.sound.js Add-on लाइब्रेरी",
+      "PreloadAddon": "p5.js 1.x Compatibility Add-on लाइब्रेरी — प्रीलोड",
+      "ShapesAddon": "p5.js 1.x Compatibility Add-on लाइब्रेरी — आकार",
+      "DataAddon": "p5.js 1.x Compatibility Add-on लाइब्रेरी — डेटा संरचनाएँ"
     },
     "KeyboardShortcuts": {
       "Title": " कीबोर्ड शॉर्टकट",
