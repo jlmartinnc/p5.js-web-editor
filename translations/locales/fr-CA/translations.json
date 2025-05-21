@@ -203,7 +203,7 @@
         "FindPreviousTextMatch": "Correspondance texte précédente",
         "CodeEditing": "Édition de code"
       },
-      "General": {
+      "GeneralSelection": {
         "StartSketch": "Exécuter le croquis",
         "StopSketch": "Arrêter le croquis",
         "TurnOnAccessibleOutput": "Activer la sortie accessible",

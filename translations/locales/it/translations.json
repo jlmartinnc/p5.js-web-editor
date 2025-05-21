@@ -203,7 +203,7 @@
       "CodeEditing": "Modifica del codice",
       "ColorPicker": "Mostra selettore colore in linea"
     },
-    "General": {
+    "GeneralSelection": {
       "StartSketch": "Avvia Sketch",
       "StopSketch": "Ferma Sketch",
       "TurnOnAccessibleOutput": "Attiva Output accessibile",
