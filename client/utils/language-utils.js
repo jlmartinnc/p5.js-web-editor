@@ -2,21 +2,6 @@
  * Utility functions for language detection and handling
  */
 
-function detectLanguageFromUserAgent(userAgent) {
-  const langRegexes = [
-    /\b([a-z]{2}(-[A-Z]{2})?);/i, // matches patterns like "en;" or "en-US;"
-    /\[([a-z]{2}(-[A-Z]{2})?)\]/i // matches patterns like "[en]" or "[en-US]"
-  ];
-
-  const match = langRegexes.reduce((result, regex) => {
-    if (result) return result;
-    const matches = userAgent.match(regex);
-    return matches && matches[1] ? matches[1] : null;
-  }, null);
-
-  return match;
-}
-
 function getPreferredLanguage(supportedLanguages = [], defaultLanguage = 'en') {
   if (typeof navigator === 'undefined') {
     return defaultLanguage;
@@ -89,18 +74,6 @@ function getPreferredLanguage(supportedLanguages = [], defaultLanguage = 'en') {
     }
   }
 
-  if (navigator.userAgent) {
-    const userAgentLang = detectLanguageFromUserAgent(navigator.userAgent);
-    if (
-      userAgentLang &&
-      normalizedSupported.includes(normalizeLanguage(userAgentLang))
-    ) {
-      const index = normalizedSupported.indexOf(
-        normalizeLanguage(userAgentLang)
-      );
-      return supportedLanguages[index];
-    }
-  }
   return defaultLanguage;
 }
 
