@@ -53,7 +53,7 @@ Issues with these labels are a great place to start!
 - [Need Steps to Reproduce](https://github.com/processing/p5.js-web-editor/labels/Needs%20Steps%20to%20Reproduce)
 - [Ready for Work](https://github.com/processing/p5.js-web-editor/labels/Ready%20for%20Work)
 
-A breakdown of what each label means can be found in the [Preparing an Issue Guide](#preparing-an-issue). 
+A breakdown of what each label means can be found in the [Preparing an Issue Guide](../contributor_docs/preparing_an_issue.md). 
 
 When approaching these issues, know that it's okay to not know how to fix an issue! Feel free to ask questions about to approach the problem. We are all here to learn and make something awesome. Someone from the community will help you out, and asking questions is a great way to learn about the p5.js editor, its file structure, and development process.
 
