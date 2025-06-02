@@ -83,7 +83,7 @@ Before submitting a pull request, make sure that:
 ---
 
 ## Ideas for Getting Started
-* Use the [p5.js Editor](https://editor.p5js.org)! Find a bug? Think of something you think would add to the project? Reference the [Preparing an Issue Guide](#preparing-an-issue) and open an issue.
+* Use the [p5.js Editor](https://editor.p5js.org)! Find a bug? Think of something you think would add to the project? Reference the [Preparing an Issue Guide](../contributor_docs/preparing_an_issue.md) and open an issue.
 * Expand an existing issue. Sometimes issues are missing steps to reproduce, or need suggestions for potential solutions. Sometimes they need another voice saying, "this is really important!"
 * Try getting the project running locally on your computer by following the [installation steps](./../contributor_docs/installation.md).
 * Look through the documentation in the [developer docs](../contributor_docs/) and the [development guide](./../contributor_docs/development.md). Is there anything that could be expanded? Is there anything missing?
