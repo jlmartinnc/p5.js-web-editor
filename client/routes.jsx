@@ -46,7 +46,7 @@ Route.propTypes = {
 
 const routes = (
   <Switch>
-    <Route exact path="/" component={IDEView} />
+    <ProtectedSketchRoute exact path="/" component={IDEView} />
     <Route path="/login" component={LoginView} />
     <Route path="/signup" component={SignupView} />
     <Route
