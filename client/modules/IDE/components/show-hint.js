@@ -11,6 +11,7 @@
 // The second function (inside) contains the actual implementation.
 import parseCode from './parseCode';
 import CodeMirror from 'codemirror';
+import warnIfBlacklisted from './warn';
 
 (function (mod) {
   if (typeof exports == 'object' && typeof module == 'object')
@@ -32,7 +33,7 @@ import CodeMirror from 'codemirror';
   // This is the old interface, kept around for now to stay
   // backwards-compatible.
   CodeMirror.showHint = function (cm, getHints, options) {
-    console.log('showhint was called: ', getHints, options);
+    console.log('showhint was called: ', cm, getHints, options);
     if (!getHints) return cm.showHint(options); // if not getHints function passed, it assumes youre using the newer interface
     // restructured options to call the new c.showHint() method
     if (options && options.async) getHints.async = true;
@@ -47,6 +48,7 @@ import CodeMirror from 'codemirror';
   // this adds a method called showHint to every cm editor instance (editor.showHint())
   CodeMirror.defineExtension('showHint', function (options) {
     options = parseOptions(this, this.getCursor('start'), options);
+    console.log('options are: ');
     var selections = this.listSelections();
     console.log('selections are: ', selections);
     if (selections.length > 1) return;
@@ -131,17 +133,27 @@ import CodeMirror from 'codemirror';
 
     pick: function (data, i) {
       // selects an item from the suggestion list
+      console.log('data, i= ', data, i);
       var completion = data.list[i],
         self = this;
+
       this.cm.operation(function () {
-        if (completion.hint) completion.hint(self.cm, data, completion);
-        else
+        // this is how cm allows custom behavior per suggestion
+        // if hint is provided on a hint object, it will be called instead of the default replace range
+        const name = completion.item?.text;
+        if (name) warnIfBlacklisted(self.cm, name);
+
+        if (completion.hint) {
+          completion.hint(self.cm, data, completion);
+        } else {
+          console.log('gettext(C)= ', getText(completion));
           self.cm.replaceRange(
             getText(completion),
             completion.from || data.from,
             completion.to || data.to,
             'complete'
           );
+        }
         // signals that a hint was picked and scrolls to it
         CodeMirror.signal(data, 'pick', completion);
         self.cm.scrollIntoView();
@@ -232,6 +244,7 @@ import CodeMirror from 'codemirror';
   }
   // extracts the visible text from a completion entry
   function getText(completion) {
+    console.log('gettext called');
     if (typeof completion === 'string') return completion;
     else return completion.item.text;
   }
@@ -328,8 +341,10 @@ ${
 }</p>`;
   }
 
-  function getInlineHintSuggestion(focus, tokenLength) {
-    console.log('the focus is: ', focus, tokenLength);
+  function getInlineHintSuggestion(cm, focus, tokenLength) {
+    const name = focus.item?.text;
+    console.log('the focus is: ', focus, name);
+    if (name) warnIfBlacklisted(cm, name);
     const suggestionItem = focus.item;
     // builds the remainder of the suggestion excluding what user already typed
     const baseCompletion = `<span class="inline-hinter-suggestion">${suggestionItem.text.slice(
@@ -365,6 +380,7 @@ ${
 
     if (token && focus.item) {
       const suggestionHTML = getInlineHintSuggestion(
+        cm,
         focus,
         token.string.length
       );
@@ -380,8 +396,8 @@ ${
     }
   }
 
-  // defines the autocomplete dropdown ui
-  // completition = the autocomplete context having cm and options
+  // defines the autocomplete dropdown ui; renders the suggestions
+  // completion = the autocomplete context having cm and options
   // data = object with the list of suggestions
   function Widget(completion, data) {
     console.log('widget completetition= ', completion);
@@ -409,7 +425,6 @@ ${
     changeInlineHint(cm, data.list[this.selectedHint]);
 
     var completions = data.list;
-
     for (var i = 0; i < completions.length; ++i) {
       var elt = hints.appendChild(ownerDocument.createElement('li')),
         cur = completions[i];
@@ -427,6 +442,7 @@ ${
         const name = getText(cur);
 
         if (cur.item && cur.item.type) {
+          console.log('display hint calllllled');
           cur.displayText = displayHint(name, cur.item.type, cur.item.p5);
         }
 

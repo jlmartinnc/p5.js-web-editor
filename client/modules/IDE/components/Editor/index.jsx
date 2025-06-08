@@ -464,19 +464,31 @@ class Editor extends React.Component {
       // JavaScript
       CodeMirror.showHint(
         _cm,
-        (cm, options) => contextAwareHinter(cm, { hinter: this.hinter }),
+        () => {
+          const c = _cm.getCursor();
+          const token = _cm.getTokenAt(c);
+          const hints = contextAwareHinter(_cm, { hinter: this.hinter });
+          console.log('hints= ', hints);
+          return {
+            list: hints,
+            from: CodeMirror.Pos(c.line, token.start),
+            to: CodeMirror.Pos(c.line, c.ch)
+          };
+        },
         hintOptions
       );
+
       // CodeMirror.showHint(
       //   _cm,
       //   () => {
       //     const c = _cm.getCursor();
       //     const token = _cm.getTokenAt(c);
-
       //     const hints = this.hinter
       //       .search(token.string)
       //       .filter((h) => h.item.text[0] === token.string[0]);
-
+      //     console.log('c= ', c);
+      //     console.log('token= ', token);
+      //     console.log('hints= ', hints);
       //     return {
       //       list: hints,
       //       from: CodeMirror.Pos(c.line, token.start),
