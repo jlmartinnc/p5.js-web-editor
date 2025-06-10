@@ -307,13 +307,13 @@
       "CurrentPasswordARIA": "موجودہ خفیہ لفظ",
       "NewPassword": "نیا پاس ورڈ",
       "NewPasswordARIA": "نیا پاس ورڈ",
-      "SaveAccountDetails": "اکاؤنٹ کی تفصیلات محفوظ کریں"
+      "SubmitSaveAllSettings": "تمام ترتیبات کو محفوظ کریں۔"
     },
     "AccountView": {
       "SocialLogin": "سماجی لاگ ان",
       "SocialLoginDescription": "p5.js ویب ایڈیٹر میں لاگ ان کرنے کے لیے اپنا GitHub یا Google اکاؤنٹ استعمال کریں۔",
       "Title": "p5.js ویب ایڈیٹر | ",
-      "Settings": "میرا اکاؤنٹ",
+      "Settings": "اکاؤنٹ کی ترتیبات",
       "AccountTab": "کھاتہ",
       "AccessTokensTab": "ٹوکنز تک رسائی حاصل کریں۔"
     },

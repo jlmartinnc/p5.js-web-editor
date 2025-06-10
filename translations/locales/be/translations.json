@@ -306,7 +306,7 @@
   "AccountForm": {
     "Email": "ই-মেইল",
     "EmailARIA": "ই-মেইল",
-    "Unconfirmed": "অনুমোদিত নয়।",
+    "Unconfirmed": "অনুমোদিত নয়।",
     "EmailSent": "কনফার্মেশন পাঠানো হয়েছে, আপনার ই-মেইল চেক করুন।",
     "Resend": "অনুমোদন ই-মেইল পুনঃপ্রেরণ করুন",
     "UserName": "ব্যবহারকারীর নাম",
@@ -315,13 +315,13 @@
     "CurrentPasswordARIA": "বর্তমান পাসওয়ার্ড",
     "NewPassword": "নতুন পাসওয়ার্ড",
     "NewPasswordARIA": "নতুন পাসওয়ার্ড",
-    "SaveAccountDetails": "অ্যাকাউন্ট বিবরণ সংরক্ষণ করুন"
+    "SubmitSaveAllSettings": "সমস্ত সেটিংস সংরক্ষণ করুন"
   },
   "AccountView": {
     "SocialLogin": "সোশ্যাল লগইন",
     "SocialLoginDescription": "p5.js ওয়েব এডিটরে লগ ইন করতে আপনি আপনার GitHub বা Google অ্যাকাউন্ট ব্যবহার করতে পারেন।",
     "Title": "p5.js ওয়েব এডিটর | অ্যাকাউন্ট সেটিংস",
-    "Settings": "আমার অ্যাকাউন্ট",
+    "Settings": "অ্যাকাউন্ট সেটিংস",
     "AccountTab": "অ্যাকাউন্ট",
     "AccessTokensTab": "অ্যাক্সেস টোকেন"
   },
@@ -533,7 +533,7 @@
     "HeaderName": "স্কেচ",
     "HeaderCreatedAt": "তারিখ তৈরি হয়েছে",
     "HeaderCreatedAt_mobile": "তৈরি হয়েছে",
-    "HeaderUpdatedAt": "তারিখ আপডেট হয়েছে",
+"HeaderUpdatedAt": "তারিখ আপডেট হয়েছে",
     "HeaderUpdatedAt_mobile": "আপডেট",
     "NoSketches": "কোন স্কেচ নেই।"
   },

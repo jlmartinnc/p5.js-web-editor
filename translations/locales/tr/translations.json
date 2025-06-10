@@ -309,13 +309,13 @@
     "CurrentPasswordARIA": "Mevcut Şifre",
     "NewPassword": "Yeni Şifre",
     "NewPasswordARIA": "Yeni Şifre",
-    "SaveAccountDetails": "Hesap Bilgilerini Kaydet"
+    "SubmitSaveAllSettings": "Tüm Ayarları Kaydet"
   },
   "AccountView": {
     "SocialLogin": "Sosyal Giriş",
     "SocialLoginDescription": "GitHub veya Google hesabınızı kullanarak p5.js Web Düzenleyici'ne giriş yapın.",
     "Title": "p5.js Web Düzenleyici | Hesap Ayarları",
-    "Settings": "Hesabım",
+    "Settings": "Hesap Ayarları",
     "AccountTab": "Hesap",
     "AccessTokensTab": "Erişim Anahtarları"
   },
