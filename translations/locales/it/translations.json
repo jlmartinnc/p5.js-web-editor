@@ -308,23 +308,23 @@
     "Email": "Email",
     "EmailARIA": "email",
     "Unconfirmed": "Non confermato.",
-    "EmailSent": "Conferma spedita, controla le tue email.",
-    "Resend": "Rispedisci email di conferma",
-    "Username": "Nome utente",
-    "UserNameARIA": "Nome utente",
+    "EmailSent": "Conferma inviata, controlla la tua email.",
+    "Resend": "Reinvia email di conferma",
+    "UserName": "Nome utente",
+    "UserNameARIA": "nome utente",
     "CurrentPassword": "Password attuale",
-    "CurrentPasswordARIA": "Password attuale",
-    "NewPassword": "Nuova Password",
-    "NewPasswordARIA": "Nuova Password",
-    "SubmitSaveAllSettings": "Salva tutte le impostazioni"
+    "CurrentPasswordARIA": "password attuale",
+    "NewPassword": "Nuova password",
+    "NewPasswordARIA": "nuova password",
+    "SaveAccountDetails": "Salva dettagli account"
   },
   "AccountView": {
-    "SocialLogin": "Accesso ai social",
-    "SocialLoginDescription": "Usa il tuo account GitHub o Google per accedere al redattore web p5.js.",
-    "Title": "p5.js redattore web | Impostazioni account",
-    "Settings": "Impostazioni Account",
+    "SocialLogin": "Social Login",
+    "SocialLoginDescription": "Usa il tuo account GitHub o Google per accedere al Web Editor di p5.js.",
+    "Title": "p5.js Web Editor | Impostazioni Account",
+    "Settings": "Il mio account",
     "AccountTab": "Account",
-    "AccessTokensTab": "Codici di accesso"
+    "AccessTokensTab": "Token di accesso"
   },
   "APIKeyForm": {
     "ConfirmDelete": "Sei sicuro di cancellare {{key_label}}?",

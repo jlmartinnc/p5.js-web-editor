@@ -306,13 +306,13 @@
     "CurrentPasswordARIA": "Senha Atual",
     "NewPassword": "Nova Senha",
     "NewPasswordARIA": "Nova Senha",
-    "SubmitSaveAllSettings": "Salvar todas as Configurações"
+    "SaveAccountDetails": "Salvar Detalhes da Conta"
   },
   "AccountView": {
     "SocialLogin": "~Login usando redes sociais",
     "SocialLoginDescription": "Use seu GitHub ou sua conta do Google para entrar no Editor de Web p5.js.",
     "Title": "Editor de Web p5.js | Configurações de Conta",
-    "Settings": "Configurações de Conta",
+    "Settings": "Minha Conta",
     "AccountTab": "Conta",
     "AccessTokensTab": "Acessar Tokens"
   },

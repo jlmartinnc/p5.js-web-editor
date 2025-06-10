@@ -294,13 +294,13 @@
     "CurrentPasswordARIA": "Current Password",
     "NewPassword": "New Password",
     "NewPasswordARIA": "New Password",
-    "SubmitSaveAllSettings": "Save All Settings"
+    "SaveAccountDetails": "Save Account Details"
   },
   "AccountView": {
     "SocialLogin": "Social Login",
     "SocialLoginDescription": "Use your GitHub or Google account to log into the p5.js Web Editor.",
     "Title": "p5.js Web Editor | Account Settings",
-    "Settings": "Account Settings",
+    "Settings": "My Account",
     "AccountTab": "Account",
     "AccessTokensTab": "Access Tokens"
   },
@@ -313,7 +313,7 @@
     "CreateTokenSubmit": "Create",
     "NoTokens": "You have no existing tokens.",
     "NewTokenTitle": "Your new access token",
-    "NewTokenInfo": "Make sure to copy your new personal access token now.\n                  You won’t be able to see it again!",
+    "NewTokenInfo": "Make sure to copy your new personal access token now.\n                  You won't be able to see it again!",
     "ExistingTokensTitle": "Existing tokens"
   },
   "APIKeyList": {
