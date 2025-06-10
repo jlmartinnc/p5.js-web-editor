@@ -578,17 +578,7 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() => {
-                      if (versionInfo.lastP5SoundURL) {
-                        // If the sketch previously used a nonstandard p5.sound
-                        // URL, restore that URL
-                        updateHTML(
-                          versionInfo.setP5SoundURL(versionInfo.lastP5SoundURL)
-                        );
-                        versionInfo.setLastP5SoundURL(undefined);
-                      } else {
-                        // Otherwise, turn on the default p5.sound URL
-                        updateHTML(versionInfo.setP5Sound(true));
-                      }
+                      updateHTML(versionInfo.setP5Sound(true));
                     }}
                     aria-label={`${t('Preferences.SoundAddon')} ${t(
                       'Preferences.AddonOn'
@@ -605,12 +595,6 @@ export default function Preferences() {
                   <input
                     type="radio"
                     onChange={() => {
-                      // If the previous p5.sound.js script tag is not the
-                      // default version that one will get via this toggle,
-                      // record it so we can give the option to put it back
-                      if (versionInfo.p5SoundURL !== p5SoundURL) {
-                        versionInfo.setLastP5SoundURL(versionInfo.p5SoundURL);
-                      }
                       updateHTML(versionInfo.setP5Sound(false));
                     }}
                     aria-label={`${t('Preferences.SoundAddon')} ${t(
@@ -628,11 +612,20 @@ export default function Preferences() {
                   >
                     {t('Preferences.Off')}
                   </label>
-                  {versionInfo.lastP5SoundURL && (
-                    <legend className="preference__warning">
-                      {t('Preferences.UndoSoundVersion')}
-                    </legend>
-                  )}
+                  <legend className="preference__warning">
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={`https://${
+                        versionInfo.isVersion2 ? 'beta.' : ''
+                      }p5js.org/reference/p5.sound`}
+                    >
+                      {t('Preferences.SoundReference').replace(
+                        '$VERSION',
+                        versionInfo.version
+                      )}
+                    </a>
+                  </legend>
                 </fieldset>
               </div>
               <div className="preference">

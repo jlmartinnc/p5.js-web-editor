@@ -144,7 +144,12 @@ export const p5Versions = [
 
 export const currentP5Version = '1.11.5'; // Don't update to 2.x until 2026
 
-export const p5SoundURLOld = `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js`;
+export const p5SoundURLOldTemplate =
+  'https://cdnjs.cloudflare.com/ajax/libs/p5.js/$VERSION/addons/p5.sound.min.js';
+export const p5SoundURLOld = p5SoundURLOldTemplate.replace(
+  '$VERSION',
+  '1.11.3'
+);
 export const p5SoundURL =
   'https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js';
 export const p5PreloadAddonURL =
@@ -167,8 +172,6 @@ export function P5VersionProvider(props) {
   );
   const indexSrc = indexFile?.content;
   const indexID = indexFile?.id;
-
-  const [lastP5SoundURL, setLastP5SoundURL] = useState(undefined);
 
   // { version: string, minified: boolean, replaceVersion: (version: string) => string } | null
   const versionInfo = useMemo(() => {
@@ -207,14 +210,6 @@ export function P5VersionProvider(props) {
     // We only know for certain which one we've got if
     if (usedP5Versions.length === 1) {
       const { version, minified, scriptNode } = usedP5Versions[0];
-      const replaceVersion = function (newVersion) {
-        const file = minified ? 'p5.min.js' : 'p5.js';
-        scriptNode.setAttribute(
-          'src',
-          `https://cdn.jsdelivr.net/npm/p5@${newVersion}/lib/${file}`
-        );
-        return serializeResult();
-      };
 
       const p5SoundNode = [
         ...dom.documentElement.querySelectorAll('script')
@@ -232,7 +227,9 @@ export function P5VersionProvider(props) {
           const newNode = document.createElement('script');
           newNode.setAttribute(
             'src',
-            version.startsWith('2') ? p5SoundURL : p5SoundURLOld
+            version.startsWith('2')
+              ? p5SoundURL
+              : p5SoundURLOldTemplate.replace('$VERSION', version)
           );
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
@@ -247,6 +244,31 @@ export function P5VersionProvider(props) {
           newNode.setAttribute('src', url);
           scriptNode.parentNode.insertBefore(newNode, scriptNode.nextSibling);
         }
+        return serializeResult();
+      };
+
+      const replaceVersion = function (newVersion) {
+        const file = minified ? 'p5.min.js' : 'p5.js';
+        scriptNode.setAttribute(
+          'src',
+          `https://cdn.jsdelivr.net/npm/p5@${newVersion}/lib/${file}`
+        );
+
+        if (p5SoundNode) {
+          if (version.startsWith('2.') !== newVersion.startsWith('2.')) {
+            // Turn off p5.sound if the user switched from 1.x to 2.x
+            setP5Sound(false);
+          } else {
+            // Replace the existing p5.sound with the one compatible with
+            // the new version
+            setP5SoundURL(
+              version.startsWith('2.')
+                ? p5SoundURL
+                : p5SoundURLOldTemplate.replace('$VERSION', newVersion)
+            );
+          }
+        }
+
         return serializeResult();
       };
 
@@ -294,14 +316,13 @@ export function P5VersionProvider(props) {
 
       return {
         version,
+        isVersion2: version.startsWith('2.'),
         minified,
         replaceVersion,
         p5Sound: !!p5SoundNode,
         setP5Sound,
         setP5SoundURL,
         p5SoundURL: p5SoundNode?.getAttribute('src'),
-        lastP5SoundURL,
-        setLastP5SoundURL,
         p5PreloadAddon: !!p5PreloadAddonNode,
         setP5PreloadAddon,
         p5ShapesAddon: !!p5ShapesAddonNode,
