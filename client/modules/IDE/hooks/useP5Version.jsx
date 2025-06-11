@@ -142,7 +142,7 @@ export const p5Versions = [
   '0.2.1'
 ];
 
-export const currentP5Version = '1.11.5'; // Don't update to 2.x until 2026
+export const currentP5Version = '1.11.8'; // Don't update to 2.x until 2026
 
 export const majorVersion = (version) => version.split('.')[0];
 
@@ -150,7 +150,7 @@ export const p5SoundURLOldTemplate =
   'https://cdnjs.cloudflare.com/ajax/libs/p5.js/$VERSION/addons/p5.sound.min.js';
 export const p5SoundURLOld = p5SoundURLOldTemplate.replace(
   '$VERSION',
-  '1.11.3'
+  currentP5Version
 );
 export const p5SoundURL =
   'https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js';
