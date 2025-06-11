@@ -21,7 +21,12 @@ import {
   setLinewrap,
   setPreferencesTab
 } from '../../actions/preferences';
-import { p5SoundURL, p5URL, useP5Version } from '../../hooks/useP5Version';
+import {
+  majorVersion,
+  p5SoundURL,
+  p5URL,
+  useP5Version
+} from '../../hooks/useP5Version';
 import VersionPicker from '../VersionPicker';
 import { updateFileContent } from '../../actions/files';
 import { CmControllerContext } from '../../pages/IDEView';
@@ -55,7 +60,7 @@ export default function Preferences() {
   const timerRef = useRef(null);
   const pickerRef = useRef(null);
   const onChangeVersion = (version) => {
-    const shouldShowStars = version.startsWith('2.');
+    const shouldShowStars = majorVersion(version) === '2';
     const box = pickerRef.current?.getBoundingClientRect();
     if (shouldShowStars) {
       setShowStars({ left: box?.left || 0, top: box?.top || 0 });

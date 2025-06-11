@@ -144,6 +144,8 @@ export const p5Versions = [
 
 export const currentP5Version = '1.11.5'; // Don't update to 2.x until 2026
 
+export const majorVersion = (version) => version.split('.')[0];
+
 export const p5SoundURLOldTemplate =
   'https://cdnjs.cloudflare.com/ajax/libs/p5.js/$VERSION/addons/p5.sound.min.js';
 export const p5SoundURLOld = p5SoundURLOldTemplate.replace(
@@ -227,7 +229,7 @@ export function P5VersionProvider(props) {
           const newNode = document.createElement('script');
           newNode.setAttribute(
             'src',
-            version.startsWith('2')
+            majorVersion(version) === '2'
               ? p5SoundURL
               : p5SoundURLOldTemplate.replace('$VERSION', version)
           );
@@ -255,14 +257,14 @@ export function P5VersionProvider(props) {
         );
 
         if (p5SoundNode) {
-          if (version.startsWith('2.') !== newVersion.startsWith('2.')) {
+          if (majorVersion(version) !== majorVersion(newVersion)) {
             // Turn off p5.sound if the user switched from 1.x to 2.x
             setP5Sound(false);
           } else {
             // Replace the existing p5.sound with the one compatible with
             // the new version
             setP5SoundURL(
-              version.startsWith('2.')
+              majorVersion(version) === '2'
                 ? p5SoundURL
                 : p5SoundURLOldTemplate.replace('$VERSION', newVersion)
             );
@@ -316,7 +318,7 @@ export function P5VersionProvider(props) {
 
       return {
         version,
-        isVersion2: version.startsWith('2.'),
+        isVersion2: majorVersion(version) === '2',
         minified,
         replaceVersion,
         p5Sound: !!p5SoundNode,
