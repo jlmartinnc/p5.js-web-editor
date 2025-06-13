@@ -198,6 +198,7 @@ import warnIfBlacklisted from './warn';
     },
 
     update: function (first) {
+      console.log('update called');
       if (this.tick == null) return;
       var self = this,
         myTick = ++this.tick;
@@ -323,22 +324,56 @@ import warnIfBlacklisted from './warn';
     }
   }
 
-  function displayHint(name, type, p5) {
-    console.log('name is', name, type, p5);
-    return `<p class="${type}-item">\
-<span class="${type}-name hint-name">${name}</span>\
-<span class="hint-hidden">, </span>\
-<span class="hint-type">${type}</span>\
-<span class="hint-hidden">, </span>\
-${
-  p5
-    ? `<a href="https://p5js.org/reference/p5/${
-        typeof p5 === 'string' ? p5 : name
-      }" role="link" onclick="event.stopPropagation()" target="_blank">\
-<span class="hint-hidden">open ${name} reference</span>\
-<span aria-hidden="true">&#10132;</span></a>`
-    : `<span class="no-link-placeholder"><span class="hint-hidden">no reference for ${name}</span></span>`
-}</p>`;
+  //   function displayHint(name, type, p5, isBlacklistedFunction) {
+  //     console.log('name is', name, type, p5, isBlacklistedFunction);
+  //     return `<p class="${type}-item">\
+  // <span class="${type}-name hint-name">${name}</span>\
+  // <span class="hint-hidden">, </span>\
+  // <span class="hint-type">${type}</span>\
+  // <span class="hint-hidden">, </span>\
+  // ${
+  //   p5
+  //     ? `<a href="https://p5js.org/reference/p5/${
+  //         typeof p5 === 'string' ? p5 : name
+  //       }" role="link" onclick="event.stopPropagation()" target="_blank">\
+  // <span class="hint-hidden">open ${name} reference</span>\
+  // <span aria-hidden="true">&#10132;</span></a>`
+  //     : `<span class="no-link-placeholder"><span class="hint-hidden">no reference for ${name}</span></span>`
+  // }</p>`;
+  //   }
+
+  function displayHint(name, type, p5, isBlacklistedFunction) {
+    console.log('name is', name, type, p5, isBlacklistedFunction);
+
+    const linkOrPlaceholder = p5
+      ? `<a href="https://p5js.org/reference/p5/${
+          typeof p5 === 'string' ? p5 : name
+        }" role="link" onclick="event.stopPropagation()" target="_blank">
+          <span class="hint-hidden">open ${name} reference</span>
+          <span aria-hidden="true">&#10132;</span>
+       </a>`
+      : `<span class="no-link-placeholder">
+         <span class="hint-hidden">no reference for ${name}</span>
+       </span>`;
+
+    const hintHTML = `
+    <div class="hint-main">
+      <span class="${type}-name hint-name">${name}</span>
+      <span class="hint-type">${type}</span>
+      ${linkOrPlaceholder}
+    </div>
+  `;
+
+    const warningHTML = isBlacklistedFunction
+      ? `<div class="blacklist-warning">⚠️ Be careful — this function is discouraged in this context.</div>`
+      : '';
+
+    return `<div class="hint-container ${
+      isBlacklistedFunction ? 'has-warning' : ''
+    }">
+    ${hintHTML}
+    ${warningHTML}
+  </div>`;
   }
 
   function getInlineHintSuggestion(cm, focus, tokenLength) {
@@ -351,6 +386,13 @@ ${
       tokenLength
     )}</span>`;
     if (suggestionItem.type !== 'fun') return baseCompletion;
+
+    console.log(
+      'tokenLength =',
+      tokenLength,
+      'suggestion =',
+      suggestionItem.text
+    );
 
     // for functions
     return (
@@ -372,7 +414,6 @@ ${
   }
 
   function changeInlineHint(cm, focus) {
-    // Copilot-style inline suggestion for autocomplete feature
     removeInlineHint(cm);
 
     const cursor = cm.getCursor();
@@ -391,7 +432,6 @@ ${
 
       const widget = cm.setBookmark(cursor, { widget: widgetElement });
       cm.state.inlineHint = widget;
-
       cm.setCursor(cursor);
     }
   }
@@ -426,31 +466,40 @@ ${
 
     var completions = data.list;
     for (var i = 0; i < completions.length; ++i) {
-      var elt = hints.appendChild(ownerDocument.createElement('li')),
-        cur = completions[i];
-      var className =
+      const cur = completions[i];
+
+      const elt = ownerDocument.createElement('li');
+      elt.className =
         HINT_ELEMENT_CLASS +
-        (i != this.selectedHint ? '' : ' ' + ACTIVE_HINT_ELEMENT_CLASS);
-      if (cur.className != null) className = cur.className + ' ' + className;
-      elt.className = className;
-      if (i == this.selectedHint) elt.setAttribute('aria-selected', 'true');
+        (i !== this.selectedHint ? '' : ' ' + ACTIVE_HINT_ELEMENT_CLASS) +
+        (cur.isBlacklisted ? ' blacklisted' : '');
+
+      if (cur.className != null)
+        elt.className = cur.className + ' ' + elt.className;
+
+      if (i === this.selectedHint) elt.setAttribute('aria-selected', 'true');
       elt.id = this.id + '-' + i;
       elt.setAttribute('role', 'option');
-      if (cur.render) cur.render(elt, data, cur);
-      else {
-        const e = ownerDocument.createElement('p');
-        const name = getText(cur);
+      elt.hintId = i;
 
+      if (cur.render) {
+        cur.render(elt, data, cur);
+      } else {
+        const name = getText(cur);
         if (cur.item && cur.item.type) {
-          console.log('display hint calllllled');
-          cur.displayText = displayHint(name, cur.item.type, cur.item.p5);
+          cur.displayText = displayHint(
+            name,
+            cur.item.type,
+            cur.item.p5,
+            cur.isBlacklisted
+          );
         }
 
-        elt.appendChild(e);
-        e.outerHTML =
-          cur.displayText || `<span class="plain-hint-item">${name}<span>`;
+        elt.innerHTML =
+          cur.displayText || `<span class="plain-hint-item">${name}</span>`;
       }
-      elt.hintId = i;
+
+      hints.appendChild(elt);
     }
 
     var container = completion.options.container || ownerDocument.body;
@@ -761,6 +810,7 @@ ${
       hint(cm, callback, options);
     } else {
       var result = hint(cm, options);
+      console.log('fetchhints result= ', result);
       if (result && result.then) result.then(callback);
       else callback(result);
     }

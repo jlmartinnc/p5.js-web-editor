@@ -11,9 +11,11 @@ export default function warnIfBlacklisted(cm, text) {
   const context = parseCode(cm);
   const blacklist = scopeMap[context]?.blacklist || [];
 
-  if (blacklist.includes(text)) {
+  const isBlacklisted = blacklist.includes(text);
+  if (isBlacklisted) {
     console.warn(
       `⚠️ Function "${text}" is usually not used in "${context}" context. Please be careful.`
     );
   }
+  return isBlacklisted;
 }
