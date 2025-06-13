@@ -7,6 +7,12 @@
 
 // declare global: DOMRect
 
+// The first function (mod) is a wrapper to support different JavaScript environments.
+// The second function (inside) contains the actual implementation.
+import parseCode from './parseCode';
+import CodeMirror from 'codemirror';
+import warnIfBlacklisted from './warn';
+
 (function (mod) {
   if (typeof exports == 'object' && typeof module == 'object')
     // CommonJS
@@ -16,6 +22,8 @@
     define(['codemirror'], mod);
   // Plain browser env
   else mod(CodeMirror);
+
+  // This part uptill here makes the code compatible with multiple JavaScript environments, so it can run in different places
 })(function (CodeMirror) {
   'use strict';
 
@@ -25,16 +33,24 @@
   // This is the old interface, kept around for now to stay
   // backwards-compatible.
   CodeMirror.showHint = function (cm, getHints, options) {
-    if (!getHints) return cm.showHint(options);
+    console.log('showhint was called: ', cm, getHints, options);
+    if (!getHints) return cm.showHint(options); // if not getHints function passed, it assumes youre using the newer interface
+    // restructured options to call the new c.showHint() method
     if (options && options.async) getHints.async = true;
     var newOpts = { hint: getHints };
     if (options) for (var prop in options) newOpts[prop] = options[prop];
+    console.log('newopts: ', newOpts);
+    const context = parseCode(cm);
+    console.log('Cursor context =', context);
     return cm.showHint(newOpts);
   };
 
+  // this adds a method called showHint to every cm editor instance (editor.showHint())
   CodeMirror.defineExtension('showHint', function (options) {
     options = parseOptions(this, this.getCursor('start'), options);
+    console.log('options are: ');
     var selections = this.listSelections();
+    console.log('selections are: ', selections);
     if (selections.length > 1) return;
     // By default, don't allow completion when something is selected.
     // A hint function can have a `supportsSelection` property to
@@ -42,18 +58,20 @@
     if (this.somethingSelected()) {
       if (!options.hint.supportsSelection) return;
       // Don't try with cross-line selections
+      // if selection spans multiple lines, bail out
       for (var i = 0; i < selections.length; i++)
         if (selections[i].head.line != selections[i].anchor.line) return;
     }
 
-    if (this.state.completionActive) this.state.completionActive.close();
+    if (this.state.completionActive) this.state.completionActive.close(); // close an already active autocomplete session if active
+    // create a new completion object and saves it to this.state.completionActive
     var completion = (this.state.completionActive = new Completion(
       this,
       options
     ));
-    if (!completion.options.hint) return;
+    if (!completion.options.hint) return; // safety check to ensure hint is valid
 
-    CodeMirror.signal(this, 'startCompletion', this);
+    CodeMirror.signal(this, 'startCompletion', this); // emits a signal; fires a startCompletion event on editor instance
     completion.update(true);
   });
 
@@ -61,19 +79,22 @@
     if (this.state.completionActive) this.state.completionActive.close();
   });
 
+  // defines a constructor function
   function Completion(cm, options) {
     this.cm = cm;
     this.options = options;
-    this.widget = null;
+    this.widget = null; // will hold a reference to the dropdown menu that shows suggestions
     this.debounce = 0;
     this.tick = 0;
-    this.startPos = this.cm.getCursor('start');
+    this.startPos = this.cm.getCursor('start'); // startPos is a {line,ch} object used to remember where hinting started
+    // startLen is the len of the line minus length of any selected text
     this.startLen =
       this.cm.getLine(this.startPos.line).length -
       this.cm.getSelection().length;
 
     if (this.options.updateOnCursorActivity) {
-      var self = this;
+      var self = this; // stores ref to this as self so it can be accessed inside the nested function
+      // adds an event listener to the editor; called when the cursor moves
       cm.on(
         'cursorActivity',
         (this.activityFunc = function () {
@@ -95,12 +116,14 @@
       if (!this.active()) return;
       this.cm.state.completionActive = null;
       this.tick = null;
+      // removes the current activity listener
       if (this.options.updateOnCursorActivity) {
         this.cm.off('cursorActivity', this.activityFunc);
       }
-
+      // signals and removes the widget
       if (this.widget && this.data) CodeMirror.signal(this.data, 'close');
       if (this.widget) this.widget.close();
+      // emits a completition end event
       CodeMirror.signal(this.cm, 'endCompletion', this.cm);
     },
 
@@ -109,26 +132,40 @@
     },
 
     pick: function (data, i) {
+      // selects an item from the suggestion list
+      console.log('data, i= ', data, i);
       var completion = data.list[i],
         self = this;
+
       this.cm.operation(function () {
-        if (completion.hint) completion.hint(self.cm, data, completion);
-        else
+        // this is how cm allows custom behavior per suggestion
+        // if hint is provided on a hint object, it will be called instead of the default replace range
+        const name = completion.item?.text;
+        if (name) warnIfBlacklisted(self.cm, name);
+
+        if (completion.hint) {
+          completion.hint(self.cm, data, completion);
+        } else {
+          console.log('gettext(C)= ', getText(completion));
           self.cm.replaceRange(
             getText(completion),
             completion.from || data.from,
             completion.to || data.to,
             'complete'
           );
+        }
+        // signals that a hint was picked and scrolls to it
         CodeMirror.signal(data, 'pick', completion);
         self.cm.scrollIntoView();
       });
+      // closes widget if closeOnPick is enabled
       if (this.options.closeOnPick) {
         this.close();
       }
     },
 
     cursorActivity: function () {
+      // if a debounce is scheduled, cancel it to avoid outdated updates
       if (this.debounce) {
         cancelAnimationFrame(this.debounce);
         this.debounce = 0;
@@ -149,6 +186,7 @@
         !pos.ch ||
         this.options.closeCharacters.test(line.charAt(pos.ch - 1))
       ) {
+        console.log('this.close called');
         this.close();
       } else {
         var self = this;
@@ -160,6 +198,7 @@
     },
 
     update: function (first) {
+      console.log('update called');
       if (this.tick == null) return;
       var self = this,
         myTick = ++this.tick;
@@ -192,6 +231,7 @@
   function parseOptions(cm, pos, options) {
     var editor = cm.options.hintOptions;
     var out = {};
+    // copies all default hint settings into out
     for (var prop in defaultOptions) out[prop] = defaultOptions[prop];
     if (editor)
       for (var prop in editor)
@@ -200,14 +240,17 @@
       for (var prop in options)
         if (options[prop] !== undefined) out[prop] = options[prop];
     if (out.hint.resolve) out.hint = out.hint.resolve(cm, pos);
+    console.log('out is ', out);
     return out;
   }
-
+  // extracts the visible text from a completion entry
   function getText(completion) {
+    console.log('gettext called');
     if (typeof completion === 'string') return completion;
     else return completion.item.text;
   }
 
+  // builds a key mapping object to define keyboard behavior for autocomplete
   function buildKeyMap(completion, handle) {
     var baseMap = {
       Up: function () {
@@ -232,7 +275,7 @@
       Tab: handle.pick,
       Esc: handle.close
     };
-
+    // checks if the user is on macOS and adds shortcuts accordingly
     var mac = /Mac/.test(navigator.platform);
 
     if (mac) {
@@ -244,6 +287,7 @@
       };
     }
 
+    // user defined custom key bindings
     var custom = completion.options.customKeys;
     var ourMap = custom ? {} : baseMap;
     function addBinding(key, val) {
@@ -257,6 +301,7 @@
       else bound = val;
       ourMap[key] = bound;
     }
+    // apply all custom key bindings and extraKeys
     if (custom)
       for (var key in custom)
         if (custom.hasOwnProperty(key)) addBinding(key, custom[key]);
@@ -267,37 +312,87 @@
     return ourMap;
   }
 
+  // hintsElement is the parent for hints and el is the clicked element within that container
   function getHintElement(hintsElement, el) {
+    console.log('el is ', el);
     while (el && el != hintsElement) {
-      if (el.nodeName.toUpperCase() === 'LI' && el.parentNode == hintsElement)
+      if (el.nodeName.toUpperCase() === 'LI' && el.parentNode == hintsElement) {
+        console.log('new el is ', el);
         return el;
+      }
       el = el.parentNode;
     }
   }
 
-  function displayHint(name, type, p5) {
-    return `<p class="${type}-item">\
-<span class="${type}-name hint-name">${name}</span>\
-<span class="hint-hidden">, </span>\
-<span class="hint-type">${type}</span>\
-<span class="hint-hidden">, </span>\
-${
-  p5
-    ? `<a href="https://p5js.org/reference/p5/${
-        typeof p5 === 'string' ? p5 : name
-      }" role="link" onclick="event.stopPropagation()" target="_blank">\
-<span class="hint-hidden">open ${name} reference</span>\
-<span aria-hidden="true">&#10132;</span></a>`
-    : `<span class="no-link-placeholder"><span class="hint-hidden">no reference for ${name}</span></span>`
-}</p>`;
+  //   function displayHint(name, type, p5, isBlacklistedFunction) {
+  //     console.log('name is', name, type, p5, isBlacklistedFunction);
+  //     return `<p class="${type}-item">\
+  // <span class="${type}-name hint-name">${name}</span>\
+  // <span class="hint-hidden">, </span>\
+  // <span class="hint-type">${type}</span>\
+  // <span class="hint-hidden">, </span>\
+  // ${
+  //   p5
+  //     ? `<a href="https://p5js.org/reference/p5/${
+  //         typeof p5 === 'string' ? p5 : name
+  //       }" role="link" onclick="event.stopPropagation()" target="_blank">\
+  // <span class="hint-hidden">open ${name} reference</span>\
+  // <span aria-hidden="true">&#10132;</span></a>`
+  //     : `<span class="no-link-placeholder"><span class="hint-hidden">no reference for ${name}</span></span>`
+  // }</p>`;
+  //   }
+
+  function displayHint(name, type, p5, isBlacklistedFunction) {
+    console.log('name is', name, type, p5, isBlacklistedFunction);
+
+    const linkOrPlaceholder = p5
+      ? `<a href="https://p5js.org/reference/p5/${
+          typeof p5 === 'string' ? p5 : name
+        }" role="link" onclick="event.stopPropagation()" target="_blank">
+          <span class="hint-hidden">open ${name} reference</span>
+          <span aria-hidden="true">&#10132;</span>
+       </a>`
+      : `<span class="no-link-placeholder">
+         <span class="hint-hidden">no reference for ${name}</span>
+       </span>`;
+
+    const hintHTML = `
+    <div class="hint-main">
+      <span class="${type}-name hint-name">${name}</span>
+      <span class="hint-type">${type}</span>
+      ${linkOrPlaceholder}
+    </div>
+  `;
+
+    const warningHTML = isBlacklistedFunction
+      ? `<div class="blacklist-warning">⚠️ Be careful — this function is discouraged in this context.</div>`
+      : '';
+
+    return `<div class="hint-container ${
+      isBlacklistedFunction ? 'has-warning' : ''
+    }">
+    ${hintHTML}
+    ${warningHTML}
+  </div>`;
   }
 
-  function getInlineHintSuggestion(focus, tokenLength) {
+  function getInlineHintSuggestion(cm, focus, tokenLength) {
+    const name = focus.item?.text;
+    console.log('the focus is: ', focus, name);
+    if (name) warnIfBlacklisted(cm, name);
     const suggestionItem = focus.item;
+    // builds the remainder of the suggestion excluding what user already typed
     const baseCompletion = `<span class="inline-hinter-suggestion">${suggestionItem.text.slice(
       tokenLength
     )}</span>`;
     if (suggestionItem.type !== 'fun') return baseCompletion;
+
+    console.log(
+      'tokenLength =',
+      tokenLength,
+      'suggestion =',
+      suggestionItem.text
+    );
 
     // for functions
     return (
@@ -310,6 +405,7 @@ ${
     );
   }
 
+  // clears existing inline hint (like the part is suggested)
   function removeInlineHint(cm) {
     if (cm.state.inlineHint) {
       cm.state.inlineHint.clear();
@@ -318,7 +414,6 @@ ${
   }
 
   function changeInlineHint(cm, focus) {
-    // Copilot-style inline suggestion for autocomplete feature
     removeInlineHint(cm);
 
     const cursor = cm.getCursor();
@@ -326,6 +421,7 @@ ${
 
     if (token && focus.item) {
       const suggestionHTML = getInlineHintSuggestion(
+        cm,
         focus,
         token.string.length
       );
@@ -336,12 +432,16 @@ ${
 
       const widget = cm.setBookmark(cursor, { widget: widgetElement });
       cm.state.inlineHint = widget;
-
       cm.setCursor(cursor);
     }
   }
 
+  // defines the autocomplete dropdown ui; renders the suggestions
+  // completion = the autocomplete context having cm and options
+  // data = object with the list of suggestions
   function Widget(completion, data) {
+    console.log('widget completetition= ', completion);
+    console.log('widget data= ', data);
     this.id = 'cm-complete-' + Math.floor(Math.random(1e6));
     this.completion = completion;
     this.data = data;
@@ -365,32 +465,41 @@ ${
     changeInlineHint(cm, data.list[this.selectedHint]);
 
     var completions = data.list;
-
     for (var i = 0; i < completions.length; ++i) {
-      var elt = hints.appendChild(ownerDocument.createElement('li')),
-        cur = completions[i];
-      var className =
+      const cur = completions[i];
+
+      const elt = ownerDocument.createElement('li');
+      elt.className =
         HINT_ELEMENT_CLASS +
-        (i != this.selectedHint ? '' : ' ' + ACTIVE_HINT_ELEMENT_CLASS);
-      if (cur.className != null) className = cur.className + ' ' + className;
-      elt.className = className;
-      if (i == this.selectedHint) elt.setAttribute('aria-selected', 'true');
+        (i !== this.selectedHint ? '' : ' ' + ACTIVE_HINT_ELEMENT_CLASS) +
+        (cur.isBlacklisted ? ' blacklisted' : '');
+
+      if (cur.className != null)
+        elt.className = cur.className + ' ' + elt.className;
+
+      if (i === this.selectedHint) elt.setAttribute('aria-selected', 'true');
       elt.id = this.id + '-' + i;
       elt.setAttribute('role', 'option');
-      if (cur.render) cur.render(elt, data, cur);
-      else {
-        const e = ownerDocument.createElement('p');
-        const name = getText(cur);
+      elt.hintId = i;
 
+      if (cur.render) {
+        cur.render(elt, data, cur);
+      } else {
+        const name = getText(cur);
         if (cur.item && cur.item.type) {
-          cur.displayText = displayHint(name, cur.item.type, cur.item.p5);
+          cur.displayText = displayHint(
+            name,
+            cur.item.type,
+            cur.item.p5,
+            cur.isBlacklisted
+          );
         }
 
-        elt.appendChild(e);
-        e.outerHTML =
-          cur.displayText || `<span class="plain-hint-item">${name}<span>`;
+        elt.innerHTML =
+          cur.displayText || `<span class="plain-hint-item">${name}</span>`;
       }
-      elt.hintId = i;
+
+      hints.appendChild(elt);
     }
 
     var container = completion.options.container || ownerDocument.body;
@@ -701,6 +810,7 @@ ${
       hint(cm, callback, options);
     } else {
       var result = hint(cm, options);
+      console.log('fetchhints result= ', result);
       if (result && result.then) result.then(callback);
       else callback(result);
     }

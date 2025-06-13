@@ -73,6 +73,8 @@ import { EditorContainer, EditorHolder } from './MobileEditor';
 import { FolderIcon } from '../../../../common/icons';
 import IconButton from '../../../../common/IconButton';
 
+import contextAwareHinter from '../contextAwareHinter';
+
 emmet(CodeMirror);
 
 window.JSHINT = JSHINT;
@@ -465,11 +467,8 @@ class Editor extends React.Component {
         () => {
           const c = _cm.getCursor();
           const token = _cm.getTokenAt(c);
-
-          const hints = this.hinter
-            .search(token.string)
-            .filter((h) => h.item.text[0] === token.string[0]);
-
+          const hints = contextAwareHinter(_cm, { hinter: this.hinter });
+          console.log('hints= ', hints);
           return {
             list: hints,
             from: CodeMirror.Pos(c.line, token.start),
@@ -478,6 +477,26 @@ class Editor extends React.Component {
         },
         hintOptions
       );
+
+      // CodeMirror.showHint(
+      //   _cm,
+      //   () => {
+      //     const c = _cm.getCursor();
+      //     const token = _cm.getTokenAt(c);
+      //     const hints = this.hinter
+      //       .search(token.string)
+      //       .filter((h) => h.item.text[0] === token.string[0]);
+      //     console.log('c= ', c);
+      //     console.log('token= ', token);
+      //     console.log('hints= ', hints);
+      //     return {
+      //       list: hints,
+      //       from: CodeMirror.Pos(c.line, token.start),
+      //       to: CodeMirror.Pos(c.line, c.ch)
+      //     };
+      //   },
+      //   hintOptions
+      // );
     } else if (_cm.options.mode === 'css') {
       // CSS
       CodeMirror.showHint(_cm, CodeMirror.hint.css, hintOptions);
