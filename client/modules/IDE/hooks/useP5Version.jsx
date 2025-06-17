@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 // JSON.stringify([...document.querySelectorAll('._132722c7')].map(n => n.innerText), null, 2)
 // TODO: use their API for this to grab these at build time?
 export const p5Versions = [
-  '2.0.3',
+  { version: '2.0.3', label: '(Beta)' },
   '2.0.2',
   '2.0.1',
   '2.0.0',
   '1.11.8',
-  '1.11.7',
+  { version: '1.11.7', label: '(Default)' },
   '1.11.6',
   '1.11.5',
   '1.11.4',
@@ -197,7 +197,10 @@ export function P5VersionProvider(props) {
         if (!match) return null;
 
         // See if this is a version we recognize
-        if (p5Versions.includes(match[1])) {
+        const versionExists = p5Versions.some((v) =>
+          typeof v === 'string' ? v === match[1] : v.version === match[1]
+        );
+        if (versionExists) {
           return { version: match[1], minified: !!match[2], scriptNode };
         }
         return null;
