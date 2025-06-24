@@ -247,13 +247,15 @@ const MobileNav = () => {
 
   const title = useMemo(resolveTitle, [pageName, project.name]);
   const userIsOwner = user?.username === project.owner?.username;
-
   const Logo = AsteriskIcon;
+
+  const showPrivacyToggle =
+    project?.owner && title === project.name && userIsOwner;
+  const showOwner = project?.owner && title === project.name && !userIsOwner;
 
   const toggleVisibility = (e) => {
     try {
       const isChecked = e.target.checked;
-
       dispatch(
         changeVisibility(
           project.id,
@@ -272,25 +274,18 @@ const MobileNav = () => {
       </LogoContainer>
       <Title>
         <h1>{title === project?.name ? <ProjectName /> : title}</h1>
-        {(() => {
-          if (project?.owner && title === project.name && userIsOwner) {
-            return (
-              <main className="toolbar__makeprivate">
-                <p>Private</p>
-                <input
-                  className="toolbar__togglevisibility"
-                  type="checkbox"
-                  onChange={toggleVisibility}
-                  defaultChecked={project.visibility === 'Private'}
-                />
-              </main>
-            );
-          }
-          if (project?.owner && title === project.name) {
-            return <h5>by {project?.owner?.username}</h5>;
-          }
-          return null;
-        })()}
+        {showPrivacyToggle && (
+          <main className="toolbar__makeprivate">
+            <p>Private</p>
+            <input
+              className="toolbar__togglevisibility"
+              type="checkbox"
+              onChange={toggleVisibility}
+              defaultChecked={project.visibility === 'Private'}
+            />
+          </main>
+        )}
+        {showOwner && <h5>by {project?.owner?.username}</h5>}
       </Title>
 
       {/* check if the user is in login page */}

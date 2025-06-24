@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
@@ -12,88 +11,7 @@ import Loader from '../../App/components/loader';
 import ArrowUpIcon from '../../../images/sort-arrow-up.svg';
 import ArrowDownIcon from '../../../images/sort-arrow-down.svg';
 import CollectionMetadata from './CollectionMetadata';
-import dates from '../../../utils/formatDate';
-import RemoveIcon from '../../../images/close.svg';
-
-const CollectionItemRow = ({ item, isOwner, collection, user }) => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const formatDateCell = (date, mobile = false) =>
-    dates.format(date, { showTime: !mobile });
-  const handleSketchRemove = () => {
-    dispatch(
-      CollectionsActions.removeFromCollection(collection.id, item.projectId)
-    );
-  };
-
-  const projectIsDeleted = item.isDeleted;
-  const projectIsPrivate =
-    !item.isDeleted && !isOwner && item.project?.visibility === 'Private';
-
-  let name;
-  if (projectIsDeleted) {
-    name = <span>{t('Collection.SketchDeleted')}</span>;
-  } else if (projectIsPrivate) {
-    name = <span>Sketch is Private</span>;
-  } else {
-    name = (
-      <Link to={`/${item.project.user.username}/sketches/${item.projectId}`}>
-        {item.project.name}
-      </Link>
-    );
-  }
-
-  const sketchOwnerUsername =
-    projectIsDeleted || projectIsPrivate ? null : item.project.user.username;
-
-  return (
-    <tr
-      className={`sketches-table__row ${
-        projectIsDeleted || projectIsPrivate ? 'is-deleted-or-private' : ''
-      }`}
-    >
-      <th scope="row">{name}</th>
-      <td>{formatDateCell(item.createdAt)}</td>
-      <td>{sketchOwnerUsername}</td>
-      <td className="collection-row__action-column">
-        {isOwner && (
-          <button
-            className="collection-row__remove-button"
-            onClick={handleSketchRemove}
-            aria-label={t('Collection.SketchRemoveARIA')}
-          >
-            <RemoveIcon focusable="false" aria-hidden="true" />
-          </button>
-        )}
-      </td>
-    </tr>
-  );
-};
-
-CollectionItemRow.propTypes = {
-  collection: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-  }).isRequired,
-  item: PropTypes.shape({
-    createdAt: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
-    isDeleted: PropTypes.bool.isRequired,
-    project: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      visibility: PropTypes.string,
-      user: PropTypes.shape({
-        username: PropTypes.string.isRequired
-      })
-    }).isRequired
-  }).isRequired,
-  isOwner: PropTypes.bool.isRequired,
-  user: PropTypes.shape({
-    username: PropTypes.string,
-    authenticated: PropTypes.bool.isRequired
-  }).isRequired
-};
+import CollectionItemRow from './CollectionItemRow';
 
 const Collection = ({ collectionId, username }) => {
   const { t } = useTranslation();
@@ -177,7 +95,6 @@ const Collection = ({ collectionId, username }) => {
             ) : (
               <ArrowDownIcon
                 role="img"
-                IST
                 aria-label={t('Collection.DirectionDescendingARIA')}
               />
             ))}

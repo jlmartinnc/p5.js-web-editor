@@ -37,6 +37,9 @@ const Toolbar = (props) => {
     setIsPrivate(project.visibility === 'Private');
   }, [project]);
 
+  const showPrivacyToggle = project?.owner && userIsOwner;
+  const showOwner = project?.owner && !userIsOwner;
+
   const toggleVisibility = (e) => {
     try {
       const isChecked = e.target.checked;
@@ -117,32 +120,25 @@ const Toolbar = (props) => {
       </div>
       <div className="toolbar__project-name-container">
         <ProjectName />
-        {(() => {
-          if (project?.owner && userIsOwner) {
-            return (
-              <main className="toolbar__makeprivate">
-                <p>Private</p>
-                <input
-                  type="checkbox"
-                  className="toolbar__togglevisibility"
-                  checked={isPrivate}
-                  onChange={toggleVisibility}
-                />
-              </main>
-            );
-          }
-          if (project?.owner && !userIsOwner) {
-            return (
-              <p className="toolbar__project-owner">
-                {t('Toolbar.By')}{' '}
-                <Link to={`/${project.owner.username}/sketches`}>
-                  {project.owner.username}
-                </Link>
-              </p>
-            );
-          }
-          return null;
-        })()}
+        {showPrivacyToggle && (
+          <main className="toolbar__makeprivate">
+            <p>Private</p>
+            <input
+              type="checkbox"
+              className="toolbar__togglevisibility"
+              checked={isPrivate}
+              onChange={toggleVisibility}
+            />
+          </main>
+        )}
+        {showOwner && (
+          <p className="toolbar__project-owner">
+            {t('Toolbar.By')}{' '}
+            <Link to={`/${project.owner.username}/sketches`}>
+              {project.owner.username}
+            </Link>
+          </p>
+        )}
         <VersionIndicator />
       </div>
       <div style={{ flex: 1 }} />
