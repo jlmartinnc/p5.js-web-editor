@@ -33,24 +33,19 @@ import warnIfBlacklisted from './warn';
   // This is the old interface, kept around for now to stay
   // backwards-compatible.
   CodeMirror.showHint = function (cm, getHints, options) {
-    console.log('showhint was called: ', cm, getHints, options);
     if (!getHints) return cm.showHint(options); // if not getHints function passed, it assumes youre using the newer interface
     // restructured options to call the new c.showHint() method
     if (options && options.async) getHints.async = true;
     var newOpts = { hint: getHints };
     if (options) for (var prop in options) newOpts[prop] = options[prop];
-    console.log('newopts: ', newOpts);
     const context = parseCode(cm);
-    console.log('Cursor context =', context);
     return cm.showHint(newOpts);
   };
 
   // this adds a method called showHint to every cm editor instance (editor.showHint())
   CodeMirror.defineExtension('showHint', function (options) {
     options = parseOptions(this, this.getCursor('start'), options);
-    console.log('options are: ');
     var selections = this.listSelections();
-    console.log('selections are: ', selections);
     if (selections.length > 1) return;
     // By default, don't allow completion when something is selected.
     // A hint function can have a `supportsSelection` property to
@@ -133,7 +128,6 @@ import warnIfBlacklisted from './warn';
 
     pick: function (data, i) {
       // selects an item from the suggestion list
-      console.log('data, i= ', data, i);
       var completion = data.list[i],
         self = this;
 
@@ -146,7 +140,6 @@ import warnIfBlacklisted from './warn';
         if (completion.hint) {
           completion.hint(self.cm, data, completion);
         } else {
-          console.log('gettext(C)= ', getText(completion));
           self.cm.replaceRange(
             getText(completion),
             completion.from || data.from,
@@ -186,7 +179,6 @@ import warnIfBlacklisted from './warn';
         !pos.ch ||
         this.options.closeCharacters.test(line.charAt(pos.ch - 1))
       ) {
-        console.log('this.close called');
         this.close();
       } else {
         var self = this;
@@ -198,7 +190,6 @@ import warnIfBlacklisted from './warn';
     },
 
     update: function (first) {
-      console.log('update called');
       if (this.tick == null) return;
       var self = this,
         myTick = ++this.tick;
@@ -240,12 +231,10 @@ import warnIfBlacklisted from './warn';
       for (var prop in options)
         if (options[prop] !== undefined) out[prop] = options[prop];
     if (out.hint.resolve) out.hint = out.hint.resolve(cm, pos);
-    console.log('out is ', out);
     return out;
   }
   // extracts the visible text from a completion entry
   function getText(completion) {
-    console.log('gettext called');
     if (typeof completion === 'string') return completion;
     else return completion.item.text;
   }
@@ -314,10 +303,8 @@ import warnIfBlacklisted from './warn';
 
   // hintsElement is the parent for hints and el is the clicked element within that container
   function getHintElement(hintsElement, el) {
-    console.log('el is ', el);
     while (el && el != hintsElement) {
       if (el.nodeName.toUpperCase() === 'LI' && el.parentNode == hintsElement) {
-        console.log('new el is ', el);
         return el;
       }
       el = el.parentNode;
@@ -325,7 +312,6 @@ import warnIfBlacklisted from './warn';
   }
 
   //   function displayHint(name, type, p5, isBlacklistedFunction) {
-  //     console.log('name is', name, type, p5, isBlacklistedFunction);
   //     return `<p class="${type}-item">\
   // <span class="${type}-name hint-name">${name}</span>\
   // <span class="hint-hidden">, </span>\
@@ -343,8 +329,6 @@ import warnIfBlacklisted from './warn';
   //   }
 
   function displayHint(name, type, p5, isBlacklistedFunction) {
-    console.log('name is', name, type, p5, isBlacklistedFunction);
-
     const linkOrPlaceholder = p5
       ? `<a href="https://p5js.org/reference/p5/${
           typeof p5 === 'string' ? p5 : name
@@ -378,7 +362,6 @@ import warnIfBlacklisted from './warn';
 
   function getInlineHintSuggestion(cm, focus, tokenLength) {
     const name = focus.item?.text;
-    console.log('the focus is: ', focus, name);
     if (name) warnIfBlacklisted(cm, name);
     const suggestionItem = focus.item;
     // builds the remainder of the suggestion excluding what user already typed
@@ -386,13 +369,6 @@ import warnIfBlacklisted from './warn';
       tokenLength
     )}</span>`;
     if (suggestionItem.type !== 'fun') return baseCompletion;
-
-    console.log(
-      'tokenLength =',
-      tokenLength,
-      'suggestion =',
-      suggestionItem.text
-    );
 
     // for functions
     return (
@@ -440,8 +416,6 @@ import warnIfBlacklisted from './warn';
   // completion = the autocomplete context having cm and options
   // data = object with the list of suggestions
   function Widget(completion, data) {
-    console.log('widget completetition= ', completion);
-    console.log('widget data= ', data);
     this.id = 'cm-complete-' + Math.floor(Math.random(1e6));
     this.completion = completion;
     this.data = data;
@@ -810,7 +784,6 @@ import warnIfBlacklisted from './warn';
       hint(cm, callback, options);
     } else {
       var result = hint(cm, options);
-      console.log('fetchhints result= ', result);
       if (result && result.then) result.then(callback);
       else callback(result);
     }

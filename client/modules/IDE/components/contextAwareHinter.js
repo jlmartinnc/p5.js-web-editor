@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror';
 import parseCode from './parseCode';
-import parseCodeVars from './parseCodeVariables';
+import parseCodeVariables from './parseCodeVariables';
 import classMap from './class-with-methods-map.json';
 
 const scopeMap = require('./finalScopeMap.json');
@@ -22,8 +22,6 @@ function getExpressionBeforeCursor(cm) {
   const cursor = cm.getCursor();
   const line = cm.getLine(cursor.line);
   const uptoCursor = line.slice(0, cursor.ch);
-  console.log('the line is: ', line);
-  console.log('the line uptocursor is: ', uptoCursor);
 
   const match = uptoCursor.match(
     /([a-zA-Z_$][\w$]*(?:\.[a-zA-Z_$][\w$]*)*)\.(?:[a-zA-Z_$][\w$]*)?$/
@@ -32,8 +30,13 @@ function getExpressionBeforeCursor(cm) {
 }
 
 export default function contextAwareHinter(cm, options = {}) {
-  const variableTypes = parseCodeVars(cm);
-  console.log('var types= ', variableTypes);
+  const {
+    p5ClassMap = {},
+    varMap = [],
+    varScopeMap = {},
+    userFuncMap = {},
+    userClassMap = {}
+  } = parseCodeVariables(cm) || {};
 
   const { hinter } = options;
   if (!hinter || typeof hinter.search !== 'function') {
@@ -42,17 +45,25 @@ export default function contextAwareHinter(cm, options = {}) {
   }
 
   const baseExpression = getExpressionBeforeCursor(cm);
-  const className = variableTypes[baseExpression]; // e.g., p5.XML
-  console.log('base expression is= ', baseExpression);
 
   // If we're completing after a dot
-  if (baseExpression && className) {
-    console.log('Detected object expression:', baseExpression);
+  if (baseExpression) {
+    const className = p5ClassMap[baseExpression];
+    const userClassEntry = Object.values(userClassMap).find(
+      (cls) => cls.initializer === baseExpression
+    );
 
-    console.log('Class of', baseExpression, '=', className);
+    let methods = [];
 
-    const methods = classMap[className]?.methods || [];
-    console.log('Available methods for class:', methods);
+    if (userClassEntry?.methods) {
+      const { methods: userMethods } = userClassEntry;
+      methods = userMethods;
+    } else if (className && classMap[className]?.methods) {
+      const { methods: classMethods } = classMap[className];
+      methods = classMethods;
+    } else {
+      return [];
+    }
 
     const cursor = cm.getCursor();
     const lineText = cm.getLine(cursor.line);
@@ -68,8 +79,6 @@ export default function contextAwareHinter(cm, options = {}) {
     } else {
       from = cursor;
     }
-
-    console.log('fromm, dotmatch= ', from, dotMatch);
 
     const to = { line: cursor.line, ch: cursor.ch };
     let tokenLength = 0;
@@ -98,15 +107,38 @@ export default function contextAwareHinter(cm, options = {}) {
   const { line, ch } = cm.getCursor();
   const { string } = cm.getTokenAt({ line, ch });
   const currentWord = string.trim();
-  console.log('current word= ', currentWord);
 
-  const context = parseCode(cm);
+  const currentContext = parseCode(cm);
   const allHints = hinter.search(currentWord);
 
-  const whitelist = scopeMap[context]?.whitelist || [];
-  const blacklist = scopeMap[context]?.blacklist || [];
+  const whitelist = scopeMap[currentContext]?.whitelist || [];
+  const blacklist = scopeMap[currentContext]?.blacklist || [];
 
   const lowerCurrentWord = currentWord.toLowerCase();
+
+  function isInScope(varName) {
+    const varScope = varScopeMap[varName];
+    if (!varScope) return false;
+    if (varScope === 'global') return true;
+    if (varScope === currentContext) return true;
+    return false;
+  }
+
+  const varHints = varMap
+    .filter(
+      (varName) =>
+        varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
+    )
+    .map((varName) => ({
+      item: {
+        text: varName,
+        type: userFuncMap[varName] ? 'fun' : 'var'
+      },
+      isBlacklisted: blacklist.includes(varName),
+      displayText: formatHintDisplay(varName, blacklist.includes(varName)),
+      from: { line, ch },
+      to: { line, ch: ch - currentWord.length }
+    }));
 
   const filteredHints = allHints
     .filter(
@@ -127,6 +159,8 @@ export default function contextAwareHinter(cm, options = {}) {
       };
     });
 
+  const combinedHints = [...varHints, ...filteredHints];
+
   const typePriority = {
     fun: 0,
     var: 1,
@@ -134,7 +168,7 @@ export default function contextAwareHinter(cm, options = {}) {
     other: 3
   };
 
-  const sorted = filteredHints.sort((a, b) => {
+  const sorted = combinedHints.sort((a, b) => {
     const nameA = a.item?.text || '';
     const nameB = b.item?.text || '';
     const typeA = a.item?.type || 'other';
