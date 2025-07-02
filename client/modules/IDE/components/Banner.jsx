@@ -36,7 +36,7 @@ const Banner = ({ onClose }) => {
     <div className="banner">
       <a href={bannerURL}>{bannerCopy}</a>
       <button className="banner-close-button" onClick={onClose}>
-        <CrossIcon />
+        <CrossIcon Icon={{ default: '#000', hover: '#333' }} />
       </button>
     </div>
   );

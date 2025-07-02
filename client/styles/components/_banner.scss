@@ -8,11 +8,11 @@
 
   a {
     color: $black;
-  }
 
-  a:hover {
-    color: $black;
-    text-decoration: underline;
+    &:hover {
+      color: $black;
+      text-decoration: underline;
+    }
   }
 
   @media (max-width: 770px) {
@@ -28,4 +28,5 @@
   height: 20px;
   width:20px;
   float: right;
+  cursor: pointer;
 }
