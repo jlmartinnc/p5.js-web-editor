@@ -7,11 +7,12 @@
   border-bottom: 1px solid #000;
 
   a {
-    color: #000;
-  }
+    color: $black;
 
-  a:hover {
-    text-decoration: underline;
+    &:hover {
+      color: $black;
+      text-decoration: underline;
+    }
   }
 
   @media (max-width: 770px) {
@@ -27,4 +28,5 @@
   height: 20px;
   width:20px;
   float: right;
+  cursor: pointer;
 }
