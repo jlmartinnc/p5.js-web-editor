@@ -26,8 +26,8 @@ const Banner = ({ onClose }) => {
   const bannerURL = 'https://openprocessing.org/curation/89576';
   const bannerCopy = (
     <>
-      We’re accepting p5.js sketches for a special curation exploring the new
-      features in p5.js 2.0!{' '}
+      We’re accepting p5.js sketches for a special curation exploring mental
+      health and the newest features in p5.js 2.0!{' '}
       <span style={{ fontWeight: 600 }}>Submit by July 13!</span>
     </>
   );
