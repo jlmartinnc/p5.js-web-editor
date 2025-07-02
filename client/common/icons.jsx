@@ -35,20 +35,20 @@ import Copy from '../images/copy.svg';
 function withLabel(SvgComponent) {
   const StyledIcon = styled(SvgComponent)`
     &&& {
-      color: ${prop('Icon.default')};
+      color: ${(props) => props.Icon?.default};
       & g,
       & path,
       & polygon {
         opacity: 1;
-        fill: ${prop('Icon.default')};
+        fill: ${(props) => props.Icon?.default};
       }
       &:hover {
-        color: ${prop('Icon.hover')};
+        color: ${(props) => props.Icon?.hover};
         & g,
         & path,
         & polygon {
           opacity: 1;
-          fill: ${prop('Icon.hover')};
+          fill: ${(props) => props.Icon?.hover};
         }
       }
     }
