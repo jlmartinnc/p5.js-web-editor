@@ -21,7 +21,11 @@ const project = (state, action) => {
     case ActionTypes.SET_PROJECT_NAME:
       return Object.assign({}, { ...state }, { name: action.name });
     case ActionTypes.SET_PROJECT_VISIBILITY:
-      return Object.assign({}, { ...state }, { visibility: action.visibility });
+      return Object.assign(
+        {},
+        { ...state },
+        { visibility: action.visibility, updatedAt: action.updatedAt }
+      );
     case ActionTypes.NEW_PROJECT:
       return {
         id: action.project.id,

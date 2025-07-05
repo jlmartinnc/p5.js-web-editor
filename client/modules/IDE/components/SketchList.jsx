@@ -60,7 +60,9 @@ const SketchList = ({
 
   const renderEmptyTable = () => {
     if (!isLoading() && sketches.length === 0) {
-      return <p className="sketches-table">{t('SketchList.NoSketches')}</p>;
+      return (
+        <p className="sketches-table__empty">{t('SketchList.NoSketches')}</p>
+      );
     }
     return null;
   };

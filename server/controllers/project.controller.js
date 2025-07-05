@@ -104,7 +104,7 @@ export async function getProject(req, res) {
 export function getProjectsForUserId(userId) {
   return Project.find({ user: userId })
     .sort('-createdAt')
-    .select('name files id createdAt updatedAt')
+    .select('name files id createdAt updatedAt visibility')
     .exec();
 }
 
