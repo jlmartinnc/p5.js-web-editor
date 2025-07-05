@@ -11,6 +11,8 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const projectIsDeleted = item.isDeleted;
+  const projectIsPrivate =
+    !item.isDeleted && !isOwner && item.project?.visibility === 'Private';
   const handleSketchRemove = () => {
     const name = projectIsDeleted ? 'deleted sketch' : item.project.name;
 
@@ -23,13 +25,18 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
     }
   };
 
-  const name = projectIsDeleted ? (
-    <span>{t('Collection.SketchDeleted')}</span>
-  ) : (
-    <Link to={`/${item.project.user.username}/sketches/${item.projectId}`}>
-      {item.project.name}
-    </Link>
-  );
+  let name;
+  if (projectIsDeleted) {
+    name = <span>{t('Collection.SketchDeleted')}</span>;
+  } else if (projectIsPrivate) {
+    name = <span>Sketch is Private</span>;
+  } else {
+    name = (
+      <Link to={`/${item.project.user.username}/sketches/${item.projectId}`}>
+        {item.project.name}
+      </Link>
+    );
+  }
 
   const sketchOwnerUsername = projectIsDeleted
     ? null
@@ -37,7 +44,9 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
 
   return (
     <tr
-      className={`sketches-table__row ${projectIsDeleted ? 'is-deleted' : ''}`}
+      className={`sketches-table__row ${
+        projectIsDeleted || projectIsPrivate ? 'is-deleted-or-private' : ''
+      }`}
     >
       <th scope="row">{name}</th>
       <td>{dates.format(item.createdAt)}</td>
@@ -71,7 +80,8 @@ CollectionItemRow.propTypes = {
       name: PropTypes.string.isRequired,
       user: PropTypes.shape({
         username: PropTypes.string.isRequired
-      })
+      }),
+      visibility: PropTypes.string
     })
   }).isRequired,
   isOwner: PropTypes.bool.isRequired

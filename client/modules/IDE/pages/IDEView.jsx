@@ -26,6 +26,7 @@ import {
 } from '../components/Editor/MobileEditor';
 import IDEOverlays from '../components/IDEOverlays';
 import useIsMobile from '../hooks/useIsMobile';
+import Banner from '../components/Banner';
 import { P5VersionProvider } from '../hooks/useP5Version';
 
 function getTitle(project) {
@@ -105,6 +106,8 @@ const IDEView = () => {
   const [sidebarSize, setSidebarSize] = useState(160);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [MaxSize, setMaxSize] = useState(window.innerWidth);
+  const [displayBanner, setDisplayBanner] = useState(true);
+
   const cmRef = useRef({});
 
   const autosaveIntervalRef = useRef(null);
@@ -170,6 +173,7 @@ const IDEView = () => {
       <Helmet>
         <title>{getTitle(project)}</title>
       </Helmet>
+      {displayBanner && <Banner onClose={() => setDisplayBanner(false)} />}
       <IDEKeyHandlers getContent={() => cmRef.current?.getContent()} />
       <WarnIfUnsavedChanges />
       <Toast />
