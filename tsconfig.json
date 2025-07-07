@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "client" },
+    // { "path": "server" }
+  ],
+  "exclude": [
+    "node_modules",
+    "node_modules/@types",
+    "./node_modules/@types",
+    "dist", 
+    "build"
+  ]
+}
