@@ -32,7 +32,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run typecheck:client && lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "typecheck:client"
     }
   },
   "lint-staged": {
