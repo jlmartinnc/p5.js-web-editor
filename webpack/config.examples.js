@@ -15,7 +15,7 @@ module.exports = [
     externals: [nodeExternals()],
 
     resolve: {
-      extensions: ['*', '.js', '.jsx'],
+      extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
       modules: ['client', 'node_modules']
     },
 
@@ -45,7 +45,7 @@ module.exports = [
     externals: [nodeExternals()],
 
     resolve: {
-      extensions: ['*', '.js', '.jsx'],
+      extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
       modules: ['client', 'node_modules']
     },
 
