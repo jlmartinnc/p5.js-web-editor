@@ -130,8 +130,6 @@ export default function contextAwareHinter(cm, options = {}) {
     )
   );
 
-  console.log(allVarNames);
-
   const varHints = allVarNames
     .filter(
       (varName) =>
@@ -151,9 +149,7 @@ export default function contextAwareHinter(cm, options = {}) {
       return {
         item: baseItem,
         isBlacklisted: blacklist.includes(varName),
-        displayText: formatHintDisplay(varName, blacklist.includes(varName)),
-        from: { line, ch },
-        to: { line: ch - currentWord.length }
+        displayText: formatHintDisplay(varName, blacklist.includes(varName))
       };
     });
 
