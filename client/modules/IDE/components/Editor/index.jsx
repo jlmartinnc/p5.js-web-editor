@@ -74,6 +74,8 @@ import { FolderIcon } from '../../../../common/icons';
 import IconButton from '../../../../common/IconButton';
 
 import contextAwareHinter from '../contextAwareHinter';
+import showRenameDialog from '../showRenameDialog';
+import { handleRename } from '../rename-variable';
 
 emmet(CodeMirror);
 
@@ -171,6 +173,7 @@ class Editor extends React.Component {
       },
       Enter: 'emmetInsertLineBreak',
       Esc: 'emmetResetAbbreviation',
+      F2: (cm) => this.renameVariable(cm),
       [`Shift-Tab`]: false,
       [`${metaKey}-Enter`]: () => null,
       [`Shift-${metaKey}-Enter`]: () => null,
@@ -532,6 +535,24 @@ class Editor extends React.Component {
     } else if (mode === 'htmlmixed') {
       this.prettierFormatWithCursor('html', [htmlParser]);
     }
+  }
+
+  renameVariable(cm) {
+    const cursorCoords = cm.cursorCoords(true, 'page');
+    const selection = cm.getSelection();
+    if (!selection) {
+      return;
+    }
+
+    const sel = cm.listSelections()[0];
+    const fromPos =
+      CodeMirror.cmpPos(sel.anchor, sel.head) <= 0 ? sel.anchor : sel.head;
+
+    showRenameDialog(cursorCoords, selection, (newName) => {
+      if (newName && newName.trim() !== '' && newName !== selection) {
+        handleRename(fromPos, selection, newName, cm);
+      }
+    });
   }
 
   initializeDocuments(files) {

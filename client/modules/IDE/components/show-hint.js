@@ -302,62 +302,32 @@ import warnIfBlacklisted from './warn';
   }
 
   // hintsElement is the parent for hints and el is the clicked element within that container
-  function getHintElement(hintsElement, el) {
-    while (el && el != hintsElement) {
-      if (el.nodeName.toUpperCase() === 'LI' && el.parentNode == hintsElement) {
-        return el;
-      }
-      el = el.parentNode;
-    }
-  }
-
-  //   function displayHint(name, type, p5, isBlacklistedFunction) {
-  //     return `<p class="${type}-item">\
-  // <span class="${type}-name hint-name">${name}</span>\
-  // <span class="hint-hidden">, </span>\
-  // <span class="hint-type">${type}</span>\
-  // <span class="hint-hidden">, </span>\
-  // ${
-  //   p5
-  //     ? `<a href="https://p5js.org/reference/p5/${
-  //         typeof p5 === 'string' ? p5 : name
-  //       }" role="link" onclick="event.stopPropagation()" target="_blank">\
-  // <span class="hint-hidden">open ${name} reference</span>\
-  // <span aria-hidden="true">&#10132;</span></a>`
-  //     : `<span class="no-link-placeholder"><span class="hint-hidden">no reference for ${name}</span></span>`
-  // }</p>`;
-  //   }
-
   function displayHint(name, type, p5, isBlacklistedFunction) {
     const linkOrPlaceholder = p5
       ? `<a href="https://p5js.org/reference/p5/${
           typeof p5 === 'string' ? p5 : name
         }" role="link" onclick="event.stopPropagation()" target="_blank">
-          <span class="hint-hidden">open ${name} reference</span>
-          <span aria-hidden="true">&#10132;</span>
-       </a>`
+      <span class="hint-hidden">open ${name} reference</span>
+      <span aria-hidden="true" class="arrow-icon">➔</span>
+    </a>`
       : `<span class="no-link-placeholder">
-         <span class="hint-hidden">no reference for ${name}</span>
-       </span>`;
+      <span class="hint-hidden">no reference for ${name}</span>
+    </span>`;
 
-    const hintHTML = `
-    <div class="hint-main">
-      <span class="${type}-name hint-name">${name}</span>
-      <span class="hint-type">${type}</span>
-      ${linkOrPlaceholder}
-    </div>
-  `;
-
-    const warningHTML = isBlacklistedFunction
-      ? `<div class="blacklist-warning">⚠️ Be careful — this function is discouraged in this context.</div>`
-      : '';
-
-    return `<div class="hint-container ${
-      isBlacklistedFunction ? 'has-warning' : ''
-    }">
-    ${hintHTML}
-    ${warningHTML}
+    const hintHTML = `<div class="hint-main">
+    <span class="${type}-name hint-name">${name}</span>
+    <span class="hint-type">${type}</span>
+    ${linkOrPlaceholder}
   </div>`;
+
+    if (isBlacklistedFunction) {
+      return `<div class="hint-container has-warning">
+    ${hintHTML}
+    <div class="blacklist-warning">⚠️ Be careful — this function is discouraged in this context.</div>
+  </div>`;
+    } else {
+      return `<div class="hint-container">${hintHTML}</div>`;
+    }
   }
 
   function getInlineHintSuggestion(cm, focus, tokenLength) {
@@ -627,6 +597,13 @@ import warnIfBlacklisted from './warn';
         hints.style.left = left + startScroll.left - curScroll.left + 'px';
       })
     );
+
+    function getHintElement(container, el) {
+      while (el && el !== container && el.hintId == null) {
+        el = el.parentNode;
+      }
+      return el;
+    }
 
     CodeMirror.on(hints, 'dblclick', function (e) {
       var t = getHintElement(hints, e.target || e.srcElement);
