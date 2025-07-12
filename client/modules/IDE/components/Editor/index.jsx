@@ -540,6 +540,9 @@ class Editor extends React.Component {
   renameVariable(cm) {
     const cursorCoords = cm.cursorCoords(true, 'page');
     const selection = cm.getSelection();
+    const pos = cm.getCursor(); // or selection start
+    const token = cm.getTokenAt(pos);
+    const tokenType = token.type;
     if (!selection) {
       return;
     }
@@ -548,7 +551,7 @@ class Editor extends React.Component {
     const fromPos =
       CodeMirror.cmpPos(sel.anchor, sel.head) <= 0 ? sel.anchor : sel.head;
 
-    showRenameDialog(cursorCoords, selection, (newName) => {
+    showRenameDialog(tokenType, cursorCoords, selection, (newName) => {
       if (newName && newName.trim() !== '' && newName !== selection) {
         handleRename(fromPos, selection, newName, cm);
       }

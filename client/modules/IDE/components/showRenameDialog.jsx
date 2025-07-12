@@ -2,8 +2,11 @@
 const allFuncs = require('./listOfAllFunctions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
-export default function showRenameDialog(coords, oldName, onSubmit) {
-  if (allFunsList.has(oldName) || !isValidIdentifierSelection(oldName)) {
+export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
+  if (
+    allFunsList.has(oldName) ||
+    !isValidIdentifierSelection(oldName, tokenType)
+  ) {
     showTemporaryDialog(coords, 'You cannot rename this element');
     return;
   }
@@ -62,9 +65,16 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
   document.addEventListener('mousedown', onClickOutside);
 }
 
-function isValidIdentifierSelection(selection) {
+function isValidIdentifierSelection(selection, tokenType) {
   // Reject if empty, multiple words, or includes special characters
   if (!selection || selection.trim() === '') return false;
+  if (
+    tokenType === 'comment' ||
+    tokenType === 'atom' ||
+    tokenType === 'string' ||
+    tokenType === 'keyword'
+  )
+    return false;
 
   // Reject multi-word selections or whitespace
   if (/\s/.test(selection)) return false;
