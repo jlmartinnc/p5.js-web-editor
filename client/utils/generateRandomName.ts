@@ -1,5 +1,10 @@
 import friendlyWords from 'friendly-words';
 
+/**
+ * Generates a random friendly project name composed of an adjective and an object.
+ * @example
+ * generateProjectName(); // "brave mountain"
+ */
 export function generateProjectName(): string {
   const adj =
     friendlyWords.predicates[
@@ -12,6 +17,11 @@ export function generateProjectName(): string {
   return `${adj} ${obj}`;
 }
 
+/**
+ * Generates a random friendly collection name using an adjective.
+ * @example
+ * generateCollectionName(); // "My clever collection"
+ */
 export function generateCollectionName(): string {
   const adj =
     friendlyWords.predicates[
