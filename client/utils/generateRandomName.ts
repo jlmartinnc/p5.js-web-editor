@@ -1,6 +1,6 @@
 import friendlyWords from 'friendly-words';
 
-export function generateProjectName() {
+export function generateProjectName(): string {
   const adj =
     friendlyWords.predicates[
       Math.floor(Math.random() * friendlyWords.predicates.length)
@@ -12,7 +12,7 @@ export function generateProjectName() {
   return `${adj} ${obj}`;
 }
 
-export function generateCollectionName() {
+export function generateCollectionName(): string {
   const adj =
     friendlyWords.predicates[
       Math.floor(Math.random() * friendlyWords.predicates.length)
