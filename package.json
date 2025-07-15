@@ -37,8 +37,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run lint-fix",
-      "npm run typecheck"
+      "npm run typecheck",
+      "npm run lint-fix"
     ]
   },
   "jest": {
