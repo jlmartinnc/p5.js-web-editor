@@ -32,12 +32,11 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run typecheck && lint-staged"
     }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run typecheck",
       "npm run lint-fix"
     ]
   },
