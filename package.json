@@ -27,7 +27,7 @@
     "storybook:build:css": "sass client/styles/main.scss client/styles/storybook.css",
     "storybook": "npm run storybook:build:css && storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "typecheck": "npx tsc --noEmit",
+    "typecheck": "npm run typecheck:client",
     "typecheck:client": "npx tsc --noEmit -p ./client/tsconfig.json"
   },
   "husky": {
@@ -37,7 +37,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run lint-fix"
+      "npm run lint-fix",
+      "npm run typecheck"
     ]
   },
   "jest": {
