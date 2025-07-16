@@ -4,10 +4,7 @@ import { reduxRender } from '../../../../test-utils';
 
 import Nav from './Nav';
 
-jest.mock('../../../../utils/generateRandomName', () => ({
-  generateProjectName: () => 'test project name',
-  generateCollectionName: () => 'My clever collection'
-}));
+jest.mock('../../../../utils/generateRandomName');
 
 // mock Menubar
 jest.mock(
