@@ -49,12 +49,16 @@
           "<rootDir>/server/jest.setup.js"
         ],
         "testMatch": [
-          "<rootDir>/server/**/*.test.(js|jsx)"
+          "<rootDir>/server/**/*.test.(js|jsx|ts|tsx)"
         ]
       },
       {
         "displayName": "client",
         "testEnvironment": "jsdom",
+        "transform": {
+          "^.+\\.[jt]sx?$": "babel-jest"
+        },
+        "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
         "setupFilesAfterEnv": [
           "<rootDir>/client/jest.setup.js"
         ],
@@ -63,7 +67,7 @@
           "\\.(css|less|scss)$": "<rootDir>/client/__mocks__/styleMock.js"
         },
         "testMatch": [
-          "<rootDir>/client/**/*.test.(js|jsx)"
+          "<rootDir>/client/**/*.test.(js|jsx|ts|tsx)"
         ]
       }
     ]
