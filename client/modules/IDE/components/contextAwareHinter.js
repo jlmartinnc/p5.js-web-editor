@@ -5,19 +5,6 @@ import classMap from './class-with-methods-map.json';
 
 const scopeMap = require('./finalScopeMap.json');
 
-function formatHintDisplay(name, isBlacklisted) {
-  return `
-    <div class="fun-item">
-      <span class="fun-name">${name}</span>
-      ${
-        isBlacklisted
-          ? `<div class="inline-warning">⚠️ "Use ${name}" carefully in this context.</div>`
-          : ''
-      }
-    </div>
-  `;
-}
-
 function getExpressionBeforeCursor(cm) {
   const cursor = cm.getCursor();
   const line = cm.getLine(cursor.line);
@@ -148,8 +135,7 @@ export default function contextAwareHinter(cm, options = {}) {
 
       return {
         item: baseItem,
-        isBlacklisted: blacklist.includes(varName),
-        displayText: formatHintDisplay(varName, blacklist.includes(varName))
+        isBlacklisted: blacklist.includes(varName)
       };
     });
 
@@ -167,8 +153,7 @@ export default function contextAwareHinter(cm, options = {}) {
 
       return {
         ...hint,
-        isBlacklisted,
-        displayText: formatHintDisplay(name, isBlacklisted)
+        isBlacklisted
       };
     });
 

@@ -286,7 +286,6 @@ function persistentDialog(cm, text, deflt, onEnter, replaceOpened, onKeyDown) {
     });
 
     function doReplace(match, cursor, query, withText) {
-      console.log('meow', match, cursor, query, withText);
       cursor.replace(
         typeof query == 'string'
           ? withText
@@ -370,7 +369,6 @@ function parseString(string) {
 }
 
 function parseQuery(query, state) {
-  console.log('parsequery=', state);
   var emptyQuery = 'x^'; // matches nothing
   if (query === '') {
     query = emptyQuery;
@@ -398,7 +396,6 @@ function parseQuery(query, state) {
 }
 
 function startSearch(cm, state, query) {
-  console.log('queryyy', query);
   var searchDialog = document.querySelector('.CodeMirror-dialog');
   if (searchDialog) {
     // check if the file has changed
@@ -426,7 +423,6 @@ function startSearch(cm, state, query) {
     cm.removeOverlay(state.overlay, state.caseInsensitive);
     state.overlay = searchOverlay(state.query, state.caseInsensitive);
     cm.addOverlay(state.overlay);
-    console.log('rr', cm);
     if (cm.showMatchesOnScrollbar) {
       if (state.annotate) {
         state.annotate.clear();
@@ -441,7 +437,6 @@ function startSearch(cm, state, query) {
     var cursor = getSearchCursor(cm, state.query);
     cursor.findNext();
     var num_match = cm.state.search.annotate.matches.length;
-    console.log('xxx', cm);
     if (num_match == 0) {
       cm.display.wrapper.querySelector(
         '.CodeMirror-search-results'
@@ -471,7 +466,6 @@ function doSearch(cm, rev, persistent, immediate, ignoreQuery) {
   var queryDialog = getQueryDialog();
   if (persistent && cm.openDialog) {
     var hiding = null;
-    console.log('doSearch function');
     var searchNext = function (query, event) {
       CodeMirror.e_stop(event);
       if (!query) return;
@@ -528,7 +522,6 @@ function doSearch(cm, rev, persistent, immediate, ignoreQuery) {
       }
     });
   } else {
-    console.log('else doSearch function');
     dialog(cm, queryDialog, 'Search for:', q, function (query) {
       if (query && !state.query)
         cm.operation(function () {
@@ -625,7 +618,6 @@ function findNext(cm, rev, callback) {
       state.query,
       rev ? state.posFrom : state.posTo
     );
-    console.log('finnext, state,cursor', state, cursor);
     if (!cursor.find(rev)) {
       cursor = getSearchCursor(
         cm,

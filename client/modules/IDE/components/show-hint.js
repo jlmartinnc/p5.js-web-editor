@@ -323,7 +323,7 @@ import warnIfBlacklisted from './warn';
     if (isBlacklistedFunction) {
       return `<div class="hint-container has-warning">
     ${hintHTML}
-    <div class="blacklist-warning">⚠️ Be careful — this function is discouraged in this context.</div>
+    <div class="blacklist-warning">⚠️use with caution in this context</div>
   </div>`;
     } else {
       return `<div class="hint-container">${hintHTML}</div>`;

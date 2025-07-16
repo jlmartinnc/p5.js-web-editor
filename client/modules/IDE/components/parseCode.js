@@ -13,7 +13,7 @@ export default function parseCode(_cm) {
       plugins: ['jsx', 'typescript'] // add plugins as needed
     });
   } catch (e) {
-    console.warn('Failed to parse code with Babel:', e.message);
+    // console.warn('Failed to parse code with Babel:', e.message);
     return 'global';
   }
 
