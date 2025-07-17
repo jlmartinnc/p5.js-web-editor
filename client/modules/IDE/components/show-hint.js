@@ -330,7 +330,12 @@ import warnIfBlacklisted from './warn';
     }
   }
 
-  function getInlineHintSuggestion(cm, focus, tokenLength) {
+  function getInlineHintSuggestion(cm, focus, token) {
+    let tokenLength = token.string.length;
+    console.log(focus, tokenLength);
+    if (token.string === '.') {
+      tokenLength -= 1;
+    }
     const name = focus.item?.text;
     if (name) warnIfBlacklisted(cm, name);
     const suggestionItem = focus.item;
@@ -364,13 +369,10 @@ import warnIfBlacklisted from './warn';
 
     const cursor = cm.getCursor();
     const token = cm.getTokenAt(cursor);
+    console.log('xx=', token.string.length, token, cursor);
 
     if (token && focus.item) {
-      const suggestionHTML = getInlineHintSuggestion(
-        cm,
-        focus,
-        token.string.length
-      );
+      const suggestionHTML = getInlineHintSuggestion(cm, focus, token);
 
       const widgetElement = document.createElement('span');
       widgetElement.className = 'autocomplete-inline-hinter';

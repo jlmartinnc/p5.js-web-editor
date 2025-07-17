@@ -1,4 +1,3 @@
-import CodeMirror from 'codemirror';
 import parseCode from './parseCode';
 import parseCodeVariables from './parseCodeVariables';
 import classMap from './class-with-methods-map.json';
@@ -66,12 +65,6 @@ export default function contextAwareHinter(cm, options = {}) {
     }
 
     const to = { line: cursor.line, ch: cursor.ch };
-    let tokenLength = 0;
-    if (dotMatch) {
-      const typed = dotMatch[1] || ''; // what's typed after the dot
-      tokenLength = typed.length;
-    }
-
     const typed = dotMatch?.[1]?.toLowerCase() || '';
 
     const methodHints = methods
@@ -79,7 +72,8 @@ export default function contextAwareHinter(cm, options = {}) {
       .map((method) => ({
         item: {
           text: method,
-          type: 'fun'
+          type: 'fun',
+          isMethod: true
         },
         displayText: method,
         from,
@@ -96,7 +90,7 @@ export default function contextAwareHinter(cm, options = {}) {
   const currentContext = parseCode(cm);
   const allHints = hinter.search(currentWord);
 
-  const whitelist = scopeMap[currentContext]?.whitelist || [];
+  // const whitelist = scopeMap[currentContext]?.whitelist || [];
   const blacklist = scopeMap[currentContext]?.blacklist || [];
 
   const lowerCurrentWord = currentWord.toLowerCase();
