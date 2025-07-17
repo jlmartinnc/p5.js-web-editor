@@ -1,11 +1,12 @@
-import * as acorn from 'acorn';
-import * as walk from 'acorn-walk';
-import * as eslintScope from 'eslint-scope';
+/* eslint-disable */
 import { debounce } from 'lodash';
+import * as eslintScope from 'eslint-scope';
 import classMap from './class-with-methods-map.json';
 
-const allFuncs = require('./listOfAllFunctions.json');
+const parser = require('@babel/parser');
+const traverse = require('@babel/traverse').default;
 
+const allFuncs = require('./listOfAllFunctions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
 const functionToClass = {};
@@ -19,7 +20,6 @@ Object.entries(classMap).forEach(([className, classData]) => {
 // Cache to store last valid result
 let lastValidResult = {
   p5ClassMap: {},
-  varMap: [],
   varScopeMap: {},
   userFuncMap: {},
   userClassMap: {}
@@ -30,19 +30,17 @@ function _parseCodeVariables(_cm) {
   let ast;
 
   try {
-    ast = acorn.parse(code, {
-      ecmaVersion: 'latest',
+    ast = parser.parse(code, {
       sourceType: 'script',
-      locations: true,
-      ranges: true
+      plugins: ['jsx', 'classProperties'],
+      ranges: true,
+      locations: true
     });
   } catch (e) {
-    console.warn('Failed to parse code - using cached result');
     return lastValidResult;
   }
 
-  const p5ClassMap = {}; // stores p5 class to methods mapping
-  const varMap = new Set();
+  const p5ClassMap = {};
   const varScopeMap = {};
   const userFuncMap = {};
   const userClassMap = {};
@@ -60,26 +58,36 @@ function _parseCodeVariables(_cm) {
 
     scope.variables.forEach((variable) => {
       variable.defs.forEach((def) => {
-        varScopeMap[def.name.name] = scopeName;
+        if (
+          def.type === 'Variable' ||
+          (def.type === 'FunctionName' && !allFunsList.has(def.name.name))
+        ) {
+          if (!varScopeMap[scopeName]) {
+            varScopeMap[scopeName] = new Set();
+          }
+
+          varScopeMap[scopeName].add(def.name.name);
+        }
       });
     });
   });
 
-  walk.simple(ast, {
-    ClassDeclaration(node) {
+  traverse(ast, {
+    ClassDeclaration(path) {
+      const node = path.node;
       if (node.id && node.id.type === 'Identifier') {
         const className = node.id.name;
         const classInfo = {
-          const: new Set(), // use Set to avoid duplicates
+          const: new Set(),
           methods: []
         };
 
         node.body.body.forEach((element) => {
-          if (element.type === 'MethodDefinition') {
+          if (element.type === 'ClassMethod') {
             const methodName = element.key.name;
 
             if (element.kind === 'constructor') {
-              element.value.body.body.forEach((stmt) => {
+              element.body.body.forEach((stmt) => {
                 if (
                   stmt.type === 'ExpressionStatement' &&
                   stmt.expression.type === 'AssignmentExpression'
@@ -101,18 +109,16 @@ function _parseCodeVariables(_cm) {
           }
         });
 
-        // Convert Set to Array before storing
         userClassMap[className] = {
           const: Array.from(classInfo.const),
           methods: classInfo.methods,
           initializer: ''
         };
       }
-    }
-  });
+    },
 
-  walk.simple(ast, {
-    AssignmentExpression(node) {
+    AssignmentExpression(path) {
+      const node = path.node;
       if (
         node.left.type === 'Identifier' &&
         (node.right.type === 'CallExpression' ||
@@ -132,7 +138,8 @@ function _parseCodeVariables(_cm) {
       }
     },
 
-    VariableDeclarator(node) {
+    VariableDeclarator(path) {
+      const node = path.node;
       if (
         node.id.type === 'Identifier' &&
         (node.init?.type === 'CallExpression' ||
@@ -149,19 +156,49 @@ function _parseCodeVariables(_cm) {
           p5ClassMap[varName] = cls;
         }
       }
-
-      if (node.id.type === 'Identifier') {
-        const varName = node.id.name;
-        varMap.add(varName);
-      }
     },
 
-    FunctionDeclaration(node) {
+    FunctionDeclaration(path) {
+      const node = path.node;
       if (node.id && node.id.name) {
         const fnName = node.id.name;
         if (!allFunsList.has(fnName)) {
-          userFuncMap[fnName] = true; // or even `= node` if you want more info later
-          varMap.add(fnName); // Ensure functions are included in varMap too
+          const params = node.params
+            .map((param) => {
+              if (param.type === 'Identifier') {
+                return { p: param.name, o: false };
+              } else if (
+                param.type === 'AssignmentPattern' &&
+                param.left.type === 'Identifier'
+              ) {
+                return { p: param.left.name, o: true };
+              } else if (
+                param.type === 'RestElement' &&
+                param.argument.type === 'Identifier'
+              ) {
+                return { p: param.argument.name, o: true };
+              }
+              return null;
+            })
+            .filter(Boolean);
+
+          // Store function metadata for hinting
+          userFuncMap[fnName] = {
+            text: fnName,
+            type: 'fun',
+            p5: false,
+            params
+          };
+
+          // Store function params in the varScopeMap
+          if (!varScopeMap[fnName]) {
+            varScopeMap[fnName] = new Set();
+          }
+          params.forEach((paramObj) => {
+            if (paramObj && paramObj.p) {
+              varScopeMap[fnName].add(paramObj.p);
+            }
+          });
         }
       }
     }
@@ -169,13 +206,11 @@ function _parseCodeVariables(_cm) {
 
   const result = {
     p5ClassMap,
-    varMap: [...varMap],
     varScopeMap,
     userFuncMap,
     userClassMap
   };
 
-  // Update cache
   lastValidResult = result;
   return result;
 }

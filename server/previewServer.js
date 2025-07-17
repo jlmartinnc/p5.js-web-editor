@@ -24,23 +24,15 @@ const connectToMongoDB = async () => {
     await mongoose.connect(mongoConnectionString, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // 30 seconds timeout
-      socketTimeoutMS: 45000 // 45 seconds timeout
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000
     });
   } catch (error) {
-    console.error('Failed to connect to MongoDB: ', error);
     process.exit(1);
   }
 };
 
-connectToMongoDB();
-
-mongoose.connection.on('error', () => {
-  console.error(
-    'MongoDB Connection Error. Please make sure that MongoDB is running.'
-  );
-  process.exit(1);
-});
+connectToMongoDB(); // Keep this if using Option B
 
 const allowedCorsOrigins = [
   /p5js\.org$/,

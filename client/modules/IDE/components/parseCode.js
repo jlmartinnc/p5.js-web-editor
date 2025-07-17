@@ -1,5 +1,5 @@
-const acorn = require('acorn');
-const walk = require('acorn-walk');
+const parser = require('@babel/parser');
+const traverse = require('@babel/traverse').default;
 
 export default function parseCode(_cm) {
   const code = _cm.getValue();
@@ -8,30 +8,27 @@ export default function parseCode(_cm) {
 
   let ast;
   try {
-    ast = acorn.parse(code, {
-      ecmaVersion: 'latest',
-      sourceType: 'script'
+    ast = parser.parse(code, {
+      sourceType: 'script',
+      plugins: ['jsx', 'typescript'] // add plugins as needed
     });
   } catch (e) {
-    console.warn('Failed to parse code', e.message);
+    // console.warn('Failed to parse code with Babel:', e.message);
     return 'global';
   }
 
   let context = 'global';
 
-  walk.fullAncestor(ast, (node, ancestors) => {
-    if (
-      node.type === 'FunctionDeclaration' ||
-      node.type === 'FunctionExpression' ||
-      node.type === 'ArrowFunctionExpression'
-    ) {
+  traverse(ast, {
+    Function(path) {
+      const { node } = path;
       if (offset >= node.start && offset <= node.end) {
         if (node.id && node.id.name) {
           context = node.id.name;
         } else {
-          const parent = ancestors[ancestors.length - 2];
+          const parent = path.parentPath.node;
           if (
-            parent?.type === 'VariableDeclarator' &&
+            parent.type === 'VariableDeclarator' &&
             parent.id.type === 'Identifier'
           ) {
             context = parent.id.name;
@@ -39,6 +36,7 @@ export default function parseCode(_cm) {
             context = '(anonymous)';
           }
         }
+        path.stop(); // Stop traversal once we found the function context
       }
     }
   });

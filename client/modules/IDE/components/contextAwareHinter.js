@@ -1,28 +1,13 @@
-import CodeMirror from 'codemirror';
 import parseCode from './parseCode';
 import parseCodeVariables from './parseCodeVariables';
 import classMap from './class-with-methods-map.json';
 
 const scopeMap = require('./finalScopeMap.json');
 
-function formatHintDisplay(name, isBlacklisted) {
-  return `
-    <div class="fun-item">
-      <span class="fun-name">${name}</span>
-      ${
-        isBlacklisted
-          ? `<div class="inline-warning">⚠️ "${name}" is discouraged in this context.</div>`
-          : ''
-      }
-    </div>
-  `;
-}
-
 function getExpressionBeforeCursor(cm) {
   const cursor = cm.getCursor();
   const line = cm.getLine(cursor.line);
   const uptoCursor = line.slice(0, cursor.ch);
-
   const match = uptoCursor.match(
     /([a-zA-Z_$][\w$]*(?:\.[a-zA-Z_$][\w$]*)*)\.(?:[a-zA-Z_$][\w$]*)?$/
   );
@@ -32,7 +17,6 @@ function getExpressionBeforeCursor(cm) {
 export default function contextAwareHinter(cm, options = {}) {
   const {
     p5ClassMap = {},
-    varMap = [],
     varScopeMap = {},
     userFuncMap = {},
     userClassMap = {}
@@ -81,12 +65,6 @@ export default function contextAwareHinter(cm, options = {}) {
     }
 
     const to = { line: cursor.line, ch: cursor.ch };
-    let tokenLength = 0;
-    if (dotMatch) {
-      const typed = dotMatch[1] || ''; // what's typed after the dot
-      tokenLength = typed.length;
-    }
-
     const typed = dotMatch?.[1]?.toLowerCase() || '';
 
     const methodHints = methods
@@ -94,7 +72,8 @@ export default function contextAwareHinter(cm, options = {}) {
       .map((method) => ({
         item: {
           text: method,
-          type: 'fun'
+          type: 'fun',
+          isMethod: true
         },
         displayText: method,
         from,
@@ -111,34 +90,48 @@ export default function contextAwareHinter(cm, options = {}) {
   const currentContext = parseCode(cm);
   const allHints = hinter.search(currentWord);
 
-  const whitelist = scopeMap[currentContext]?.whitelist || [];
+  // const whitelist = scopeMap[currentContext]?.whitelist || [];
   const blacklist = scopeMap[currentContext]?.blacklist || [];
 
   const lowerCurrentWord = currentWord.toLowerCase();
 
   function isInScope(varName) {
-    const varScope = varScopeMap[varName];
-    if (!varScope) return false;
-    if (varScope === 'global') return true;
-    if (varScope === currentContext) return true;
-    return false;
+    return Object.entries(varScopeMap).some(
+      ([scope, vars]) =>
+        vars.has(varName) && (scope === 'global' || scope === currentContext)
+    );
   }
 
-  const varHints = varMap
+  const allVarNames = Array.from(
+    new Set(
+      Object.values(varScopeMap)
+        .map((s) => Array.from(s)) // convert Set to Array
+        .flat()
+        .filter((name) => typeof name === 'string')
+    )
+  );
+
+  const varHints = allVarNames
     .filter(
       (varName) =>
         varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
     )
-    .map((varName) => ({
-      item: {
-        text: varName,
-        type: userFuncMap[varName] ? 'fun' : 'var'
-      },
-      isBlacklisted: blacklist.includes(varName),
-      displayText: formatHintDisplay(varName, blacklist.includes(varName)),
-      from: { line, ch },
-      to: { line, ch: ch - currentWord.length }
-    }));
+    .map((varName) => {
+      const isFunc = !!userFuncMap[varName];
+      const baseItem = isFunc
+        ? { ...userFuncMap[varName] }
+        : {
+            text: varName,
+            type: 'var',
+            params: [],
+            p5: false
+          };
+
+      return {
+        item: baseItem,
+        isBlacklisted: blacklist.includes(varName)
+      };
+    });
 
   const filteredHints = allHints
     .filter(
@@ -154,8 +147,7 @@ export default function contextAwareHinter(cm, options = {}) {
 
       return {
         ...hint,
-        isBlacklisted,
-        displayText: formatHintDisplay(name, isBlacklisted)
+        isBlacklisted
       };
     });
 
