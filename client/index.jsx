@@ -35,12 +35,12 @@ script.src = 'https://foundation-donate-banner.netlify.app/static/js/main.js';
 document.body.appendChild(script);
 
 const App = () => (
-  <>
+  <div>
     <Router history={browserHistory}>
       <SkipLink targetId="play-sketch" text="PlaySketch" />
       <Routing />
     </Router>
-  </>
+  </div>
 );
 
 render(
