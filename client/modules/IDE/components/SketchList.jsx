@@ -148,7 +148,7 @@ const SketchList = ({
                   context: mobile ? 'mobile' : ''
                 })
               )}
-              {userIsOwner && renderFieldHeader('makePrivate', 'Make Private')}
+              {userIsOwner && renderFieldHeader('visibility', 'Visibility')}
               <th scope="col"></th>
             </tr>
           </thead>

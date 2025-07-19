@@ -10,8 +10,7 @@ import TableDropdown from '../../../components/Dropdown/TableDropdown';
 import MenuItem from '../../../components/Dropdown/MenuItem';
 import dates from '../../../utils/formatDate';
 import getConfig from '../../../utils/getConfig';
-import LockIcon from '../../../images/lock.svg';
-import EarthIcon from '../../../images/earth.svg';
+import VisibilityDropdown from '../../User/components/VisibilityDropdown';
 
 const ROOT_URL = getConfig('API_URL');
 
@@ -90,29 +89,11 @@ const SketchListRowBase = ({
     }
   };
 
-  const handleToggleVisibilityChange = (e) => {
-    const isChecked = e.target.checked;
-    const newVisibility = isChecked ? 'Private' : 'Public';
-    changeVisibility(sketch.id, sketch.name, newVisibility);
-  };
-
-  const renderToggleVisibility = () => (
-    <div>
-      <input
-        checked={sketch.visibility === 'Private'}
-        type="checkbox"
-        className="visibility__toggle-checkbox"
-        id={`toggle-${sketch.id}`}
-        onChange={handleToggleVisibilityChange}
-      />
-      <label
-        htmlFor={`toggle-${sketch.id}`}
-        className="visibility__toggle-label"
-      >
-        <LockIcon className="lock" />
-        <EarthIcon className="earth" />
-      </label>
-    </div>
+  const handleVisibilityChange = useCallback(
+    (sketchId, sketchName, newVisibility) => {
+      changeVisibility(sketchId, sketchName, newVisibility);
+    },
+    [changeVisibility]
   );
 
   const userIsOwner = user.username === username;
@@ -144,7 +125,12 @@ const SketchListRowBase = ({
       <th scope="row">{name}</th>
       <td>{formatDateCell(sketch.createdAt, mobile)}</td>
       <td>{formatDateCell(sketch.updatedAt, mobile)}</td>
-      <td hidden={!userIsOwner}>{renderToggleVisibility()}</td>
+      <td hidden={!userIsOwner}>
+        <VisibilityDropdown
+          sketch={sketch}
+          onVisibilityChange={handleVisibilityChange}
+        />
+      </td>{' '}
       <td className="sketch-list__dropdown-column">
         <TableDropdown aria-label={t('SketchList.ToggleLabelARIA')}>
           <MenuItem hideIf={!userIsOwner} onClick={openRename}>

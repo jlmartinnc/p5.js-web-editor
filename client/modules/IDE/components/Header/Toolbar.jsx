@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -15,12 +15,13 @@ import {
   setGridOutput,
   setTextOutput
 } from '../../actions/preferences';
-import { changeVisibility } from '../../actions/project';
 import PlayIcon from '../../../../images/play.svg';
 import StopIcon from '../../../../images/stop.svg';
 import PreferencesIcon from '../../../../images/preferences.svg';
 import ProjectName from './ProjectName';
 import VersionIndicator from '../VersionIndicator';
+import VisibilityDropdown from '../../../User/components/VisibilityDropdown';
+import { changeVisibility } from '../../actions/project';
 
 const Toolbar = (props) => {
   const { isPlaying, infiniteLoop, preferencesIsVisible } = useSelector(
@@ -32,25 +33,8 @@ const Toolbar = (props) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const userIsOwner = user?.username === project.owner?.username;
-  const [isPrivate, setIsPrivate] = useState(project.visibility === 'Private');
-  useEffect(() => {
-    setIsPrivate(project.visibility === 'Private');
-  }, [project]);
 
-  const showPrivacyToggle = project?.owner && userIsOwner;
-  const showOwner = project?.owner && !userIsOwner;
-
-  const toggleVisibility = (e) => {
-    try {
-      const isChecked = e.target.checked;
-      const newVisibility = isChecked ? 'Private' : 'Public';
-      setIsPrivate(isChecked);
-      dispatch(changeVisibility(project.id, project.name, newVisibility));
-    } catch (error) {
-      console.log(error);
-      setIsPrivate(project.visibility === 'Private');
-    }
-  };
+  const showVisibilityDropdown = project?.owner && userIsOwner;
 
   const playButtonClass = classNames({
     'toolbar__play-button': true,
@@ -64,6 +48,13 @@ const Toolbar = (props) => {
     'toolbar__preferences-button': true,
     'toolbar__preferences-button--selected': preferencesIsVisible
   });
+
+  const handleVisibilityChange = useCallback(
+    (sketchId, sketchName, newVisibility) => {
+      dispatch(changeVisibility(sketchId, sketchName, newVisibility));
+    },
+    [changeVisibility]
+  );
 
   return (
     <div className="toolbar">
@@ -118,20 +109,21 @@ const Toolbar = (props) => {
           {t('Toolbar.Auto-refresh')}
         </label>
       </div>
+
       <div className="toolbar__project-name-container">
         <ProjectName />
-        {showPrivacyToggle && (
-          <main className="toolbar__makeprivate">
-            <p>Private</p>
-            <input
-              type="checkbox"
-              className="toolbar__togglevisibility"
-              checked={isPrivate}
-              onChange={toggleVisibility}
+
+        {showVisibilityDropdown && (
+          <div className="toolbar__visibility">
+            <VisibilityDropdown
+              sketch={project}
+              onVisibilityChange={handleVisibilityChange}
             />
-          </main>
+          </div>
         )}
-        {showOwner && (
+
+        {/* ✅ Still show owner if not you */}
+        {project?.owner && !userIsOwner && (
           <p className="toolbar__project-owner">
             {t('Toolbar.By')}{' '}
             <Link to={`/${project.owner.username}/sketches`}>
@@ -139,9 +131,12 @@ const Toolbar = (props) => {
             </Link>
           </p>
         )}
+
         <VersionIndicator />
       </div>
+
       <div style={{ flex: 1 }} />
+
       <button
         className={preferencesButtonClass}
         onClick={() => dispatch(openPreferences())}

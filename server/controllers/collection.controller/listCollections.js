@@ -24,13 +24,13 @@ export default async function listCollections(req, res) {
   };
 
   try {
-    const owner = await getOwnerUserId(req);
+    const ownerId = await getOwnerUserId(req);
 
-    if (!owner) {
-      sendFailure('404', 'User not found');
+    if (!ownerId) {
+      return sendFailure({ code: 404, message: 'User not found' });
     }
 
-    const collections = await Collection.find({ owner }).populate([
+    let collections = await Collection.find({ owner: ownerId }).populate([
       { path: 'owner', select: ['id', 'username'] },
       {
         path: 'items.project',
@@ -42,8 +42,29 @@ export default async function listCollections(req, res) {
       }
     ]);
 
-    sendSuccess(collections);
+    const isOwner = req.user && req.user._id.equals(ownerId);
+
+    if (isOwner) {
+      return sendSuccess(collections);
+    }
+
+    const publicCollections = collections.map((collection) => {
+      let items = collection.items;
+      items = items.filter(
+        (item) => item.project && item.project.visibility === 'Public'
+      );
+      return {
+        ...collection.toObject(),
+        items,
+        id: collection._id
+      };
+    });
+
+    sendSuccess(publicCollections);
   } catch (error) {
-    sendFailure(error.code || 500, error.message || 'Something went wrong');
+    sendFailure({
+      code: error.code || 500,
+      message: error.message || 'Something went wrong'
+    });
   }
 }
