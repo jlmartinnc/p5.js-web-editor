@@ -30,7 +30,7 @@ export default async function listCollections(req, res) {
       return sendFailure({ code: 404, message: 'User not found' });
     }
 
-    let collections = await Collection.find({ owner: ownerId }).populate([
+    const collections = await Collection.find({ owner: ownerId }).populate([
       { path: 'owner', select: ['id', 'username'] },
       {
         path: 'items.project',
@@ -49,8 +49,8 @@ export default async function listCollections(req, res) {
     }
 
     const publicCollections = collections.map((collection) => {
-      let items = collection.items;
-      items = items.filter(
+      const { items: originalItems } = collection;
+      const items = originalItems.filter(
         (item) => item.project && item.project.visibility === 'Public'
       );
       return {
@@ -60,9 +60,9 @@ export default async function listCollections(req, res) {
       };
     });
 
-    sendSuccess(publicCollections);
+    return sendSuccess(publicCollections);
   } catch (error) {
-    sendFailure({
+    return sendFailure({
       code: error.code || 500,
       message: error.message || 'Something went wrong'
     });

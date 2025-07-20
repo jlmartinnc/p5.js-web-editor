@@ -81,16 +81,18 @@ describe('<Sketchlist />', () => {
 
   it('renders component correctly', () => {
     const { container } = subject();
-    
-    expect(container.querySelector('.sketches-table-container')).toBeInTheDocument();
+
+    expect(
+      container.querySelector('.sketches-table-container')
+    ).toBeInTheDocument();
     expect(container.querySelector('.sketches-table')).toBeInTheDocument();
     expect(container.querySelector('thead')).toBeInTheDocument();
     expect(container.querySelector('tbody')).toBeInTheDocument();
-    
+
     // expect(screen.getByText(/Sketch/i)).toBeInTheDocument();
     // expect(screen.getByText(/Date created/i)).toBeInTheDocument();
     // expect(screen.getByText(/Last updated/i)).toBeInTheDocument();
-    
+
     const sketchRows = container.querySelectorAll('tbody tr');
     expect(sketchRows.length).toBeGreaterThan(0);
   });
