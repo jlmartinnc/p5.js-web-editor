@@ -13,13 +13,13 @@ const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
     {
       value: 'Public',
       label: 'Public',
-      icon: <EarthIcon className="visibility-icon" />, 
+      icon: <EarthIcon className="visibility-icon" />,
       description: 'Anyone can see this sketch'
     },
     {
       value: 'Private',
       label: 'Private',
-      icon: <LockIcon className="visibility-icon" />, 
+      icon: <LockIcon className="visibility-icon" />,
       description: 'Only you can see this sketch'
     }
   ];

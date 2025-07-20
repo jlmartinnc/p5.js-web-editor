@@ -9,7 +9,7 @@ const mockProjects = [
     files: [],
     createdAt: '2021-02-26T04:58:14',
     id: 'testid1',
-    visibility: 'Public' 
+    visibility: 'Public'
   },
   {
     name: 'testsketch2',
@@ -18,7 +18,7 @@ const mockProjects = [
     files: [],
     createdAt: '2021-02-23T17:40:43',
     id: 'testid2',
-    visibility: 'Public' 
+    visibility: 'Public'
   }
 ];
 
