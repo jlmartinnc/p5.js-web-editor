@@ -76,6 +76,7 @@ import IconButton from '../../../../common/IconButton';
 import contextAwareHinter from '../contextAwareHinter';
 import showRenameDialog from '../showRenameDialog';
 import { handleRename } from '../rename-variable';
+import { jumpToDefinition } from '../jump-to-definition';
 
 emmet(CodeMirror);
 
@@ -157,6 +158,16 @@ class Editor extends React.Component {
     });
 
     delete this._cm.options.lint.options.errors;
+
+    this._cm.getWrapperElement().addEventListener('click', (e) => {
+      const isMac = /Mac/.test(navigator.platform);
+      const isCtrlClick = isMac ? e.metaKey : e.ctrlKey;
+
+      if (isCtrlClick) {
+        const pos = this._cm.coordsChar({ left: e.clientX, top: e.clientY });
+        jumpToDefinition.call(this, pos);
+      }
+    });
 
     const replaceCommand =
       metaKey === 'Ctrl' ? `${metaKey}-H` : `${metaKey}-Option-F`;
