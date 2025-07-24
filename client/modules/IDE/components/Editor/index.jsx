@@ -493,23 +493,6 @@ class Editor extends React.Component {
         },
         hintOptions
       );
-
-      // CodeMirror.showHint(
-      //   _cm,
-      //   () => {
-      //     const c = _cm.getCursor();
-      //     const token = _cm.getTokenAt(c);
-      //     const hints = this.hinter
-      //       .search(token.string)
-      //       .filter((h) => h.item.text[0] === token.string[0]);
-      //     return {
-      //       list: hints,
-      //       from: CodeMirror.Pos(c.line, token.start),
-      //       to: CodeMirror.Pos(c.line, c.ch)
-      //     };
-      //   },
-      //   hintOptions
-      // );
     } else if (_cm.options.mode === 'css') {
       // CSS
       CodeMirror.showHint(_cm, CodeMirror.hint.css, hintOptions);

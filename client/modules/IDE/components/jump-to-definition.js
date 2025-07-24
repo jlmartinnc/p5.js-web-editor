@@ -19,7 +19,6 @@ export function jumpToDefinition(pos) {
   const context = getContext(cm, ast, pos, varScopeMap);
 
   if (!context || !varScopeMap[context] || !varScopeMap[context].has(varName)) {
-    console.warn(`Variable "${varName}" not found in context "${context}".`);
     return;
   }
 
@@ -73,10 +72,4 @@ export function jumpToDefinition(pos) {
       }
     }
   });
-
-  if (!found) {
-    console.warn(
-      `Definition for "${varName}" not found in context "${context}".`
-    );
-  }
 }

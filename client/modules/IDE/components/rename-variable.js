@@ -15,7 +15,6 @@ export function handleRename(fromPos, oldName, newName, cm) {
   const { varScopeMap = {} } = parseCodeVariables(cm) || {};
 
   if (!cm) {
-    console.warn('CodeMirror instance not provided.');
     return;
   }
   const ast = getAST(cm);
@@ -65,7 +64,6 @@ export function getContext(cm, ast, fromPos, varScopeMap) {
   });
 
   if (!foundNode) {
-    console.warn('No identifier found at the selected position.');
     return null;
   }
 
@@ -153,7 +151,6 @@ export function getAST(cm) {
     });
     return ast;
   } catch (e) {
-    console.warn('Failed to parse code with Babel:', e.message);
     return;
   }
 }

@@ -24,13 +24,11 @@ export default function contextAwareHinter(cm, options = {}) {
 
   const { hinter } = options;
   if (!hinter || typeof hinter.search !== 'function') {
-    console.warn('Hinter is not available or invalid.');
     return [];
   }
 
   const baseExpression = getExpressionBeforeCursor(cm);
 
-  // If we're completing after a dot
   if (baseExpression) {
     const className = p5ClassMap[baseExpression];
     const userClassEntry = Object.values(userClassMap).find(
@@ -58,7 +56,7 @@ export default function contextAwareHinter(cm, options = {}) {
     let from = cursor;
     if (dotMatch) {
       const fullMatch = dotMatch[0];
-      const methodStart = cursor.ch - fullMatch.length + 1; // +1 to skip the dot itself
+      const methodStart = cursor.ch - fullMatch.length + 1;
       from = { line: cursor.line, ch: methodStart };
     } else {
       from = cursor;
@@ -105,7 +103,7 @@ export default function contextAwareHinter(cm, options = {}) {
   const allVarNames = Array.from(
     new Set(
       Object.values(varScopeMap)
-        .map((s) => Array.from(s)) // convert Set to Array
+        .map((s) => Array.from(s))
         .flat()
         .filter((name) => typeof name === 'string')
     )

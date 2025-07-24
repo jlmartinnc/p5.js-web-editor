@@ -11,7 +11,7 @@ export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
     return;
   }
 
-  openRenameInputDialog(coords, oldName, onSubmit); // ✅ pass callback
+  openRenameInputDialog(coords, oldName, onSubmit);
 }
 
 function openRenameInputDialog(coords, oldName, onSubmit) {
@@ -44,7 +44,6 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
   function onClickOutside(e) {
     if (!dialog.contains(e.target)) {
       cleanup();
-      // Cancel — do nothing
     }
   }
 
@@ -53,12 +52,11 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
       const value = input.value.trim();
       if (value) {
         cleanup();
-        onSubmit(value); // ✅ rename triggered here
-      } else {
-        cleanup(); // no-op for empty
+        onSubmit(value);
+        cleanup();
       }
     } else if (e.key === 'Escape') {
-      cleanup(); // cancel
+      cleanup();
     }
   });
 
@@ -66,7 +64,6 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
 }
 
 function isValidIdentifierSelection(selection, tokenType) {
-  // Reject if empty, multiple words, or includes special characters
   if (!selection || selection.trim() === '') return false;
   if (
     tokenType === 'comment' ||
@@ -76,12 +73,7 @@ function isValidIdentifierSelection(selection, tokenType) {
   )
     return false;
 
-  // Reject multi-word selections or whitespace
   if (/\s/.test(selection)) return false;
-
-  // Reject if it's just a punctuation character or not a valid identifier
-  // Valid JS identifier: starts with letter, _, or $, and only includes those plus digits
-  // NOTE: This doesn't catch reserved keywords; Babel parsing would be needed for that.
   return /^[$A-Z_a-z][$\w]*$/.test(selection);
 }
 

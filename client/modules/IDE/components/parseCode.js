@@ -10,10 +10,9 @@ export default function parseCode(_cm) {
   try {
     ast = parser.parse(code, {
       sourceType: 'script',
-      plugins: ['jsx', 'typescript'] // add plugins as needed
+      plugins: ['jsx', 'typescript']
     });
   } catch (e) {
-    // console.warn('Failed to parse code with Babel:', e.message);
     return 'global';
   }
 
@@ -36,7 +35,7 @@ export default function parseCode(_cm) {
             context = '(anonymous)';
           }
         }
-        path.stop(); // Stop traversal once we found the function context
+        path.stop();
       }
     }
   });
