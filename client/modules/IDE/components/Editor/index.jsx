@@ -76,6 +76,7 @@ import IconButton from '../../../../common/IconButton';
 import contextAwareHinter from '../contextAwareHinter';
 import showRenameDialog from '../showRenameDialog';
 import { handleRename } from '../rename-variable';
+import { jumpToDefinition } from '../jump-to-definition';
 
 emmet(CodeMirror);
 
@@ -158,6 +159,16 @@ class Editor extends React.Component {
 
     delete this._cm.options.lint.options.errors;
 
+    this._cm.getWrapperElement().addEventListener('click', (e) => {
+      const isMac = /Mac/.test(navigator.platform);
+      const isCtrlClick = isMac ? e.metaKey : e.ctrlKey;
+
+      if (isCtrlClick) {
+        const pos = this._cm.coordsChar({ left: e.clientX, top: e.clientY });
+        jumpToDefinition.call(this, pos);
+      }
+    });
+
     const replaceCommand =
       metaKey === 'Ctrl' ? `${metaKey}-H` : `${metaKey}-Option-F`;
     this._cm.setOption('extraKeys', {
@@ -173,6 +184,9 @@ class Editor extends React.Component {
       },
       Enter: 'emmetInsertLineBreak',
       Esc: 'emmetResetAbbreviation',
+      [`Shift-${metaKey}-E`]: (cm) => {
+        cm.getInputField().blur();
+      },
       F2: (cm) => this.renameVariable(cm),
       [`Shift-Tab`]: false,
       [`${metaKey}-Enter`]: () => null,
@@ -591,7 +605,7 @@ class Editor extends React.Component {
             <section className={editorSectionClass}>
               <div className="editor__header">
                 <button
-                  aria-label={this.props.t('Editor.OpenSketchARIA')}
+                  aria-label={this.props.t('Editor.CloseSketchARIA')}
                   className="sidebar__contract"
                   onClick={() => {
                     this.props.collapseSidebar();
@@ -601,7 +615,7 @@ class Editor extends React.Component {
                   <LeftArrowIcon focusable="false" aria-hidden="true" />
                 </button>
                 <button
-                  aria-label={this.props.t('Editor.CloseSketchARIA')}
+                  aria-label={this.props.t('Editor.OpenSketchARIA')}
                   className="sidebar__expand"
                   onClick={this.props.expandSidebar}
                 >

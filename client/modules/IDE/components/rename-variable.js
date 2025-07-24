@@ -25,7 +25,7 @@ export function handleRename(fromPos, oldName, newName, cm) {
   const matches = getMatches(cm, state, state.query);
 }
 
-function getContext(cm, ast, fromPos, varScopeMap) {
+export function getContext(cm, ast, fromPos, varScopeMap) {
   const posIndex = cm.indexFromPos(fromPos);
   let foundNode = null;
   let enclosingFunction = null;
@@ -140,7 +140,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
   });
 }
 
-function getAST(cm) {
+export function getAST(cm) {
   const code = cm.getValue();
   const cursor = cm.getCursor();
   const offset = cm.indexFromPos(cursor);
