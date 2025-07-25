@@ -1,8 +1,8 @@
-import parseCode from './parseCode';
-import parseCodeVariables from './parseCodeVariables';
-import classMap from './class-with-methods-map.json';
+import getContext from './getContext';
+import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
+import classMap from './p5-instance-methods-and-creators.json';
 
-const scopeMap = require('./finalScopeMap.json');
+const scopeMap = require('./p5-scope-function-access-map.json');
 
 function getExpressionBeforeCursor(cm) {
   const cursor = cm.getCursor();
@@ -16,11 +16,11 @@ function getExpressionBeforeCursor(cm) {
 
 export default function contextAwareHinter(cm, options = {}) {
   const {
-    p5ClassMap = {},
-    varScopeMap = {},
-    userFuncMap = {},
-    userClassMap = {}
-  } = parseCodeVariables(cm) || {};
+    variableToP5ClassMap = {},
+    scopeToDeclaredVarsMap = {},
+    userDefinedFunctionMetadata = {},
+    userDefinedClassMetadata = {}
+  } = p5CodeAstAnalyzer(cm) || {};
 
   const { hinter } = options;
   if (!hinter || typeof hinter.search !== 'function') {
@@ -30,8 +30,8 @@ export default function contextAwareHinter(cm, options = {}) {
   const baseExpression = getExpressionBeforeCursor(cm);
 
   if (baseExpression) {
-    const className = p5ClassMap[baseExpression];
-    const userClassEntry = Object.values(userClassMap).find(
+    const className = variableToP5ClassMap[baseExpression];
+    const userClassEntry = Object.values(userDefinedClassMetadata).find(
       (cls) => cls.initializer === baseExpression
     );
 
@@ -85,7 +85,7 @@ export default function contextAwareHinter(cm, options = {}) {
   const { string } = cm.getTokenAt({ line, ch });
   const currentWord = string.trim();
 
-  const currentContext = parseCode(cm);
+  const currentContext = getContext(cm);
   const allHints = hinter.search(currentWord);
 
   // const whitelist = scopeMap[currentContext]?.whitelist || [];
@@ -94,7 +94,7 @@ export default function contextAwareHinter(cm, options = {}) {
   const lowerCurrentWord = currentWord.toLowerCase();
 
   function isInScope(varName) {
-    return Object.entries(varScopeMap).some(
+    return Object.entries(scopeToDeclaredVarsMap).some(
       ([scope, vars]) =>
         vars.has(varName) && (scope === 'global' || scope === currentContext)
     );
@@ -102,7 +102,7 @@ export default function contextAwareHinter(cm, options = {}) {
 
   const allVarNames = Array.from(
     new Set(
-      Object.values(varScopeMap)
+      Object.values(scopeToDeclaredVarsMap)
         .map((s) => Array.from(s))
         .flat()
         .filter((name) => typeof name === 'string')
@@ -115,9 +115,9 @@ export default function contextAwareHinter(cm, options = {}) {
         varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
     )
     .map((varName) => {
-      const isFunc = !!userFuncMap[varName];
+      const isFunc = !!userDefinedFunctionMetadata[varName];
       const baseItem = isFunc
-        ? { ...userFuncMap[varName] }
+        ? { ...userDefinedFunctionMetadata[varName] }
         : {
             text: varName,
             type: 'var',

@@ -1,12 +1,12 @@
 /* eslint-disable */
 import { debounce } from 'lodash';
 import * as eslintScope from 'eslint-scope';
-import classMap from './class-with-methods-map.json';
+import classMap from './p5-instance-methods-and-creators.json';
 
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
-const allFuncs = require('./listOfAllFunctions.json');
+const allFuncs = require('./p5-reference-functions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
 const functionToClass = {};
@@ -19,13 +19,13 @@ Object.entries(classMap).forEach(([className, classData]) => {
 
 // Cache to store last valid result
 let lastValidResult = {
-  p5ClassMap: {},
-  varScopeMap: {},
-  userFuncMap: {},
-  userClassMap: {}
+  variableToP5ClassMap: {},
+  scopeToDeclaredVarsMap: {},
+  userDefinedFunctionMetadata: {},
+  userDefinedClassMetadata: {}
 };
 
-function _parseCodeVariables(_cm) {
+function _p5CodeAstAnalyzer(_cm) {
   const code = _cm.getValue();
   let ast;
 
@@ -40,10 +40,10 @@ function _parseCodeVariables(_cm) {
     return lastValidResult;
   }
 
-  const p5ClassMap = {};
-  const varScopeMap = {};
-  const userFuncMap = {};
-  const userClassMap = {};
+  const variableToP5ClassMap = {};
+  const scopeToDeclaredVarsMap = {};
+  const userDefinedFunctionMetadata = {};
+  const userDefinedClassMetadata = {};
 
   const scopeManager = eslintScope.analyze(ast, {
     ecmaVersion: 2020,
@@ -62,11 +62,11 @@ function _parseCodeVariables(_cm) {
           def.type === 'Variable' ||
           (def.type === 'FunctionName' && !allFunsList.has(def.name.name))
         ) {
-          if (!varScopeMap[scopeName]) {
-            varScopeMap[scopeName] = new Set();
+          if (!scopeToDeclaredVarsMap[scopeName]) {
+            scopeToDeclaredVarsMap[scopeName] = new Set();
           }
 
-          varScopeMap[scopeName].add(def.name.name);
+          scopeToDeclaredVarsMap[scopeName].add(def.name.name);
         }
       });
     });
@@ -109,7 +109,7 @@ function _parseCodeVariables(_cm) {
           }
         });
 
-        userClassMap[className] = {
+        userDefinedClassMetadata[className] = {
           const: Array.from(classInfo.const),
           methods: classInfo.methods,
           initializer: ''
@@ -129,11 +129,11 @@ function _parseCodeVariables(_cm) {
         const fnName = node.right.callee.name;
 
         const cls = functionToClass[fnName];
-        const userCls = userClassMap[fnName];
+        const userCls = userDefinedClassMetadata[fnName];
         if (userCls) {
-          userClassMap[fnName].initializer = varName;
+          userDefinedClassMetadata[fnName].initializer = varName;
         } else if (cls) {
-          p5ClassMap[varName] = cls;
+          variableToP5ClassMap[varName] = cls;
         }
       }
     },
@@ -149,11 +149,11 @@ function _parseCodeVariables(_cm) {
         const varName = node.id.name;
         const fnName = node.init.callee.name;
         const cls = functionToClass[fnName];
-        const userCls = userClassMap[fnName];
+        const userCls = userDefinedClassMetadata[fnName];
         if (userCls) {
-          userClassMap[fnName].initializer = varName;
+          userDefinedClassMetadata[fnName].initializer = varName;
         } else if (cls) {
-          p5ClassMap[varName] = cls;
+          variableToP5ClassMap[varName] = cls;
         }
       }
     },
@@ -183,20 +183,20 @@ function _parseCodeVariables(_cm) {
             .filter(Boolean);
 
           // Store function metadata for hinting
-          userFuncMap[fnName] = {
+          userDefinedFunctionMetadata[fnName] = {
             text: fnName,
             type: 'fun',
             p5: false,
             params
           };
 
-          // Store function params in the varScopeMap
-          if (!varScopeMap[fnName]) {
-            varScopeMap[fnName] = new Set();
+          // Store function params in the scopeToDeclaredVarsMap
+          if (!scopeToDeclaredVarsMap[fnName]) {
+            scopeToDeclaredVarsMap[fnName] = new Set();
           }
           params.forEach((paramObj) => {
             if (paramObj && paramObj.p) {
-              varScopeMap[fnName].add(paramObj.p);
+              scopeToDeclaredVarsMap[fnName].add(paramObj.p);
             }
           });
         }
@@ -205,10 +205,10 @@ function _parseCodeVariables(_cm) {
   });
 
   const result = {
-    p5ClassMap,
-    varScopeMap,
-    userFuncMap,
-    userClassMap
+    variableToP5ClassMap,
+    scopeToDeclaredVarsMap,
+    userDefinedFunctionMetadata,
+    userDefinedClassMetadata
   };
 
   lastValidResult = result;
@@ -216,7 +216,7 @@ function _parseCodeVariables(_cm) {
 }
 
 // Export a debounced version
-export default debounce(_parseCodeVariables, 200, {
+export default debounce(_p5CodeAstAnalyzer, 200, {
   leading: true,
   trailing: true,
   maxWait: 300

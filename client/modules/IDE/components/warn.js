@@ -1,6 +1,6 @@
-import parseCode from './parseCode';
+import getContext from './getContext';
 
-const scopeMap = require('./finalScopeMap.json');
+const scopeMap = require('./p5-scope-function-access-map.json');
 
 /**
  * Checks if a completion is blacklisted in the current context and logs a warning if so.
@@ -8,7 +8,7 @@ const scopeMap = require('./finalScopeMap.json');
  * @param {string} text - The name of the selected function
  */
 export default function warnIfBlacklisted(cm, text) {
-  const context = parseCode(cm);
+  const context = getContext(cm);
   const blacklist = scopeMap[context]?.blacklist || [];
 
   const isBlacklisted = blacklist.includes(text);

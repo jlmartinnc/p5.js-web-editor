@@ -1,5 +1,5 @@
 /* eslint-disable */
-import parseCodeVariables from './parseCodeVariables';
+import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
@@ -12,19 +12,19 @@ function SearchState(oldName) {
 }
 
 export function handleRename(fromPos, oldName, newName, cm) {
-  const { varScopeMap = {} } = parseCodeVariables(cm) || {};
+  const { scopeToDeclaredVarsMap = {} } = p5CodeAstAnalyzer(cm) || {};
 
   if (!cm) {
     return;
   }
   const ast = getAST(cm);
-  const context = getContext(cm, ast, fromPos, varScopeMap);
+  const context = getContext(cm, ast, fromPos, scopeToDeclaredVarsMap);
   startRenaming(cm, ast, fromPos, newName, oldName);
   const state = getRenameSearchState(cm, oldName);
   const matches = getMatches(cm, state, state.query);
 }
 
-export function getContext(cm, ast, fromPos, varScopeMap) {
+export function getContext(cm, ast, fromPos, scopeToDeclaredVarsMap) {
   const posIndex = cm.indexFromPos(fromPos);
   let foundNode = null;
   let enclosingFunction = null;
@@ -37,11 +37,8 @@ export function getContext(cm, ast, fromPos, varScopeMap) {
       const start = node.start;
       const end = node.end;
 
-      // If position is inside this node
       if (start <= posIndex && posIndex <= end) {
-        // Check if it's an identifier
         if (node.type === 'Identifier' && node.name) {
-          // Assign only if not assigned yet or if it's more specific
           if (
             !foundNode ||
             (node.start >= foundNode.start && node.end <= foundNode.end)
@@ -50,7 +47,6 @@ export function getContext(cm, ast, fromPos, varScopeMap) {
           }
         }
 
-        // Capture the enclosing function name
         if (
           (node.type === 'FunctionDeclaration' ||
             node.type === 'FunctionExpression') &&
@@ -69,26 +65,25 @@ export function getContext(cm, ast, fromPos, varScopeMap) {
 
   const varName = foundNode.name;
 
-  // Now check varScopeMap to determine scope
-  const contextCandidates = Object.entries(varScopeMap)
+  const contextCandidates = Object.entries(scopeToDeclaredVarsMap)
     .filter(([context, vars]) => vars.has(varName))
     .map(([context]) => context);
 
-  // Priority logic
   if (contextCandidates.includes(enclosingFunction)) {
-    return enclosingFunction; // local
+    return enclosingFunction;
   } else if (contextCandidates.includes('global')) {
-    return 'global'; // global fallback
+    return 'global';
   } else {
-    return enclosingFunction || 'global'; // fallback
+    return enclosingFunction || 'global';
   }
 }
 
 function startRenaming(cm, ast, fromPos, newName, oldName) {
   const code = cm.getValue();
   const fromIndex = cm.indexFromPos(fromPos);
-  const varScopeMap = parseCodeVariables(cm).varScopeMap || {};
-  const baseContext = getContext(cm, ast, fromPos, varScopeMap);
+  const scopeToDeclaredVarsMap =
+    p5CodeAstAnalyzer(cm).scopeToDeclaredVarsMap || {};
+  const baseContext = getContext(cm, ast, fromPos, scopeToDeclaredVarsMap);
 
   const replacements = [];
 
@@ -100,12 +95,10 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       const startIndex = node.start;
       const endIndex = node.end;
 
-      // Check it's the same variable name
       if (node.name !== oldName) return;
 
       const pos = cm.posFromIndex(startIndex);
 
-      // Skip property keys and non-variable references
       if (
         parent.type === 'MemberExpression' &&
         parent.property === node &&
@@ -113,10 +106,8 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       )
         return;
 
-      // Use the same getContext to figure out *this* node's context
-      const thisContext = getContext(cm, ast, pos, varScopeMap);
+      const thisContext = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
 
-      // Only allow rename if the context matches the original context
       if (thisContext === baseContext) {
         replacements.push({
           from: cm.posFromIndex(startIndex),
@@ -126,7 +117,6 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
     }
   });
 
-  // Sort replacements in reverse order to avoid messing up the text positions
   replacements.sort(
     (a, b) => cm.indexFromPos(b.from) - cm.indexFromPos(a.from)
   );
@@ -147,7 +137,7 @@ export function getAST(cm) {
   try {
     ast = parser.parse(code, {
       sourceType: 'script',
-      plugins: ['jsx', 'typescript'] // add plugins as needed
+      plugins: ['jsx', 'typescript']
     });
     return ast;
   } catch (e) {
@@ -179,7 +169,6 @@ function getRenameSearchState(cm, oldName) {
 }
 
 function getSearchCursor(cm, query, pos) {
-  // Heuristic: if the query string is all lowercase, do a case insensitive search.
   return cm.getSearchCursor(
     query,
     pos,

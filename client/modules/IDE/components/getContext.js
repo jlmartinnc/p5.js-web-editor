@@ -1,7 +1,7 @@
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
-export default function parseCode(_cm) {
+export default function getContext(_cm) {
   const code = _cm.getValue();
   const cursor = _cm.getCursor();
   const offset = _cm.indexFromPos(cursor);

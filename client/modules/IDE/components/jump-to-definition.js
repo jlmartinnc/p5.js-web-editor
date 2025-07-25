@@ -1,5 +1,5 @@
 /* eslint-disable */
-import parseCodeVariables from './parseCodeVariables';
+import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import { getAST, getContext } from './rename-variable';
 const traverse = require('@babel/traverse').default;
 
@@ -8,21 +8,23 @@ export function jumpToDefinition(pos) {
   const token = cm.getTokenAt(pos);
   const tokenType = token.type;
 
-  // Only act if it's a variable
   if (!tokenType || !tokenType.includes('variable')) return;
 
   const varName = token.string;
 
-  // Get full AST and variable scopes
   const ast = getAST(cm);
-  const varScopeMap = parseCodeVariables(cm).varScopeMap || {};
-  const context = getContext(cm, ast, pos, varScopeMap);
+  const scopeToDeclaredVarsMap =
+    p5CodeAstAnalyzer(cm).scopeToDeclaredVarsMap || {};
+  const context = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
 
-  if (!context || !varScopeMap[context] || !varScopeMap[context].has(varName)) {
+  if (
+    !context ||
+    !scopeToDeclaredVarsMap[context] ||
+    !scopeToDeclaredVarsMap[context].has(varName)
+  ) {
     return;
   }
 
-  // Now find the actual definition location using Babel traverse
   const targetIndex = cm.indexFromPos(pos);
   let found = false;
 
@@ -37,7 +39,7 @@ export function jumpToDefinition(pos) {
         node.loc
       ) {
         const defPos = cm.posFromIndex(node.start);
-        const defContext = getContext(cm, ast, defPos, varScopeMap);
+        const defContext = getContext(cm, ast, defPos, scopeToDeclaredVarsMap);
 
         if (defContext === context) {
           found = true;
@@ -48,7 +50,6 @@ export function jumpToDefinition(pos) {
     },
 
     FunctionDeclaration(path) {
-      // Handle function parameters like: function foo(x) { x }
       if (found) return;
 
       const { node } = path;
@@ -61,7 +62,12 @@ export function jumpToDefinition(pos) {
           param.loc
         ) {
           const defPos = cm.posFromIndex(param.start);
-          const defContext = getContext(cm, ast, defPos, varScopeMap);
+          const defContext = getContext(
+            cm,
+            ast,
+            defPos,
+            scopeToDeclaredVarsMap
+          );
 
           if (defContext === context) {
             found = true;

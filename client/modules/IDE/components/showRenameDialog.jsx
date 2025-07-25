@@ -1,5 +1,5 @@
 /* eslint-disable */
-const allFuncs = require('./listOfAllFunctions.json');
+const allFuncs = require('./p5-reference-functions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
 export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {

@@ -9,7 +9,7 @@
 
 // The first function (mod) is a wrapper to support different JavaScript environments.
 // The second function (inside) contains the actual implementation.
-import parseCode from './parseCode';
+import getContext from './getContext';
 import CodeMirror from 'codemirror';
 import warnIfBlacklisted from './warn';
 
@@ -38,7 +38,7 @@ import warnIfBlacklisted from './warn';
     if (options && options.async) getHints.async = true;
     var newOpts = { hint: getHints };
     if (options) for (var prop in options) newOpts[prop] = options[prop];
-    const context = parseCode(cm);
+    const context = getContext(cm);
     return cm.showHint(newOpts);
   };
 
@@ -132,8 +132,6 @@ import warnIfBlacklisted from './warn';
         self = this;
 
       this.cm.operation(function () {
-        // this is how cm allows custom behavior per suggestion
-        // if hint is provided on a hint object, it will be called instead of the default replace range
         const name = completion.item?.text;
         if (name) warnIfBlacklisted(self.cm, name);
 
