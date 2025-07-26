@@ -5,76 +5,46 @@
 function getPreferredLanguage(
   supportedLanguages: string[] = [],
   defaultLanguage: string = 'en'
-) {
+): string | undefined {
   if (typeof navigator === 'undefined') {
     return defaultLanguage;
   }
 
   const normalizeLanguage = (langCode: string) => langCode.toLowerCase().trim();
-
   const normalizedSupported = supportedLanguages.map(normalizeLanguage);
 
-  if (navigator.languages && navigator.languages.length) {
-    const matchedLang = navigator.languages.find((browserLang) => {
-      const normalizedBrowserLang = normalizeLanguage(browserLang);
+  /**
+   * Attempts to find a match in normalizedSupported given a browser-provided language.
+   * Prioritizes exact match of both language and region (eg. 'en-GB'), falls back to base-language match (eg. 'en').
+   */
+  function findMatch(inputLang: string): string | undefined {
+    const normalizedLang = normalizeLanguage(inputLang);
 
-      const hasExactMatch =
-        normalizedSupported.findIndex(
-          (lang) => lang === normalizedBrowserLang
-        ) !== -1;
+    const exactMatchIndex = normalizedSupported.indexOf(normalizedLang);
+    if (exactMatchIndex !== -1) return supportedLanguages[exactMatchIndex];
 
-      if (hasExactMatch) {
-        return true;
-      }
+    const baseLanguage = normalizedLang.split('-')[0];
+    const partialMatchIndex = normalizedSupported.findIndex(
+      (lang) => lang === baseLanguage || lang.startsWith(`${baseLanguage}-`)
+    );
+    if (partialMatchIndex !== -1) return supportedLanguages[partialMatchIndex];
 
-      const languageOnly = normalizedBrowserLang.split('-')[0];
-      const hasLanguageOnlyMatch =
-        normalizedSupported.findIndex(
-          (lang) => lang === languageOnly || lang.startsWith(`${languageOnly}-`)
-        ) !== -1;
+    // eslint-disable-next-line consistent-return
+    return undefined;
+  }
 
-      return hasLanguageOnlyMatch;
-    });
-
-    if (matchedLang) {
-      const normalizedMatchedLang = normalizeLanguage(matchedLang);
-      const exactMatchIndex = normalizedSupported.findIndex(
-        (lang) => lang === normalizedMatchedLang
-      );
-
-      if (exactMatchIndex !== -1) {
-        return supportedLanguages[exactMatchIndex];
-      }
-
-      const languageOnly = normalizedMatchedLang.split('-')[0];
-      const languageOnlyMatchIndex = normalizedSupported.findIndex(
-        (lang) => lang === languageOnly || lang.startsWith(`${languageOnly}-`)
-      );
-
-      if (languageOnlyMatchIndex !== -1) {
-        return supportedLanguages[languageOnlyMatchIndex];
-      }
+  // Try navigator.languages list first
+  if (Array.isArray(navigator.languages)) {
+    for (let i = 0; i < navigator.languages.length; i++) {
+      const match = findMatch(navigator.languages[i]);
+      if (match) return match;
     }
   }
 
+  // Fallback to navigator.language
   if (navigator.language) {
-    const normalizedNavLang = normalizeLanguage(navigator.language);
-    const exactMatchIndex = normalizedSupported.findIndex(
-      (lang) => lang === normalizedNavLang
-    );
-
-    if (exactMatchIndex !== -1) {
-      return supportedLanguages[exactMatchIndex];
-    }
-
-    const languageOnly = normalizedNavLang.split('-')[0];
-    const languageOnlyMatchIndex = normalizedSupported.findIndex(
-      (lang) => lang === languageOnly || lang.startsWith(`${languageOnly}-`)
-    );
-
-    if (languageOnlyMatchIndex !== -1) {
-      return supportedLanguages[languageOnlyMatchIndex];
-    }
+    const match = findMatch(navigator.language);
+    if (match) return match;
   }
 
   return defaultLanguage;
