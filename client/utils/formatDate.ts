@@ -4,10 +4,14 @@ import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import parseISO from 'date-fns/parseISO';
 import i18next from 'i18next';
-
 import { currentDateLocale } from '../i18n';
 
-function parse(maybeDate) {
+/**
+ * Parses input into a valid Date object, or returns null if invalid.
+ * @param date - Date or string to parse
+ * @returns Parsed Date or null
+ */
+function parse(maybeDate: Date | string) {
   const date = maybeDate instanceof Date ? maybeDate : parseISO(maybeDate);
 
   if (isValid(date)) {
@@ -18,40 +22,44 @@ function parse(maybeDate) {
 }
 
 export default {
-  distanceInWordsToNow(date) {
+  /**
+   * Returns a human-friendly relative time string from now.
+   * For very recent dates, returns specific labels (e.g., 'JustNow').
+   * @param date - Date or string to compare
+   * @returns Relative time string or empty string if invalid
+   */
+  distanceInWordsToNow(date: Date | string) {
     const parsed = parse(date);
 
-    if (parsed) {
-      const now = new Date();
-      const diffInMs = differenceInMilliseconds(now, parsed);
+    if (!parsed) return '';
 
-      if (Math.abs(diffInMs < 10000)) {
-        return i18next.t('formatDate.JustNow');
-      } else if (diffInMs < 20000) {
-        return i18next.t('formatDate.15Seconds');
-      } else if (diffInMs < 30000) {
-        return i18next.t('formatDate.25Seconds');
-      } else if (diffInMs < 46000) {
-        return i18next.t('formatDate.35Seconds');
-      }
+    const diffInMs = Math.abs(differenceInMilliseconds(new Date(), parsed));
 
-      const timeAgo = formatDistanceToNow(parsed, {
-        includeSeconds: false,
-        locale: currentDateLocale()
-      });
-      return i18next.t('formatDate.Ago', { timeAgo });
-    }
+    if (diffInMs < 10000) return i18next.t('formatDate.JustNow');
+    if (diffInMs < 20000) return i18next.t('formatDate.15Seconds');
+    if (diffInMs < 30000) return i18next.t('formatDate.25Seconds');
+    if (diffInMs < 46000) return i18next.t('formatDate.35Seconds');
 
-    return '';
+    const timeAgo = formatDistanceToNow(parsed, {
+      includeSeconds: false,
+      locale: currentDateLocale()
+    });
+
+    return i18next.t('formatDate.Ago', { timeAgo });
   },
-  format(date, { showTime = true } = {}) {
+
+  /**
+   * Formats a date as a string. Includes time by default.
+   * @param date - Date or string to format
+   * @param options - Formatting options
+   * @param options.showTime - Whether to include time (default true)
+   * @returns Formatted date string or empty string if invalid
+   */
+  format(date: Date | string, { showTime = true } = {}): string {
     const parsed = parse(date);
+    if (!parsed) return '';
+
     const formatType = showTime ? 'PPpp' : 'PP';
-
-    if (parsed) {
-      return format(parsed, formatType, { locale: currentDateLocale() });
-    }
-
-    return '';
+    return format(parsed, formatType, { locale: currentDateLocale() });
   }
 };
