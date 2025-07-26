@@ -1,21 +1,5 @@
 /* eslint-disable */
 import i18n from 'i18next';
-export const domOnlyProps = ({
-  initialValue,
-  autofill,
-  onUpdate,
-  valid,
-  invalid,
-  dirty,
-  pristine,
-  active,
-  touched,
-  visited,
-  autofilled,
-  error,
-  ...domProps
-}) => domProps;
-/* eslint-enable */
 
 /* eslint-disable */
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
