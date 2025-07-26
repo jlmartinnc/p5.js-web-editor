@@ -50,12 +50,10 @@ export function registerFrame(
   };
 }
 
-/** Notify the currently registered listener with a `message` */
 function notifyListener(message: Message): void {
   if (listener) listener(message);
 }
 
-/** Notify each registered frame with a `message` */
 function notifyFrames(message: Message) {
   const rawMessage = JSON.parse(JSON.stringify(message));
   Object.values(frames).forEach((frameObj) => {
@@ -89,7 +87,6 @@ export function listen(callback: (message: Message) => void): () => void {
   };
 }
 
-/** Forwards a `MessageEvent` to the registered event listener */
 function eventListener(e: MessageEvent) {
   const { data } = e;
 
