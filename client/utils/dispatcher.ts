@@ -6,6 +6,7 @@ const frames: {
 } = {};
 let frameIndex = 1;
 
+/** Codesandbox dispatcher message types */
 export const MessageTypes = {
   START: 'START',
   STOP: 'STOP',
@@ -16,8 +17,14 @@ export const MessageTypes = {
   // eslint-disable-next-line prettier/prettier
 } as const;
 
+/** Codesandbox dispatcher message types */
 export type MessageType = typeof MessageTypes[keyof typeof MessageTypes];
 
+/**
+ * Codesandbox dispatcher message
+ *   - type: 'START', 'STOP' etc
+ *   - payload: additional data for that message type
+ */
 export type Message = {
   type: MessageType,
   payload?: any
@@ -25,6 +32,12 @@ export type Message = {
 
 let listener: ((message: Message) => void) | null = null;
 
+/**
+ * Registers a frame to receive future dispatched messages.
+ * @param newFrame - The Window object of the frame to register.
+ * @param newOrigin - The expected origin to use when posting messages to this frame. If this is nullish, it will be registered as ''
+ * @returns A cleanup function that unregisters the frame.
+ */
 export function registerFrame(
   newFrame: Window | null,
   newOrigin: string | null | undefined
@@ -37,10 +50,12 @@ export function registerFrame(
   };
 }
 
+/** Notify the currently registered listener with a `message` */
 function notifyListener(message: Message): void {
   if (listener) listener(message);
 }
 
+/** Notify each registered frame with a `message` */
 function notifyFrames(message: Message) {
   const rawMessage = JSON.parse(JSON.stringify(message));
   Object.values(frames).forEach((frameObj) => {
@@ -51,6 +66,10 @@ function notifyFrames(message: Message) {
   });
 }
 
+/**
+ * Sends a message to all registered frames.
+ * @param message - The message to dispatch.
+ */
 export function dispatchMessage(message: Message | undefined | null): void {
   if (!message) return;
 
@@ -70,6 +89,7 @@ export function listen(callback: (message: Message) => void): () => void {
   };
 }
 
+/** Forwards a `MessageEvent` to the registered event listener */
 function eventListener(e: MessageEvent) {
   const { data } = e;
 
