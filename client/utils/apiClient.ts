@@ -1,13 +1,12 @@
-import axios from 'axios';
-
+import axios, { AxiosInstance } from 'axios';
 import getConfig from './getConfig';
 
-const ROOT_URL = getConfig('API_URL');
+const ROOT_URL = getConfig('API_URL') ?? '';
 
 /**
  * Configures an Axios instance with the correct API URL
  */
-function createClientInstance() {
+function createClientInstance(): AxiosInstance {
   return axios.create({
     baseURL: ROOT_URL,
     withCredentials: true
