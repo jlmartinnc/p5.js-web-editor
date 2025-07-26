@@ -26,4 +26,20 @@ describe('isMac', () => {
     });
     expect(isMac()).toBe(false);
   });
+
+  it('returns false when navigator agent is null', () => {
+    Object.defineProperty(navigator, 'userAgent', {
+      value: null,
+      configurable: true
+    });
+    expect(isMac()).toBe(false);
+  });
+
+  it('returns false when navigator agent is undefined', () => {
+    Object.defineProperty(navigator, 'userAgent', {
+      value: undefined,
+      configurable: true
+    });
+    expect(isMac()).toBe(false);
+  });
 });

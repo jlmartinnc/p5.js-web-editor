@@ -1,1 +1,10 @@
-export const isMac = () => navigator.userAgent.toLowerCase().indexOf('mac') !== -1; // eslint-disable-line
+/**
+ * Checks if the user's OS is macOS based on the user agent string.
+ * This is the preferred method over navigator.platform, which is now deprecated:
+ *   - see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
+ */
+export function isMac(): boolean {
+  return typeof navigator?.userAgent === 'string'
+    ? navigator.userAgent.toLowerCase().includes('mac')
+    : false;
+}
