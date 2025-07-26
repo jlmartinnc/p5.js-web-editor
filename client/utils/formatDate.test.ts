@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import dateUtils from './formatDate';
 
 jest.mock('i18next', () => ({
-  t: jest.fn()
+  t: jest.fn((key: string) => key.split('.')[1])
 }));
 
 jest.mock('../i18n', () => ({
@@ -20,8 +20,6 @@ describe('dateUtils', () => {
       const now = new Date();
       const recentDate = new Date(now.getTime() - 5000);
 
-      i18next.t.mockReturnValue('JustNow');
-
       const result = dateUtils.distanceInWordsToNow(recentDate);
       expect(i18next.t).toHaveBeenCalledWith('formatDate.JustNow');
       expect(result).toBe('JustNow');
@@ -30,8 +28,6 @@ describe('dateUtils', () => {
     it('returns "15Seconds" for dates ~15s ago', () => {
       const now = new Date();
       const recentDate = new Date(now.getTime() - 15000);
-
-      i18next.t.mockReturnValue('15Seconds');
 
       const result = dateUtils.distanceInWordsToNow(recentDate);
       expect(i18next.t).toHaveBeenCalledWith('formatDate.15Seconds');
@@ -42,7 +38,9 @@ describe('dateUtils', () => {
       const now = new Date();
       const oldDate = new Date(now.getTime() - 60000);
 
-      i18next.t.mockImplementation((key, { timeAgo }) => `${key}: ${timeAgo}`);
+      jest.mock('i18next', () => ({
+        t: jest.fn((key: string, { timeAgo }) => `${key}: ${timeAgo}`)
+      }));
 
       const result = dateUtils.distanceInWordsToNow(oldDate);
       expect(i18next.t).toHaveBeenCalledWith(
