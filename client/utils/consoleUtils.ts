@@ -1,7 +1,14 @@
 export const startTag = '@fs-';
 
-export const getAllScriptOffsets = (htmlFile: string) => {
-  const offs = [];
+export type ScriptOffset = [number, string];
+
+/**
+ * Extracts line offsets and filenames for JS scripts embedded in an HTML string.
+ * @param htmlFile - Full HTML file content as a string
+ * @returns Array of [lineOffset, filename] pairs
+ */
+export const getAllScriptOffsets = (htmlFile: string): ScriptOffset[] => {
+  const offs: ScriptOffset[] = [];
   const hijackConsoleErrorsScriptLength = 2;
   const embeddedJSStart = 'script crossorigin=""';
   let foundJSScript = true;
