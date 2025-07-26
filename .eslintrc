@@ -26,6 +26,7 @@
         "tsx": "never"
       }
     ],
+    "import/prefer-default-export": "off",
     "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
     "indent": 0,
     "no-console": 0,
