@@ -5,18 +5,16 @@ import {
   MessageTypes
 } from './dispatcher';
 
-interface MessagePortLike {
-  postMessage: jest.Mock<any, any>;
-}
 
 describe('dispatcher', () => {
-  let mockFrame: MessagePortLike;
+  let mockFrame: Window;
   let origin: string;
   let removeFrame: () => void;
 
   beforeEach(() => {
     origin = 'https://example.com';
-    mockFrame = { postMessage: jest.fn() };
+    // eslint-disable-next-line prettier/prettier
+    mockFrame = { postMessage: jest.fn() } as unknown as Window;
   });
 
   afterEach(() => {
@@ -51,8 +49,8 @@ describe('dispatcher', () => {
     });
 
     it('sends a deep-copied message to all registered frames', () => {
-      const frame1 = { postMessage: jest.fn() };
-      const frame2 = { postMessage: jest.fn() };
+      const frame1 = { postMessage: jest.fn() } as unknown as Window;
+      const frame2 = { postMessage: jest.fn() } as unknown as Window;
 
       const remove1 = registerFrame(frame1, origin);
       const remove2 = registerFrame(frame2, origin);
