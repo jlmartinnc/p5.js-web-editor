@@ -1,6 +1,6 @@
 export const startTag = '@fs-';
 
-export const getAllScriptOffsets = (htmlFile) => {
+export const getAllScriptOffsets = (htmlFile: string) => {
   const offs = [];
   const hijackConsoleErrorsScriptLength = 2;
   const embeddedJSStart = 'script crossorigin=""';
