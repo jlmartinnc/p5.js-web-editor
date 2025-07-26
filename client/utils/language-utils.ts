@@ -2,12 +2,15 @@
  * Utility functions for language detection and handling
  */
 
-function getPreferredLanguage(supportedLanguages = [], defaultLanguage = 'en') {
+function getPreferredLanguage(
+  supportedLanguages: string[] = [],
+  defaultLanguage: string = 'en'
+) {
   if (typeof navigator === 'undefined') {
     return defaultLanguage;
   }
 
-  const normalizeLanguage = (langCode) => langCode.toLowerCase().trim();
+  const normalizeLanguage = (langCode: string) => langCode.toLowerCase().trim();
 
   const normalizedSupported = supportedLanguages.map(normalizeLanguage);
 
