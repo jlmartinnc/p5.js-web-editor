@@ -1,0 +1,48 @@
+import { parseNumber, parseBoolean } from './parseStringToType';
+
+describe('parseNumber', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('parses a valid number string to number', () => {
+    expect(parseNumber('42')).toBe(42);
+    expect(parseNumber('3.14')).toBeCloseTo(3.14);
+    expect(parseNumber('0')).toBe(0);
+  });
+
+  it('returns undefined and warns if parsing fails', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    const input = 'abc';
+    expect(parseNumber(input)).toBe(undefined);
+    expect(warnSpy).toHaveBeenCalledWith(`expected a number, got ${input}`);
+  });
+});
+
+describe('parseBoolean', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('parses "true" and "false" strings (case-insensitive) to booleans', () => {
+    expect(parseBoolean('true')).toBe(true);
+    expect(parseBoolean('TRUE')).toBe(true);
+    expect(parseBoolean('false')).toBe(false);
+    expect(parseBoolean('FALSE')).toBe(false);
+  });
+
+  it('returns undefined and warns if parsing fails and warn=true', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    const input = 'yes';
+    expect(parseBoolean(input)).toBe(undefined);
+    expect(warnSpy).toHaveBeenCalledWith(`expected a boolean, got ${input}`);
+  });
+});
