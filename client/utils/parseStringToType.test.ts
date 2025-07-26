@@ -15,11 +15,25 @@ describe('parseNumber', () => {
     expect(parseNumber('0')).toBe(0);
   });
 
+  it('returns 0 if input is undefined and nullishNumber is true', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseNumber(undefined, true)).toBe(0);
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got undefined input');
+  });
+
+  it('returns undefined and warns if input is undefined and nullishNumber is false', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseNumber(undefined, false)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got undefined input');
+  });
+
   it('returns undefined and warns if parsing fails', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     const input = 'abc';
-    expect(parseNumber(input)).toBe(undefined);
-    expect(warnSpy).toHaveBeenCalledWith(`expected a number, got ${input}`);
+    expect(parseNumber(input)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith(
+      `parseNumber: expected a number, got ${input}`
+    );
   });
 });
 
@@ -39,10 +53,24 @@ describe('parseBoolean', () => {
     expect(parseBoolean('FALSE')).toBe(false);
   });
 
-  it('returns undefined and warns if parsing fails and warn=true', () => {
+  it('returns false if input is undefined and nullishBool is true', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseBoolean(undefined, true)).toBe(false);
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got undefined input');
+  });
+
+  it('returns undefined and warns if input is undefined and nullishBool is false', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseBoolean(undefined, false)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got undefined input');
+  });
+
+  it('returns undefined and warns if parsing fails', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     const input = 'yes';
-    expect(parseBoolean(input)).toBe(undefined);
-    expect(warnSpy).toHaveBeenCalledWith(`expected a boolean, got ${input}`);
+    expect(parseBoolean(input)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith(
+      `parseBoolean: expected 'true' or 'false', got "${input}"`
+    );
   });
 });

@@ -15,7 +15,7 @@ import {
 } from './ide';
 import { clearState, saveState } from '../../../persistState';
 
-const ROOT_URL = getConfig('API_URL');
+const ROOT_URL = getConfig('API_URL', { nullishString: true });
 const S3_BUCKET_URL_BASE = getConfig('S3_BUCKET_URL_BASE');
 const S3_BUCKET = getConfig('S3_BUCKET');
 
@@ -307,6 +307,8 @@ export function cloneProject(project) {
       (file, callback) => {
         if (
           file.url &&
+          S3_BUCKET &&
+          S3_BUCKET_URL_BASE &&
           (file.url.includes(S3_BUCKET_URL_BASE) ||
             file.url.includes(S3_BUCKET))
         ) {

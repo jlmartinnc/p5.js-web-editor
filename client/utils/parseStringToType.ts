@@ -1,20 +1,45 @@
 /* eslint-disable consistent-return */
-/** Parses a string into a number or undefined if parsing fails. */
-export function parseNumber(str: string): number | undefined {
+/**
+ * Parses a string into a number.
+ * - Returns `0` for nullish input if `nullishNumber` is true.
+ * - Returns `undefined` otherwise for nullish or unrecognized input.
+ */
+export function parseNumber(
+  str?: string,
+  nullishNumber = false
+): number | undefined {
+  if (str == null) {
+    console.warn(`parseNumber: got undefined input`);
+    return nullishNumber ? 0 : undefined;
+  }
+
   const num = Number(str);
   if (Number.isNaN(num)) {
-    console.warn(`expected a number, got ${str}`);
+    console.warn(`parseNumber: expected a number, got ${str}`);
     return undefined;
   }
+
   return num;
 }
 
-/** Parses a case-insensitive string into a boolean or undefined if parsing fails. */
-export function parseBoolean(str: string): boolean | undefined {
+/**
+ * Parses a case-insensitive string into a boolean.
+ * - Returns `false` for nullish input if `nullishBool` is true.
+ * - Returns `undefined` otherwise for nullish or unrecognized input.
+ */
+export function parseBoolean(
+  str?: string,
+  nullishBool = false
+): boolean | undefined {
+  if (str == null) {
+    console.warn('parseBoolean: got undefined input');
+    return nullishBool ? false : undefined;
+  }
+
   const lower = str.toLowerCase();
   if (lower === 'true') return true;
   if (lower === 'false') return false;
 
-  console.warn(`expected a boolean, got ${str}`);
+  console.warn(`parseBoolean: expected 'true' or 'false', got "${str}"`);
   return undefined;
 }

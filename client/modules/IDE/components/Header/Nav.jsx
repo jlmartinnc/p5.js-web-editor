@@ -8,6 +8,7 @@ import MenubarSubmenu from '../../../../components/Menubar/MenubarSubmenu';
 import MenubarItem from '../../../../components/Menubar/MenubarItem';
 import { availableLanguages, languageKeyToLabel } from '../../../../i18n';
 import getConfig from '../../../../utils/getConfig';
+import { parseBoolean } from '../../../../utils/parseStringToType';
 import { showToast } from '../../actions/toast';
 import { setLanguage } from '../../actions/preferences';
 import Menubar from '../../../../components/Menubar/Menubar';
@@ -80,8 +81,14 @@ LeftLayout.defaultProps = {
   layout: 'project'
 };
 
+const isLoginEnabled = parseBoolean(getConfig('LOGIN_ENABLED'), true);
+const isUiCollectionsEnabled = parseBoolean(
+  getConfig('UI_COLLECTIONS_ENABLED'),
+  true
+);
+const isExamplesEnabled = parseBoolean(getConfig('EXAMPLES_ENABLED'), true);
+
 const UserMenu = () => {
-  const isLoginEnabled = getConfig('LOGIN_ENABLED');
   const isAuthenticated = useSelector(getAuthenticated);
 
   if (isLoginEnabled && isAuthenticated) {
@@ -177,7 +184,7 @@ const ProjectMenu = () => {
           id="file-save"
           isDisabled={
             !user.authenticated ||
-            !getConfig('LOGIN_ENABLED') ||
+            !isLoginEnabled ||
             (project?.owner && !isUserOwner)
           }
           onClick={() => saveSketch(cmRef.current)}
@@ -216,9 +223,7 @@ const ProjectMenu = () => {
         <MenubarItem
           id="file-add-to-collection"
           isDisabled={
-            !getConfig('UI_COLLECTIONS_ENABLED') ||
-            !user.authenticated ||
-            isUnsaved
+            !isUiCollectionsEnabled || !user.authenticated || isUnsaved
           }
           href={`/${user.username}/sketches/${project?.id}/add-to-collection`}
         >
@@ -226,7 +231,7 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem
           id="file-examples"
-          isDisabled={!getConfig('EXAMPLES_ENABLED')}
+          isDisabled={!isExamplesEnabled}
           href="/p5/sketches"
         >
           {t('Nav.File.Examples')}
@@ -370,7 +375,7 @@ const AuthenticatedUserMenu = () => {
         <MenubarItem
           id="account-collections"
           href={`/${username}/collections`}
-          isDisabled={!getConfig('UI_COLLECTIONS_ENABLED')}
+          isDisabled={!isUiCollectionsEnabled}
         >
           {t('Nav.Auth.MyCollections')}
         </MenubarItem>
