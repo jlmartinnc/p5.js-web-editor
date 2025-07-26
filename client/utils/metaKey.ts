@@ -1,11 +1,17 @@
-const metaKey = (() => {
-  if (navigator != null && navigator.platform != null) {
-    return /^MAC/i.test(navigator.platform) ? 'Cmd' : 'Ctrl';
-  }
+import { isMac } from './device';
 
-  return 'Ctrl';
-})();
+/**
+ * A string representing the meta key name used in keyboard shortcuts.
+ * - `'Cmd'` on macOS
+ * - `'Ctrl'` on other platforms
+ */
+const metaKey: string = isMac() ? 'Cmd' : 'Ctrl';
 
-const metaKeyName = metaKey === 'Cmd' ? '⌘' : 'Ctrl';
+/**
+ * A user-friendly symbol or label representing the meta key for display purposes.
+ * - `'⌘'` on macOS
+ * - `'Ctrl'` on other platforms
+ */
+const metaKeyName: string = isMac() ? '⌘' : 'Ctrl';
 
 export { metaKey, metaKeyName };
