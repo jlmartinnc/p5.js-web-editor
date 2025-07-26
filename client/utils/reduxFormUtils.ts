@@ -1,61 +1,52 @@
-/* eslint-disable */
 import i18n from 'i18next';
 
 /* eslint-disable */
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+const USERNAME_REGEX = /^[a-zA-Z0-9._-]{1,20}$/
 /* eslint-enable */
 
-function validateNameEmail(formProps, errors) {
+type Email = { email: string };
+type Username = { username: string };
+type Password = { password: string };
+type ConfirmPassword = { confirmPassword: string };
+type CurrentPassword = { currentPassword: string };
+type NewPassword = { newPassword: string };
+
+type UsernameAndEmail = Username & Email;
+type PasswordsConfirm = Password & ConfirmPassword;
+
+/** Validation errors for site forms */
+export type FormErrors = Partial<
+  Email & Username & Password & ConfirmPassword & CurrentPassword & NewPassword
+>;
+
+// === Internal helper functions: =====
+
+/** Processes form & mutates errors to add any `username` & `email` errors */
+function validateUsernameEmail(
+  formProps: Partial<UsernameAndEmail>,
+  errors: Partial<FormErrors>
+) {
   if (!formProps.username) {
     errors.username = i18n.t('ReduxFormUtils.errorEmptyUsername');
-  } else if (!formProps.username.match(/^.{1,20}$/)) {
+  } else if (formProps.username.length > 20) {
     errors.username = i18n.t('ReduxFormUtils.errorLongUsername');
-  } else if (!formProps.username.match(/^[a-zA-Z0-9._-]{1,20}$/)) {
+  } else if (!formProps.username.match(USERNAME_REGEX)) {
     errors.username = i18n.t('ReduxFormUtils.errorValidUsername');
   }
 
   if (!formProps.email) {
     errors.email = i18n.t('ReduxFormUtils.errorEmptyEmail');
-  } else if (
-    // eslint-disable-next-line max-len
-    !formProps.email.match(EMAIL_REGEX)
-  ) {
+  } else if (!formProps.email.match(EMAIL_REGEX)) {
     errors.email = i18n.t('ReduxFormUtils.errorInvalidEmail');
   }
 }
 
-export function validateSettings(formProps) {
-  const errors = {};
-
-  validateNameEmail(formProps, errors);
-
-  if (formProps.currentPassword && !formProps.newPassword) {
-    errors.newPassword = i18n.t('ReduxFormUtils.errorNewPassword');
-  }
-  if (formProps.newPassword && formProps.newPassword.length < 6) {
-    errors.newPassword = i18n.t('ReduxFormUtils.errorShortPassword');
-  }
-  if (
-    formProps.newPassword &&
-    formProps.currentPassword === formProps.newPassword
-  ) {
-    errors.newPassword = i18n.t('ReduxFormUtils.errorNewPasswordRepeat');
-  }
-  return errors;
-}
-
-export function validateLogin(formProps) {
-  const errors = {};
-  if (!formProps.email && !formProps.username) {
-    errors.email = i18n.t('ReduxFormUtils.errorEmptyEmailorUserName');
-  }
-  if (!formProps.password) {
-    errors.password = i18n.t('ReduxFormUtils.errorEmptyPassword');
-  }
-  return errors;
-}
-
-function validatePasswords(formProps, errors) {
+/** Processes form & mutates errors to add any `password` and `confirmPassword` errors */
+function validatePasswords(
+  formProps: Partial<PasswordsConfirm>,
+  errors: Partial<FormErrors>
+) {
   if (!formProps.password) {
     errors.password = i18n.t('ReduxFormUtils.errorEmptyPassword');
   }
@@ -74,28 +65,91 @@ function validatePasswords(formProps, errors) {
   }
 }
 
-export function validateNewPassword(formProps) {
+// ====== PUBLIC: ========
+
+// Account Form:
+export type AccountForm = UsernameAndEmail & CurrentPassword & NewPassword;
+export type AccountFormErrors = Partial<AccountForm>;
+
+/** Validation for the Account Form */
+export function validateSettings(
+  formProps: Partial<AccountForm>
+): AccountFormErrors {
+  const errors: AccountFormErrors = {};
+
+  validateUsernameEmail(formProps, errors);
+
+  if (formProps.currentPassword && !formProps.newPassword) {
+    errors.newPassword = i18n.t('ReduxFormUtils.errorNewPassword');
+  }
+  if (formProps.newPassword && formProps.newPassword.length < 6) {
+    errors.newPassword = i18n.t('ReduxFormUtils.errorShortPassword');
+  }
+  if (
+    formProps.newPassword &&
+    formProps.currentPassword === formProps.newPassword
+  ) {
+    errors.newPassword = i18n.t('ReduxFormUtils.errorNewPasswordRepeat');
+  }
+  return errors;
+}
+
+// Login form:
+export type LoginForm = UsernameAndEmail & Password;
+export type LoginFormErrors = Partial<LoginForm>;
+
+/** Validation for the Login Form */
+export function validateLogin(formProps: Partial<LoginForm>): LoginFormErrors {
+  const errors: LoginFormErrors = {};
+  if (!formProps.email && !formProps.username) {
+    errors.email = i18n.t('ReduxFormUtils.errorEmptyEmailorUserName');
+  }
+  if (!formProps.password) {
+    errors.password = i18n.t('ReduxFormUtils.errorEmptyPassword');
+  }
+  return errors;
+}
+
+export type NewPasswordForm = PasswordsConfirm;
+export type NewPasswordFormErrors = Partial<NewPasswordForm>;
+
+/** Validation for the New Password Form */
+export function validateNewPassword(
+  formProps: Partial<NewPasswordForm>
+): NewPasswordFormErrors {
   const errors = {};
   validatePasswords(formProps, errors);
   return errors;
 }
 
-export function validateSignup(formProps) {
-  const errors = {};
+// Signup Form:
+export type SignupForm = UsernameAndEmail & PasswordsConfirm;
+export type SignupFormErrors = Partial<SignupForm>;
 
-  validateNameEmail(formProps, errors);
+/** Validation for the Signup Form */
+export function validateSignup(
+  formProps: Partial<SignupForm>
+): SignupFormErrors {
+  const errors: SignupFormErrors = {};
+
+  validateUsernameEmail(formProps, errors);
   validatePasswords(formProps, errors);
 
   return errors;
 }
-export function validateResetPassword(formProps) {
-  const errors = {};
+
+// Reset Password Form:
+export type ResetPasswordForm = Email;
+export type ResetPasswordFormErrors = Partial<ResetPasswordForm>;
+
+/** Validation for the Reset Password Form */
+export function validateResetPassword(
+  formProps: Partial<ResetPasswordForm>
+): ResetPasswordFormErrors {
+  const errors: ResetPasswordFormErrors = {};
   if (!formProps.email) {
     errors.email = i18n.t('ReduxFormUtils.errorEmptyEmail');
-  } else if (
-    // eslint-disable-next-line max-len
-    !formProps.email.match(EMAIL_REGEX)
-  ) {
+  } else if (!formProps.email.match(EMAIL_REGEX)) {
     errors.email = i18n.t('ReduxFormUtils.errorInvalidEmail');
   }
   return errors;
