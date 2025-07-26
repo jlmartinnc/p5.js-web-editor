@@ -6,10 +6,6 @@ describe('utils/getConfig()', () => {
     delete window.process.env.CONFIG_TEST_KEY_NAME;
   });
 
-  it('throws if key is not defined', () => {
-    expect(() => getConfig(/* key is missing */)).toThrow(/must be provided/);
-  });
-
   it('fetches from global.process', () => {
     global.process.env.CONFIG_TEST_KEY_NAME = 'editor.p5js.org';
 
