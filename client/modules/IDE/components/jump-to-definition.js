@@ -8,22 +8,25 @@ export function jumpToDefinition(pos) {
   const token = cm.getTokenAt(pos);
   const tokenType = token.type;
 
-  if (!tokenType || !tokenType.includes('variable')) return;
+  if (!tokenType || !['variable', 'def'].some((t) => tokenType.includes(t)))
+    return;
 
   const varName = token.string;
 
   const ast = getAST(cm);
-  const scopeToDeclaredVarsMap =
-    p5CodeAstAnalyzer(cm).scopeToDeclaredVarsMap || {};
+  const { scopeToDeclaredVarsMap = {}, userDefinedFunctionMetadata = {} } =
+    p5CodeAstAnalyzer(cm) || {};
+
   const context = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
 
-  if (
-    !context ||
-    !scopeToDeclaredVarsMap[context] ||
-    !scopeToDeclaredVarsMap[context].has(varName)
-  ) {
-    return;
-  }
+  // If not found in scope and not a user-defined function, abort
+  const isUserFunction = !!userDefinedFunctionMetadata[varName];
+  const isDeclaredVar =
+    context &&
+    scopeToDeclaredVarsMap[context] &&
+    varName in scopeToDeclaredVarsMap[context];
+
+  if (!isDeclaredVar && !isUserFunction) return;
 
   const targetIndex = cm.indexFromPos(pos);
   let found = false;
@@ -53,8 +56,14 @@ export function jumpToDefinition(pos) {
       if (found) return;
 
       const { node } = path;
-      if (!node.params || !node.loc) return;
+      if (node.id?.type === 'Identifier' && node.id.name === varName) {
+        const defPos = cm.posFromIndex(node.start);
+        found = true;
+        cm.setCursor(defPos);
+        cm.focus();
+      }
 
+      if (!node.params || !node.loc) return;
       for (const param of node.params) {
         if (
           param.type === 'Identifier' &&

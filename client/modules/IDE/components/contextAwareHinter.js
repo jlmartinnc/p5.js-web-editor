@@ -96,14 +96,14 @@ export default function contextAwareHinter(cm, options = {}) {
   function isInScope(varName) {
     return Object.entries(scopeToDeclaredVarsMap).some(
       ([scope, vars]) =>
-        vars.has(varName) && (scope === 'global' || scope === currentContext)
+        varName in vars && (scope === 'global' || scope === currentContext)
     );
   }
 
   const allVarNames = Array.from(
     new Set(
       Object.values(scopeToDeclaredVarsMap)
-        .map((s) => Array.from(s))
+        .map((s) => Object.keys(s))
         .flat()
         .filter((name) => typeof name === 'string')
     )
@@ -115,7 +115,11 @@ export default function contextAwareHinter(cm, options = {}) {
         varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
     )
     .map((varName) => {
-      const isFunc = !!userDefinedFunctionMetadata[varName];
+      const isFunc = Object.entries(scopeToDeclaredVarsMap).some(
+        ([s, vars]) =>
+          (s === 'global' || s === currentContext) && vars[varName] === 'fun'
+      );
+
       const baseItem = isFunc
         ? { ...userDefinedFunctionMetadata[varName] }
         : {

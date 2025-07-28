@@ -19,9 +19,9 @@ export function handleRename(fromPos, oldName, newName, cm) {
   }
   const ast = getAST(cm);
   const context = getContext(cm, ast, fromPos, scopeToDeclaredVarsMap);
+  // const state = getRenameSearchState(cm, oldName);
+  // const matches = getMatches(cm, state, state.query);
   startRenaming(cm, ast, fromPos, newName, oldName);
-  const state = getRenameSearchState(cm, oldName);
-  const matches = getMatches(cm, state, state.query);
 }
 
 export function getContext(cm, ast, fromPos, scopeToDeclaredVarsMap) {
@@ -66,7 +66,7 @@ export function getContext(cm, ast, fromPos, scopeToDeclaredVarsMap) {
   const varName = foundNode.name;
 
   const contextCandidates = Object.entries(scopeToDeclaredVarsMap)
-    .filter(([context, vars]) => vars.has(varName))
+    .filter(([context, vars]) => varName in vars)
     .map(([context]) => context);
 
   if (contextCandidates.includes(enclosingFunction)) {
@@ -161,6 +161,7 @@ function getMatches(cm, state, query) {
     );
   }
   var matches = cm.state.search.annotate.matches;
+  console.log('match=', cm.state.search);
   return matches;
 }
 

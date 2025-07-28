@@ -63,10 +63,10 @@ function _p5CodeAstAnalyzer(_cm) {
           (def.type === 'FunctionName' && !allFunsList.has(def.name.name))
         ) {
           if (!scopeToDeclaredVarsMap[scopeName]) {
-            scopeToDeclaredVarsMap[scopeName] = new Set();
+            scopeToDeclaredVarsMap[scopeName] = {};
           }
-
-          scopeToDeclaredVarsMap[scopeName].add(def.name.name);
+          const defType = def.type === 'FunctionName' ? 'fun' : 'var';
+          scopeToDeclaredVarsMap[scopeName][def.name.name] = defType;
         }
       });
     });
@@ -190,13 +190,12 @@ function _p5CodeAstAnalyzer(_cm) {
             params
           };
 
-          // Store function params in the scopeToDeclaredVarsMap
           if (!scopeToDeclaredVarsMap[fnName]) {
-            scopeToDeclaredVarsMap[fnName] = new Set();
+            scopeToDeclaredVarsMap[fnName] = {};
           }
           params.forEach((paramObj) => {
             if (paramObj && paramObj.p) {
-              scopeToDeclaredVarsMap[fnName].add(paramObj.p);
+              scopeToDeclaredVarsMap[fnName][paramObj.p] = 'param';
             }
           });
         }
