@@ -19,6 +19,16 @@
     "import/no-useless-path-segments": 1,
     "import/no-cycle":0, //temporarily off
     "import/no-import-module-exports": 0, //temporarily off
+    "import/extensions": [ // override airbnb setting to allow imports of js, jsx, ts, and tsx files to auto-resolve instead of error
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
     "default-param-last": 0,
     "no-else-return" :0,
@@ -96,6 +106,11 @@
   ],
   "settings": {
     "import/parser": "@babel/eslint-parser",
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
     "import/resolve": {
       "moduleDirectory": ["node_modules"]
     }
