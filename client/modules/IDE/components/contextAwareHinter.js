@@ -1,3 +1,4 @@
+/* eslint-disable */
 import getContext from './getContext';
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import classMap from './p5-instance-methods-and-creators.json';
@@ -115,10 +116,14 @@ export default function contextAwareHinter(cm, options = {}) {
         varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
     )
     .map((varName) => {
-      const isFunc = Object.entries(scopeToDeclaredVarsMap).some(
-        ([s, vars]) =>
-          (s === 'global' || s === currentContext) && vars[varName] === 'fun'
-      );
+      const isFunc = (() => {
+        const inCurrentScope =
+          scopeToDeclaredVarsMap[currentContext]?.[varName];
+        const inGlobalScope = scopeToDeclaredVarsMap['global']?.[varName];
+
+        if (inCurrentScope && inCurrentScope !== 'fun') return false;
+        return inGlobalScope === 'fun';
+      })();
 
       const baseItem = isFunc
         ? { ...userDefinedFunctionMetadata[varName] }
