@@ -78,6 +78,7 @@
   }
   & a:hover {
     text-decoration: underline;
+    text-decoration-thickness: 0.1em;
   }
 }
 
@@ -157,6 +158,7 @@
     }
     & a:hover {
       text-decoration: underline;
+      text-decoration-thickness: 0.1em;
     }
   }
 }
