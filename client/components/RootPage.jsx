@@ -2,18 +2,19 @@ import styled from 'styled-components';
 import { prop } from '../theme';
 
 const RootPage = styled.div`
-  min-height: 100%;
+  min-height: 100vh;
+  height: ${({ fixedHeight }) => fixedHeight || '100vh'};
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-direction: column;
   color: ${prop('primaryTextColor')};
   background-color: ${prop('backgroundColor')};
-  height: ${({ fixedHeight }) => fixedHeight || 'initial'};
 
   @media (max-width: 770px) {
     height: 100%;
     overflow: hidden;
   }
+
   @media print {
     @page {
       page-orientation: landscape;
