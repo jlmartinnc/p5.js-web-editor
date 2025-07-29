@@ -68,7 +68,7 @@ export async function updateProject(req, res) {
       const newFileIds = req.body.files.map((file) => file.id);
       const staleIds = oldFileIds.filter((id) => newFileIds.indexOf(id) === -1);
       staleIds.forEach((staleId) => {
-        updatedProject.files.id(staleId).remove();
+        updatedProject.files.id(staleId).deleteOne();
       });
       const savedProject = await updatedProject.save();
       res.json(savedProject);
@@ -99,13 +99,6 @@ export async function getProject(req, res) {
       .send({ message: 'Project with that id does not exist' });
   }
   return res.json(project);
-}
-
-export function getProjectsForUserId(userId) {
-  return Project.find({ user: userId })
-    .sort('-createdAt')
-    .select('name files id createdAt updatedAt')
-    .exec();
 }
 
 export async function getProjectAsset(req, res) {
@@ -146,7 +139,7 @@ export async function getProjectAsset(req, res) {
 
 export async function getProjects(req, res) {
   if (req.user) {
-    const projects = await getProjectsForUserId(req.user._id);
+    const projects = await Project.getProjectsForUserId(req.user._id);
     res.json(projects);
   } else {
     // could just move this to client side
