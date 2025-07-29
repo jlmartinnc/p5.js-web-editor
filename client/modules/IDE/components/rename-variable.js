@@ -18,64 +18,48 @@ export function handleRename(fromPos, oldName, newName, cm) {
     return;
   }
   const ast = getAST(cm);
-  const context = getContext(cm, ast, fromPos, scopeToDeclaredVarsMap);
-  // const state = getRenameSearchState(cm, oldName);
-  // const matches = getMatches(cm, state, state.query);
   startRenaming(cm, ast, fromPos, newName, oldName);
 }
 
 export function getContext(cm, ast, fromPos, scopeToDeclaredVarsMap) {
-  const posIndex = cm.indexFromPos(fromPos);
-  let foundNode = null;
-  let enclosingFunction = null;
+  const offset = cm.indexFromPos(fromPos);
+  let context = 'global';
 
   traverse(ast, {
     enter(path) {
       const { node } = path;
+
       if (!node.loc) return;
 
-      const start = node.start;
-      const end = node.end;
+      if (offset < node.start || offset > node.end) return;
 
-      if (start <= posIndex && posIndex <= end) {
-        if (node.type === 'Identifier' && node.name) {
+      if (
+        (node.type === 'FunctionDeclaration' ||
+          node.type === 'FunctionExpression') &&
+        node.body &&
+        offset >= node.body.start &&
+        offset <= node.body.end
+      ) {
+        if (node.id?.name) {
+          context = node.id.name;
+        } else {
+          const parent = path.parentPath?.node;
           if (
-            !foundNode ||
-            (node.start >= foundNode.start && node.end <= foundNode.end)
+            parent?.type === 'VariableDeclarator' &&
+            parent.id?.type === 'Identifier'
           ) {
-            foundNode = node;
+            context = parent.id.name;
+          } else {
+            context = '(anonymous)';
           }
         }
 
-        if (
-          (node.type === 'FunctionDeclaration' ||
-            node.type === 'FunctionExpression') &&
-          node.id &&
-          node.id.name
-        ) {
-          enclosingFunction = node.id.name;
-        }
+        path.skip();
       }
     }
   });
 
-  if (!foundNode) {
-    return null;
-  }
-
-  const varName = foundNode.name;
-
-  const contextCandidates = Object.entries(scopeToDeclaredVarsMap)
-    .filter(([context, vars]) => varName in vars)
-    .map(([context]) => context);
-
-  if (contextCandidates.includes(enclosingFunction)) {
-    return enclosingFunction;
-  } else if (contextCandidates.includes('global')) {
-    return 'global';
-  } else {
-    return enclosingFunction || 'global';
-  }
+  return context;
 }
 
 function startRenaming(cm, ast, fromPos, newName, oldName) {
@@ -108,7 +92,11 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
 
       const thisContext = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
 
-      if (thisContext === baseContext) {
+      const shadowed =
+        thisContext !== baseContext &&
+        scopeToDeclaredVarsMap[thisContext]?.hasOwnProperty(oldName);
+
+      if (thisContext === baseContext || !shadowed) {
         replacements.push({
           from: cm.posFromIndex(startIndex),
           to: cm.posFromIndex(endIndex)
@@ -143,36 +131,4 @@ export function getAST(cm) {
   } catch (e) {
     return;
   }
-}
-
-function getMatches(cm, state, query) {
-  state.queryText = query;
-
-  var cursor = getSearchCursor(cm, state.query);
-  cursor.findNext();
-  if (cm.showMatchesOnScrollbar) {
-    if (state.annotate) {
-      state.annotate.clear();
-      state.annotate = null;
-    }
-    state.annotate = cm.showMatchesOnScrollbar(
-      state.query,
-      state.caseInsensitive
-    );
-  }
-  var matches = cm.state.search.annotate.matches;
-  console.log('match=', cm.state.search);
-  return matches;
-}
-
-function getRenameSearchState(cm, oldName) {
-  return cm.state.search || (cm.state.search = new SearchState(oldName));
-}
-
-function getSearchCursor(cm, query, pos) {
-  return cm.getSearchCursor(
-    query,
-    pos,
-    getRenameSearchState(cm).caseInsensitive
-  );
 }
