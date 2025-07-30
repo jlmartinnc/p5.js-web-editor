@@ -12,23 +12,40 @@ export function jumpToDefinition(pos) {
     return;
 
   const varName = token.string;
-
   const ast = getAST(cm);
   const { scopeToDeclaredVarsMap = {}, userDefinedFunctionMetadata = {} } =
     p5CodeAstAnalyzer(cm) || {};
 
-  const context = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
-
-  // If not found in scope and not a user-defined function, abort
+  const currentContext = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
   const isUserFunction = !!userDefinedFunctionMetadata[varName];
   const isDeclaredVar =
-    context &&
-    scopeToDeclaredVarsMap[context] &&
-    varName in scopeToDeclaredVarsMap[context];
+    scopeToDeclaredVarsMap[currentContext]?.[varName] !== undefined;
 
-  if (!isDeclaredVar && !isUserFunction) return;
+  let isAtDeclaration = false;
 
-  const targetIndex = cm.indexFromPos(pos);
+  traverse(ast, {
+    VariableDeclarator(path) {
+      if (
+        path.node.id.name === varName &&
+        path.node.start === cm.indexFromPos(pos)
+      ) {
+        isAtDeclaration = true;
+        path.stop();
+      }
+    },
+    FunctionDeclaration(path) {
+      if (
+        path.node.id?.name === varName &&
+        path.node.start === cm.indexFromPos(pos)
+      ) {
+        isAtDeclaration = true;
+        path.stop();
+      }
+    }
+  });
+
+  if (isAtDeclaration) return;
+
   let found = false;
 
   traverse(ast, {
@@ -36,15 +53,10 @@ export function jumpToDefinition(pos) {
       if (found) return;
 
       const { node } = path;
-      if (
-        node.id.type === 'Identifier' &&
-        node.id.name === varName &&
-        node.loc
-      ) {
+      if (node.id.name === varName && node.loc) {
         const defPos = cm.posFromIndex(node.start);
         const defContext = getContext(cm, ast, defPos, scopeToDeclaredVarsMap);
-
-        if (defContext === context) {
+        if (defContext === currentContext) {
           found = true;
           cm.setCursor(defPos);
           cm.focus();
@@ -56,20 +68,20 @@ export function jumpToDefinition(pos) {
       if (found) return;
 
       const { node } = path;
-      if (node.id?.type === 'Identifier' && node.id.name === varName) {
+
+      if (node.id?.name === varName) {
         const defPos = cm.posFromIndex(node.start);
-        found = true;
-        cm.setCursor(defPos);
-        cm.focus();
+        const defContext = getContext(cm, ast, defPos, scopeToDeclaredVarsMap);
+        if (defContext === currentContext) {
+          found = true;
+          cm.setCursor(defPos);
+          cm.focus();
+        }
       }
 
       if (!node.params || !node.loc) return;
       for (const param of node.params) {
-        if (
-          param.type === 'Identifier' &&
-          param.name === varName &&
-          param.loc
-        ) {
+        if (param.name === varName && param.loc) {
           const defPos = cm.posFromIndex(param.start);
           const defContext = getContext(
             cm,
@@ -77,8 +89,7 @@ export function jumpToDefinition(pos) {
             defPos,
             scopeToDeclaredVarsMap
           );
-
-          if (defContext === context) {
+          if (defContext === currentContext) {
             found = true;
             cm.setCursor(defPos);
             cm.focus();
@@ -87,4 +98,32 @@ export function jumpToDefinition(pos) {
       }
     }
   });
+
+  if (!found) {
+    traverse(ast, {
+      VariableDeclarator(path) {
+        if (found) return;
+
+        const { node } = path;
+        if (node.id.name === varName && node.loc) {
+          const defPos = cm.posFromIndex(node.start);
+          found = true;
+          cm.setCursor(defPos);
+          cm.focus();
+        }
+      },
+
+      FunctionDeclaration(path) {
+        if (found) return;
+
+        const { node } = path;
+        if (node.id?.name === varName) {
+          const defPos = cm.posFromIndex(node.start);
+          found = true;
+          cm.setCursor(defPos);
+          cm.focus();
+        }
+      }
+    });
+  }
 }

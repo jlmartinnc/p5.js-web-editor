@@ -4,7 +4,7 @@ const allFunsList = new Set(allFuncs.functions.list);
 
 export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
   if (
-    allFunsList.has(oldName) ||
+    (allFunsList.has(oldName) && tokenType !== 'p5-variable') ||
     !isValidIdentifierSelection(oldName, tokenType)
   ) {
     showTemporaryDialog(coords, 'You cannot rename this element');
