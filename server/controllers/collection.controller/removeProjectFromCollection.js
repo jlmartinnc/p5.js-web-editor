@@ -26,7 +26,7 @@ export default function removeProjectFromCollection(req, res) {
     const project = collection.items.find((p) => p.projectId === projectId);
 
     if (project != null) {
-      project.remove();
+      project.deleteOne();
       return collection.save();
     }
 

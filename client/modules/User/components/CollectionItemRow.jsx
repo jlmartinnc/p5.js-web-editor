@@ -21,22 +21,17 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
         t('Collection.DeleteFromCollection', { name_sketch: name })
       )
     ) {
-      dispatch(removeFromCollection(collection.id, item.projectId));
+      dispatch(removeFromCollection(collection.id, item.project.id));
     }
   };
 
-  let name;
-  if (projectIsDeleted) {
-    name = <span>{t('Collection.SketchDeleted')}</span>;
-  } else if (projectIsPrivate) {
-    name = <span>Sketch is Private</span>;
-  } else {
-    name = (
-      <Link to={`/${item.project.user.username}/sketches/${item.projectId}`}>
-        {item.project.name}
-      </Link>
-    );
-  }
+  const name = projectIsDeleted ? (
+    <span>{t('Collection.SketchDeleted')}</span>
+  ) : (
+    <Link to={`/${item.project.user.username}/sketches/${item.project.id}`}>
+      {item.project.name}
+    </Link>
+  );
 
   const sketchOwnerUsername = projectIsDeleted
     ? null
@@ -73,7 +68,6 @@ CollectionItemRow.propTypes = {
   }).isRequired,
   item: PropTypes.shape({
     createdAt: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     isDeleted: PropTypes.bool.isRequired,
     project: PropTypes.shape({
       id: PropTypes.string.isRequired,

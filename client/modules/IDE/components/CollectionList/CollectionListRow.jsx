@@ -34,6 +34,12 @@ const SketchsTableRow = styled.tr`
 
   a {
     color: ${prop('primaryTextColor')};
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 0.1em;
+    }
   }
 
   &.is-deleted > * {

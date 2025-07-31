@@ -81,5 +81,21 @@ projectSchema.methods.isSlugUnique = async function isSlugUnique() {
   };
 };
 
+/**
+ * Queries Project collection by userId and returns all Projects that match.
+ * @return {Promise<{ isUnique: boolean; conflictingIds: string[] }>}
+ */
+projectSchema.statics.getProjectsForUserId = async function getProjectsForUserId(
+  userId
+) {
+  const project = this;
+
+  return project
+    .find({ user: userId })
+    .sort('-createdAt')
+    .select('name files id createdAt updatedAt')
+    .exec();
+};
+
 export default mongoose.models.Project ||
   mongoose.model('Project', projectSchema);

@@ -214,8 +214,10 @@
 
 .sketches-table__row a {
   @include themify() {
+    text-decoration: underline;
     color: getThemifyVariable("primary-text-color");
   }
+  
 }
 
 .sketches-table__row.is-deleted-or-private>* {
@@ -253,4 +255,5 @@
   @include themify() {
     color: getThemifyVariable("logo-color");
   }
+  text-decoration-thickness: 0.1em;
 }
