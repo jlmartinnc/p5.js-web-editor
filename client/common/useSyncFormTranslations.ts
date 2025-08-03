@@ -1,9 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, MutableRefObject } from 'react';
 
-// Usage: useSyncFormTranslations(formRef, language)
-// This hook ensures that form values are preserved when the language changes.
-// Pass a ref to the form instance and the current language as arguments.
-const useSyncFormTranslations = (formRef, language) => {
+export interface FormLike {
+  getState(): { values: Record<string, unknown> };
+  reset(): void;
+  change(field: string, value: unknown): void;
+}
+
+/**
+ * This hook ensures that form values are preserved when the language changes.
+ * @param formRef
+ * @param language
+ */
+const useSyncFormTranslations = (
+  formRef: MutableRefObject<FormLike>,
+  language: string
+) => {
   useEffect(() => {
     const form = formRef.current;
     if (!form) return;
