@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, MutableRefObject } from 'react';
 import useKeyDownHandlers from './useKeyDownHandlers';
 
 /**
@@ -14,21 +14,24 @@ import useKeyDownHandlers from './useKeyDownHandlers';
  *
  * Returns a ref to attach to the outermost element of the modal.
  *
- * @param {() => void} onClose
- * @param {React.MutableRefObject<HTMLElement | null>} [passedRef]
- * @return {React.MutableRefObject<HTMLElement | null>}
+ * @param onClose - Function called when modal should close
+ * @param passedRef - Optional ref to the modal element. If not provided, one is created internally.
+ * @returns A ref to be attached to the modal DOM element
  */
-export default function useModalClose(onClose, passedRef) {
-  const createdRef = useRef(null);
-  const modalRef = passedRef || createdRef;
+export default function useModalClose(
+  onClose: () => void,
+  passedRef?: MutableRefObject<HTMLElement | null>
+): MutableRefObject<HTMLElement | null> {
+  const createdRef = useRef<HTMLElement | null>(null);
+  const modalRef = passedRef ?? createdRef;
 
   useEffect(() => {
     modalRef.current?.focus();
 
-    function handleClick(e) {
+    function handleClick(e: MouseEvent) {
       // ignore clicks on the component itself
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onClose?.();
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
       }
     }
 
