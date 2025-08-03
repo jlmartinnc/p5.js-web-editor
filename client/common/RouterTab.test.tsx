@@ -6,12 +6,12 @@ const mockPath = '/projects';
 const mockLinkText = 'Projects';
 
 describe('Tab', () => {
-  function rerender() {
+  function mountComponent() {
     return render(<Tab to={mockPath}>{mockLinkText}</Tab>);
   }
 
   it('renders a react-router NavLink with correct text and path', async () => {
-    rerender();
+    mountComponent();
 
     const linkElement = screen.getByText(mockLinkText);
     expect(linkElement).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('Tab', () => {
   });
 
   it('includes the dashboard-header class names', () => {
-    const { container } = rerender();
+    const { container } = mountComponent();
 
     const listItem = container.querySelector('li');
     const link = container.querySelector('a');

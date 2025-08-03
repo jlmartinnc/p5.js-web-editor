@@ -30,12 +30,12 @@ describe('useModalClose', () => {
     );
   }
 
-  function rerender() {
+  function mountComponent() {
     return render(<TestModal handleClose={onClose} />);
   }
 
   it('calls onClose when clicking outside the modal', () => {
-    const { getByTestId } = rerender();
+    const { getByTestId } = mountComponent();
 
     fireEvent.click(getByTestId('outside'));
 
@@ -43,7 +43,7 @@ describe('useModalClose', () => {
   });
 
   it('does not call onClose when clicking inside the modal', () => {
-    const { getByTestId } = rerender();
+    const { getByTestId } = mountComponent();
 
     fireEvent.click(getByTestId('modal'));
 
@@ -51,14 +51,14 @@ describe('useModalClose', () => {
   });
 
   it('returns a ref that is focused on mount', () => {
-    const { getByTestId } = rerender();
+    const { getByTestId } = mountComponent();
     const modal = getByTestId('modal');
 
     expect(document.activeElement).toBe(modal);
   });
 
   it('calls useKeyDownHandlers with escape handler', () => {
-    rerender();
+    mountComponent();
 
     expect(useKeyDownHandlers).toHaveBeenCalledWith({ escape: onClose });
   });
