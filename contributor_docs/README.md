@@ -15,6 +15,7 @@ These guides aren't exhaustive, and do not cover all the possible ways you can c
 * [Translations Guidelines](translations.md) - Guidelines for translating the p5.js editor. 
 * [Deployment](deployment.md) - A guide to production deployment, and all platforms that are being used.
 * [Release](./release.md) - A guide to creating a production release.
+* [Typescript Migration](./typescript_migration.md) - About the Typescript Migration project.
 
 
 ## Documents to Create
