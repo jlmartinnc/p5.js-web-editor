@@ -35,6 +35,7 @@ import { setLanguage } from '../../actions/preferences';
 import Overlay from '../../../App/components/Overlay';
 import ProjectName from './ProjectName';
 import CollectionCreate from '../../../User/components/CollectionCreate';
+import { changeVisibility } from '../../actions/project';
 
 const Nav = styled(Menubar)`
   background: ${prop('MobilePanel.default.background')};
@@ -73,6 +74,13 @@ const Title = styled.div`
   * {
     padding: 0;
     margin: 0;
+  }
+
+  > section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
   }
 
   > h5 {
@@ -212,6 +220,7 @@ const MobileMenuItem = ({ children, ...props }) => (
 const MobileNav = () => {
   const project = useSelector((state) => state.project);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const { t } = useTranslation();
 
@@ -237,21 +246,48 @@ const MobileNav = () => {
   }
 
   const title = useMemo(resolveTitle, [pageName, project.name]);
-
+  const userIsOwner = user?.username === project.owner?.username;
   const Logo = AsteriskIcon;
+
+  const showPrivacyToggle =
+    project?.owner && title === project.name && userIsOwner;
+  const showOwner = project?.owner && title === project.name && !userIsOwner;
+
+  const toggleVisibility = (e) => {
+    try {
+      const isChecked = e.target.checked;
+      dispatch(
+        changeVisibility(
+          project.id,
+          project.name,
+          isChecked ? 'Private' : 'Public'
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Nav>
       <LogoContainer>
         <Logo />
       </LogoContainer>
       <Title>
-        <h1>{title === project.name ? <ProjectName /> : title}</h1>
-        {project?.owner && title === project.name && (
-          <Link to={`/${project.owner.username}/sketches`}>
-            by {project?.owner?.username}
-          </Link>
+        <h1>{title === project?.name ? <ProjectName /> : title}</h1>
+        {showPrivacyToggle && (
+          <main className="toolbar__makeprivate">
+            <p>Private</p>
+            <input
+              className="toolbar__togglevisibility"
+              type="checkbox"
+              onChange={toggleVisibility}
+              defaultChecked={project.visibility === 'Private'}
+            />
+          </main>
         )}
+        {showOwner && <h5>by {project?.owner?.username}</h5>}
       </Title>
+
       {/* check if the user is in login page */}
       {pageName === 'login' || pageName === 'signup' ? (
         // showing the CrossIcon
