@@ -11,7 +11,6 @@
 // The second function (inside) contains the actual implementation.
 import getContext from './getContext';
 import CodeMirror from 'codemirror';
-import warnIfBlacklisted from './warn';
 
 (function (mod) {
   if (typeof exports == 'object' && typeof module == 'object')
@@ -133,7 +132,6 @@ import warnIfBlacklisted from './warn';
 
       this.cm.operation(function () {
         const name = completion.item?.text;
-        if (name) warnIfBlacklisted(self.cm, name);
 
         if (completion.hint) {
           completion.hint(self.cm, data, completion);
@@ -334,7 +332,6 @@ import warnIfBlacklisted from './warn';
       tokenLength -= 1;
     }
     const name = focus.item?.text;
-    if (name) warnIfBlacklisted(cm, name);
     const suggestionItem = focus.item;
     // builds the remainder of the suggestion excluding what user already typed
     const baseCompletion = `<span class="inline-hinter-suggestion">${suggestionItem.text.slice(

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { includes } from 'lodash';
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
@@ -92,11 +93,27 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
 
       const thisContext = getContext(cm, ast, pos, scopeToDeclaredVarsMap);
 
-      const shadowed =
-        thisContext !== baseContext &&
-        scopeToDeclaredVarsMap[thisContext]?.hasOwnProperty(oldName);
+      const thisScopeVars = scopeToDeclaredVarsMap[thisContext] || {};
+      const baseScopeVars = scopeToDeclaredVarsMap[baseContext] || {};
+      const globalScopeVars = scopeToDeclaredVarsMap['global'] || {};
 
-      if (thisContext === baseContext || !shadowed) {
+      const isInBaseScope = thisContext === baseContext;
+      const isShadowedLocally =
+        !isInBaseScope && thisScopeVars.hasOwnProperty(oldName);
+      const isDeclaredInBaseScope = baseScopeVars.hasOwnProperty(oldName);
+      const isDeclaredGlobally = globalScopeVars.hasOwnProperty(oldName);
+
+      const shouldRename =
+        isInBaseScope ||
+        (!isShadowedLocally &&
+          thisScopeVars.hasOwnProperty(oldName) === {} &&
+          baseContext === 'global') ||
+        (baseContext === 'global' && !thisScopeVars.hasOwnProperty(oldName));
+
+      const shouldRenameGlobalVar =
+        thisContext === 'global' && !isDeclaredInBaseScope;
+
+      if (shouldRename || shouldRenameGlobalVar) {
         replacements.push({
           from: cm.posFromIndex(startIndex),
           to: cm.posFromIndex(endIndex)
