@@ -1,6 +1,7 @@
 /* eslint-disable */
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import { getAST, getContext } from './rename-variable';
+import announceToScreenReader from '../utils/ScreenReaderHelper';
 const traverse = require('@babel/traverse').default;
 
 export function jumpToDefinition(pos) {
@@ -44,7 +45,10 @@ export function jumpToDefinition(pos) {
     }
   });
 
-  if (isAtDeclaration) return;
+  if (isAtDeclaration) {
+    announceToScreenReader(`Already at definition of ${varName}`);
+    return;
+  }
 
   let found = false;
 
@@ -60,6 +64,11 @@ export function jumpToDefinition(pos) {
           found = true;
           cm.setCursor(defPos);
           cm.focus();
+          announceToScreenReader(
+            `Jumped from line ${pos.line + 1} to line ${
+              defPos.line + 1
+            } at definition of ${varName}`
+          );
         }
       }
     },
@@ -76,6 +85,11 @@ export function jumpToDefinition(pos) {
           found = true;
           cm.setCursor(defPos);
           cm.focus();
+          announceToScreenReader(
+            `Jumped from line ${pos.line + 1} to line ${
+              defPos.line + 1
+            } at definition of ${varName}`
+          );
         }
       }
 
@@ -93,6 +107,11 @@ export function jumpToDefinition(pos) {
             found = true;
             cm.setCursor(defPos);
             cm.focus();
+            announceToScreenReader(
+              `Jumped from line ${pos.line + 1} to line ${
+                defPos.line + 1
+              } at definition of ${varName}`
+            );
           }
         }
       }
@@ -110,6 +129,11 @@ export function jumpToDefinition(pos) {
           found = true;
           cm.setCursor(defPos);
           cm.focus();
+          announceToScreenReader(
+            `Jumped from line ${pos.line + 1} to line ${
+              defPos.line + 1
+            } at definition of ${varName}`
+          );
         }
       },
 
@@ -122,8 +146,16 @@ export function jumpToDefinition(pos) {
           found = true;
           cm.setCursor(defPos);
           cm.focus();
+          announceToScreenReader(
+            `Jumped from line ${pos.line + 1} to line ${
+              defPos.line + 1
+            } at definition of ${varName}`
+          );
         }
       }
     });
+  }
+  if (!found) {
+    announceToScreenReader(`No definition found for ${varName}`, true);
   }
 }

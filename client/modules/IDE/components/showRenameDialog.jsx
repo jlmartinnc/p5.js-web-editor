@@ -1,4 +1,5 @@
 /* eslint-disable */
+import announceToScreenReader from '../utils/ScreenReaderHelper';
 const allFuncs = require('./p5-reference-functions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
@@ -8,6 +9,7 @@ export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
     !isValidIdentifierSelection(oldName, tokenType)
   ) {
     showTemporaryDialog(coords, 'You cannot rename this element');
+    announceToScreenReader(`The word ${oldName} cannot be renamed`, true);
     return;
   }
 
@@ -36,6 +38,8 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
   document.body.appendChild(dialog);
   input.focus();
 
+  announceToScreenReader(`Renaming dialog box opened with word ${oldName}`);
+
   function cleanup() {
     dialog.remove();
     document.removeEventListener('mousedown', onClickOutside);
@@ -53,6 +57,9 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
       if (value) {
         cleanup();
         onSubmit(value);
+        announceToScreenReader(
+          `Renaming done from word ${oldName} to ${value}`
+        );
         cleanup();
       }
     } else if (e.key === 'Escape') {

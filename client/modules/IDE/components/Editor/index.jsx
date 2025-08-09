@@ -77,6 +77,7 @@ import contextAwareHinter from '../contextAwareHinter';
 import showRenameDialog from '../showRenameDialog';
 import { handleRename } from '../rename-variable';
 import { jumpToDefinition } from '../jump-to-definition';
+import { ensureAriaLiveRegion } from '../../utils/ScreenReaderHelper';
 
 emmet(CodeMirror);
 
@@ -114,6 +115,7 @@ class Editor extends React.Component {
 
   componentDidMount() {
     this.beep = new Audio(beepUrl);
+    ensureAriaLiveRegion();
     // this.widgets = [];
     this._cm = CodeMirror(this.codemirrorContainer, {
       theme: `p5-${this.props.theme}`,
