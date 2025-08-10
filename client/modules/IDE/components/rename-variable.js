@@ -108,7 +108,10 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
         (!isShadowedLocally &&
           thisScopeVars.hasOwnProperty(oldName) === {} &&
           baseContext === 'global') ||
-        (baseContext === 'global' && !thisScopeVars.hasOwnProperty(oldName));
+        (baseContext === 'global' && !thisScopeVars.hasOwnProperty(oldName)) ||
+        (isDeclaredGlobally &&
+          !thisScopeVars.hasOwnProperty(oldName) &&
+          !isDeclaredInBaseScope);
 
       const shouldRenameGlobalVar =
         thisContext === 'global' && !isDeclaredInBaseScope;

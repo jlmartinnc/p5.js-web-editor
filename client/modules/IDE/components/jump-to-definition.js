@@ -9,8 +9,7 @@ export function jumpToDefinition(pos) {
   const token = cm.getTokenAt(pos);
   const tokenType = token.type;
 
-  if (!tokenType || !['variable', 'def'].some((t) => tokenType.includes(t)))
-    return;
+  if (!tokenType || tokenType === 'def') return;
 
   const varName = token.string;
   const ast = getAST(cm);
