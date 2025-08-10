@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-const SkipLink = ({ targetId, text }) => {
+type SkipLinkProps = {
+  targetId: string,
+  text: string
+};
+
+const SkipLink = ({ targetId, text }: SkipLinkProps) => {
   const [focus, setFocus] = useState(false);
   const { t } = useTranslation();
   const handleFocus = () => {
@@ -25,11 +29,6 @@ const SkipLink = ({ targetId, text }) => {
       {t(`SkipLink.${text}`)}
     </a>
   );
-};
-
-SkipLink.propTypes = {
-  targetId: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
 };
 
 export default SkipLink;

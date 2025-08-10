@@ -29,6 +29,7 @@
         "tsx": "never"
       }
     ],
+    "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
     "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
     "default-param-last": 0,
     "no-else-return" :0,
@@ -126,7 +127,12 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint"]
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "no-use-before-define": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-unused-vars": "off"
+      }
     },
     {
       "files": ["*.stories.@(js|jsx|ts|tsx)"],
