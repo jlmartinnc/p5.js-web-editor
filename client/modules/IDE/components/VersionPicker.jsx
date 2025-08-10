@@ -10,8 +10,9 @@ import { p5Versions } from '../../../../common/p5Versions';
 import MenuItem from '../../../components/Dropdown/MenuItem';
 import DropdownMenu from '../../../components/Dropdown/DropdownMenu';
 import { updateFileContent } from '../actions/files';
+// eslint-disable-next-line import/no-cycle
 import { CmControllerContext } from '../pages/IDEView';
-import { DropdownArrowIcon } from '../.././../common/icons';
+import { DropdownArrowIcon } from '../../../common/icons';
 
 const VersionPickerButton = styled.div`
   display: flex;

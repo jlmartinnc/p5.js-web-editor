@@ -19,14 +19,14 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
         t('Collection.DeleteFromCollection', { name_sketch: name })
       )
     ) {
-      dispatch(removeFromCollection(collection.id, item.projectId));
+      dispatch(removeFromCollection(collection.id, item.project.id));
     }
   };
 
   const name = projectIsDeleted ? (
     <span>{t('Collection.SketchDeleted')}</span>
   ) : (
-    <Link to={`/${item.project.user.username}/sketches/${item.projectId}`}>
+    <Link to={`/${item.project.user.username}/sketches/${item.project.id}`}>
       {item.project.name}
     </Link>
   );
@@ -64,7 +64,6 @@ CollectionItemRow.propTypes = {
   }).isRequired,
   item: PropTypes.shape({
     createdAt: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     isDeleted: PropTypes.bool.isRequired,
     project: PropTypes.shape({
       id: PropTypes.string.isRequired,
