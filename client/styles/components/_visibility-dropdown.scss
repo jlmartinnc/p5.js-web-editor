@@ -45,7 +45,7 @@
 
   @include themify() {
     border-bottom: 1px solid getThemifyVariable("modal-border-color");
-    background-color: white;
+    background-color: getThemifyVariable("modal-background-color");
   }
 
   &:last-child {
@@ -54,14 +54,20 @@
 
   &:hover {
     @include themify() {
-      background-color: getThemifyVariable("table-row-stripe-color") !important; 
+      background-color: getThemifyVariable("file-selected-color") !important; 
     }
   }
 
   &.selected {
     @include themify() {
-      background-color: getThemifyVariable("search-background-color");
+      background-color: getThemifyVariable("table-row-stripe-color");
     }
+
+    // &:hover {
+    //   @include themify() {
+    //     background-color: getThemifyVariable("table-row-stripe-color") !important;
+    //   }
+    // }
   }
 }
 
