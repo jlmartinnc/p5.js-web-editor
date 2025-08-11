@@ -53,3 +53,5 @@ render(
   </Provider>,
   document.getElementById('root')
 );
+
+export default store;

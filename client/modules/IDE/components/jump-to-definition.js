@@ -1,10 +1,72 @@
 /* eslint-disable */
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
+import * as parser from '@babel/parser';
 import { getAST, getContext } from './rename-variable';
+import { selectFiles } from '../selectors/files';
+import { setSelectedFile } from '../actions/ide';
 import announceToScreenReader from '../utils/ScreenReaderHelper';
+import store from '../../../index';
 const traverse = require('@babel/traverse').default;
 
+function getScriptLoadOrder(files) {
+  const indexHtmlFile = files.find((f) => f.name.endsWith('index.html'));
+  if (!indexHtmlFile) return [];
+
+  const scriptRegex = /<script\s+[^>]*src=["']([^"']+)["']/g;
+  const scripts = [];
+  let match;
+  while ((match = scriptRegex.exec(indexHtmlFile.content)) !== null) {
+    scripts.push(match[1]);
+  }
+  return scripts;
+}
+
+function buildProjectSymbolTable(files, scriptOrder) {
+  const symbolTable = {};
+
+  for (const scriptName of scriptOrder) {
+    const file = files.find((f) => f.name.endsWith(scriptName));
+    if (!file) continue;
+
+    let ast;
+    try {
+      ast = parser.parse(file.content, {
+        sourceType: 'script',
+        plugins: ['jsx', 'typescript']
+      });
+    } catch (e) {
+      continue;
+    }
+
+    traverse(ast, {
+      FunctionDeclaration(path) {
+        const name = path.node.id?.name;
+        if (name && !symbolTable[name]) {
+          symbolTable[name] = {
+            file: file.name,
+            pos: path.node.start
+          };
+        }
+      },
+      VariableDeclarator(path) {
+        const name = path.node.id?.name;
+        if (name && !symbolTable[name]) {
+          symbolTable[name] = {
+            file: file.name,
+            pos: path.node.start
+          };
+        }
+      }
+    });
+  }
+
+  return symbolTable;
+}
+
 export function jumpToDefinition(pos) {
+  const state = store.getState();
+  const files = selectFiles(state);
+
   const cm = this._cm;
   const token = cm.getTokenAt(pos);
   const tokenType = token.type;
@@ -154,6 +216,37 @@ export function jumpToDefinition(pos) {
       }
     });
   }
+  if (!found) {
+    const scriptOrder = getScriptLoadOrder(files);
+
+    const projectSymbolTable =
+      buildProjectSymbolTable(files, scriptOrder) || {};
+    const globalSymbol = projectSymbolTable[varName];
+
+    if (globalSymbol) {
+      const targetFileObj = files.find((f) => f.name === globalSymbol.file);
+      if (!targetFileObj) {
+        return;
+      }
+
+      store.dispatch(setSelectedFile(targetFileObj.id));
+
+      if (!targetFileObj.cmInstance) {
+        return;
+      }
+
+      const targetFileCM = targetFileObj.cmInstance;
+      const defPos = targetFileCM.posFromIndex(globalSymbol.pos);
+      targetFileCM.setCursor(defPos);
+      targetFileCM.focus();
+
+      announceToScreenReader(
+        `Jumped to definition of ${varName} in ${globalSymbol.file}`
+      );
+      found = true;
+    }
+  }
+
   if (!found) {
     announceToScreenReader(`No definition found for ${varName}`, true);
   }
