@@ -2,7 +2,7 @@
  * Internal function to retrieve env vars, with no error handling.
  * @returns String value of env variable or undefined if not found.
  */
-function _getConfig(key: string): string | undefined {
+function getEnvVar(key: string): string | undefined {
   const env: Record<string, string | undefined> =
     (typeof global !== 'undefined' ? global : window)?.process?.env || {};
 
@@ -31,11 +31,11 @@ function getConfig(
   if (!key) {
     throw new Error('"key" must be provided to getConfig()');
   }
-  const isTestEnvironment = _getConfig('NODE_ENV') === 'test';
+  const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
 
   const { warn = !isTestEnvironment, nullishString = false } = options;
 
-  const value = _getConfig(key);
+  const value = getEnvVar(key);
 
   if (value == null) {
     if (warn) {
