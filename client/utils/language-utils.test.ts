@@ -1,4 +1,4 @@
-import getPreferredLanguage from './language-utils';
+import { getPreferredLanguage } from './language-utils';
 
 describe('getPreferredLanguage', () => {
   const originalNavigator = global.navigator;

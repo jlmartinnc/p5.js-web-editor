@@ -2,7 +2,7 @@
  * Utility functions for language detection and handling
  */
 
-function getPreferredLanguage(
+export function getPreferredLanguage(
   supportedLanguages: string[] = [],
   defaultLanguage: string = 'en'
 ): string | undefined {
@@ -49,5 +49,3 @@ function getPreferredLanguage(
 
   return defaultLanguage;
 }
-
-export default getPreferredLanguage;
