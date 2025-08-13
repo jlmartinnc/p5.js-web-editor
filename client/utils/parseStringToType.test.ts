@@ -18,13 +18,25 @@ describe('parseNumber', () => {
   it('returns 0 if input is undefined and nullishNumber is true', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     expect(parseNumber(undefined, true)).toBe(0);
-    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got undefined input');
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got nullish input');
+  });
+
+  it('returns 0 if input is an empty string and nullishNumber is true', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseNumber('', true)).toBe(0);
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got nullish input');
   });
 
   it('returns undefined and warns if input is undefined and nullishNumber is false', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     expect(parseNumber(undefined, false)).toBeUndefined();
-    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got undefined input');
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got nullish input');
+  });
+
+  it('returns undefined and warns if input is an empty string and nullishNumber is false', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseNumber('', false)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith('parseNumber: got nullish input');
   });
 
   it('returns undefined and warns if parsing fails', () => {
@@ -56,13 +68,25 @@ describe('parseBoolean', () => {
   it('returns false if input is undefined and nullishBool is true', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     expect(parseBoolean(undefined, true)).toBe(false);
-    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got undefined input');
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got nullish input');
+  });
+
+  it('returns false if input is empty string and nullishBool is true', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseBoolean('', true)).toBe(false);
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got nullish input');
   });
 
   it('returns undefined and warns if input is undefined and nullishBool is false', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     expect(parseBoolean(undefined, false)).toBeUndefined();
-    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got undefined input');
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got nullish input');
+  });
+
+  it('returns undefined and warns if input is empty string and nullishBool is false', () => {
+    const warnSpy = jest.spyOn(console, 'warn');
+    expect(parseBoolean('', false)).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith('parseBoolean: got nullish input');
   });
 
   it('returns undefined and warns if parsing fails', () => {

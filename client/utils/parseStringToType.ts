@@ -8,8 +8,8 @@ export function parseNumber(
   str?: string,
   nullishNumber = false
 ): number | undefined {
-  if (str == null) {
-    console.warn(`parseNumber: got undefined input`);
+  if (!str) {
+    console.warn(`parseNumber: got nullish input`);
     return nullishNumber ? 0 : undefined;
   }
 
@@ -31,8 +31,8 @@ export function parseBoolean(
   str?: string,
   nullishBool = false
 ): boolean | undefined {
-  if (str == null) {
-    console.warn('parseBoolean: got undefined input');
+  if (!str) {
+    console.warn('parseBoolean: got nullish input');
     return nullishBool ? false : undefined;
   }
 
