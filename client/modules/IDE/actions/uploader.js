@@ -1,5 +1,5 @@
 import { TEXT_FILE_REGEX } from '../../../../server/utils/fileUtils';
-import apiClient from '../../../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 import getConfig from '../../../utils/getConfig';
 import { handleCreateFile } from './files';
 

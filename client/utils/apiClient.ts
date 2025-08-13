@@ -13,4 +13,5 @@ function createClientInstance(): AxiosInstance {
   });
 }
 
-export default createClientInstance();
+/** Axios instance configured with the API_URL as the ROOT URL */
+export const apiClient = createClientInstance();
