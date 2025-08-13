@@ -4,7 +4,5 @@
  *   - see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
  */
 export function isMac(): boolean {
-  return typeof navigator?.userAgent === 'string'
-    ? navigator.userAgent.toLowerCase().includes('mac')
-    : false;
+  return navigator?.userAgent?.toLowerCase().includes('mac') ?? false;
 }
