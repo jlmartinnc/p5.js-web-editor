@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { removeFromCollection } from '../../IDE/actions/collections';
-import dates from '../../../utils/formatDate';
+import { formatDateToString } from '../../../utils/formatDate';
 import RemoveIcon from '../../../images/close.svg';
 
 const CollectionItemRow = ({ collection, item, isOwner }) => {
@@ -40,7 +40,7 @@ const CollectionItemRow = ({ collection, item, isOwner }) => {
       className={`sketches-table__row ${projectIsDeleted ? 'is-deleted' : ''}`}
     >
       <th scope="row">{name}</th>
-      <td>{dates.format(item.createdAt)}</td>
+      <td>{formatDateToString(item.createdAt)}</td>
       <td>{sketchOwnerUsername}</td>
       <td className="collection-row__action-column">
         {isOwner && (

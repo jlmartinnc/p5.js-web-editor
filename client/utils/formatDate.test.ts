@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import dateUtils from './formatDate';
+import { distanceInWordsToNow, formatDateToString } from './formatDate';
 
 jest.mock('i18next', () => ({
   t: jest.fn((key: string) => key.split('.')[1])
@@ -20,7 +20,7 @@ describe('dateUtils', () => {
       const now = new Date();
       const recentDate = new Date(now.getTime() - 5000);
 
-      const result = dateUtils.distanceInWordsToNow(recentDate);
+      const result = distanceInWordsToNow(recentDate);
       expect(i18next.t).toHaveBeenCalledWith('formatDate.JustNow');
       expect(result).toBe('JustNow');
     });
@@ -29,7 +29,7 @@ describe('dateUtils', () => {
       const now = new Date();
       const recentDate = new Date(now.getTime() - 15000);
 
-      const result = dateUtils.distanceInWordsToNow(recentDate);
+      const result = distanceInWordsToNow(recentDate);
       expect(i18next.t).toHaveBeenCalledWith('formatDate.15Seconds');
       expect(result).toBe('15Seconds');
     });
@@ -42,7 +42,7 @@ describe('dateUtils', () => {
         t: jest.fn((key: string, { timeAgo }) => `${key}: ${timeAgo}`)
       }));
 
-      const result = dateUtils.distanceInWordsToNow(oldDate);
+      const result = distanceInWordsToNow(oldDate);
       expect(i18next.t).toHaveBeenCalledWith(
         'formatDate.Ago',
         expect.any(Object)
@@ -51,7 +51,7 @@ describe('dateUtils', () => {
     });
 
     it('returns empty string for invalid date', () => {
-      const result = dateUtils.distanceInWordsToNow('not a date');
+      const result = distanceInWordsToNow('not a date');
       expect(result).toBe('');
     });
   });
@@ -59,20 +59,20 @@ describe('dateUtils', () => {
   describe('format', () => {
     it('formats with time by default', () => {
       const date = new Date('2025-07-16T12:34:56Z');
-      const formatted = dateUtils.format(date);
+      const formatted = formatDateToString(date);
 
       expect(formatted).toMatch(/(\d{1,2}:\d{2})/); // Contains time
     });
 
     it('formats without time when showTime is false', () => {
       const date = new Date('2025-07-16T12:34:56Z');
-      const formatted = dateUtils.format(date, { showTime: false });
+      const formatted = formatDateToString(date, { showTime: false });
 
       expect(formatted).not.toMatch(/(\d{1,2}:\d{2})/); // Contains time
     });
 
     it('returns empty string for invalid date', () => {
-      const formatted = dateUtils.format('invalid date');
+      const formatted = formatDateToString('invalid date');
       expect(formatted).toBe('');
     });
   });

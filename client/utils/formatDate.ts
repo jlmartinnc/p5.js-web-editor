@@ -21,45 +21,46 @@ function parse(maybeDate: Date | string) {
   return null;
 }
 
-export default {
-  /**
-   * Returns a human-friendly relative time string from now.
-   * For very recent dates, returns specific labels (e.g., 'JustNow').
-   * @param date - Date or string to compare
-   * @returns Relative time string or empty string if invalid
-   */
-  distanceInWordsToNow(date: Date | string) {
-    const parsed = parse(date);
+/**
+ * Returns a human-friendly relative time string from now.
+ * For very recent dates, returns specific labels (e.g., 'JustNow').
+ * @param date - Date or string to compare
+ * @returns Relative time string or empty string if invalid
+ */
+export function distanceInWordsToNow(date: Date | string) {
+  const parsed = parse(date);
 
-    if (!parsed) return '';
+  if (!parsed) return '';
 
-    const diffInMs = Math.abs(differenceInMilliseconds(new Date(), parsed));
+  const diffInMs = Math.abs(differenceInMilliseconds(new Date(), parsed));
 
-    if (diffInMs < 10000) return i18next.t('formatDate.JustNow');
-    if (diffInMs < 20000) return i18next.t('formatDate.15Seconds');
-    if (diffInMs < 30000) return i18next.t('formatDate.25Seconds');
-    if (diffInMs < 46000) return i18next.t('formatDate.35Seconds');
+  if (diffInMs < 10000) return i18next.t('formatDate.JustNow');
+  if (diffInMs < 20000) return i18next.t('formatDate.15Seconds');
+  if (diffInMs < 30000) return i18next.t('formatDate.25Seconds');
+  if (diffInMs < 46000) return i18next.t('formatDate.35Seconds');
 
-    const timeAgo = formatDistanceToNow(parsed, {
-      includeSeconds: false,
-      locale: currentDateLocale()
-    });
+  const timeAgo = formatDistanceToNow(parsed, {
+    includeSeconds: false,
+    locale: currentDateLocale()
+  });
 
-    return i18next.t('formatDate.Ago', { timeAgo });
-  },
+  return i18next.t('formatDate.Ago', { timeAgo });
+}
 
-  /**
-   * Formats a date as a string. Includes time by default.
-   * @param date - Date or string to format
-   * @param options - Formatting options
-   * @param options.showTime - Whether to include time (default true)
-   * @returns Formatted date string or empty string if invalid
-   */
-  format(date: Date | string, { showTime = true } = {}): string {
-    const parsed = parse(date);
-    if (!parsed) return '';
+/**
+ * Formats a date as a string. Includes time by default.
+ * @param date - Date or string to format
+ * @param options - Formatting options
+ * @param options.showTime - Whether to include time (default true)
+ * @returns Formatted date string or empty string if invalid
+ */
+export function formatDateToString(
+  date: Date | string,
+  { showTime = true } = {}
+): string {
+  const parsed = parse(date);
+  if (!parsed) return '';
 
-    const formatType = showTime ? 'PPpp' : 'PP';
-    return format(parsed, formatType, { locale: currentDateLocale() });
-  }
-};
+  const formatType = showTime ? 'PPpp' : 'PP';
+  return format(parsed, formatType, { locale: currentDateLocale() });
+}
