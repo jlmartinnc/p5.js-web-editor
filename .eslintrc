@@ -40,7 +40,7 @@
     "no-import-assign": 2,
     "no-promise-executor-return": 0, //temporarily off
     "no-restricted-exports": 1,
-    "no-underscore-dangle": 0,
+    "no-underscore-dangle": 1,
     "no-useless-catch": 2,
     "no-plusplus": "off",
     "prefer-object-spread": 0,
