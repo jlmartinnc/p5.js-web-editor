@@ -1,5 +1,5 @@
 type EvalResult = {
-  result: any,
+  result: unknown,
   error: boolean
 };
 
@@ -19,12 +19,14 @@ function evaluateExpression(): (expr: string) => EvalResult {
     try {
       try {
         const wrapped = `(${expr})`;
-        const validate = new Function(wrapped); // eslint-disable-line
-        newExpr = wrapped; // eslint-disable-line
+        // eslint-disable-next-line no-new-func
+        const validate = new Function(wrapped);
+        newExpr = wrapped;
       } catch (e) {
         // We shouldn't wrap the expression
       }
-      result = (0, eval)(newExpr); // eslint-disable-line
+      // eslint-disable-next-line no-eval
+      result = (0, eval)(newExpr);
     } catch (e) {
       if (e instanceof Error) {
         result = `${e.name}: ${e.message}`;
