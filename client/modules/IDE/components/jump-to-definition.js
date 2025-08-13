@@ -63,6 +63,24 @@ function buildProjectSymbolTable(files, scriptOrder) {
   return symbolTable;
 }
 
+const jumpToLineChAfterLoad = (targetFileId, pos) => {
+  let tries = 10;
+  const tryJump = () => {
+    const stateNow = store.getState();
+    const filesNow = selectFiles(stateNow);
+    const freshTarget = filesNow.find((f) => f.id === targetFileId); // get fresh copy
+    const cm = freshTarget?.cmInstance;
+
+    if (cm) {
+      cm.setCursor(pos);
+      cm.focus();
+    } else if (tries-- > 0) {
+      setTimeout(tryJump, 30);
+    }
+  };
+  tryJump();
+};
+
 export function jumpToDefinition(pos) {
   const state = store.getState();
   const files = selectFiles(state);
@@ -112,6 +130,80 @@ export function jumpToDefinition(pos) {
   }
 
   let found = false;
+
+  if (!found) {
+    const scriptOrder = getScriptLoadOrder(files);
+
+    if (scriptOrder.length) {
+      const projectSymbolTable =
+        buildProjectSymbolTable(files, scriptOrder) || {};
+      const globalSymbol = projectSymbolTable[varName];
+
+      if (globalSymbol) {
+        for (let i = scriptOrder.length - 1; i >= 0; i--) {
+          const scriptName = scriptOrder[i];
+          const file = files.find((f) => f.name.endsWith(scriptName));
+          if (!file) continue;
+
+          let ast;
+          try {
+            ast = parser.parse(file.content, {
+              sourceType: 'script',
+              plugins: ['jsx', 'typescript']
+            });
+          } catch {
+            continue;
+          }
+
+          let foundInThisFile = false;
+          traverse(ast, {
+            FunctionDeclaration(path) {
+              if (path.node.id?.name === varName) {
+                const targetFileObj = file;
+
+                const fileContent = targetFileObj.content;
+                const beforeText = fileContent.slice(0, path.node.start);
+                const line = beforeText.split('\n').length - 1;
+                const ch = beforeText.split('\n').pop().length;
+
+                store.dispatch(setSelectedFile(targetFileObj.id));
+                pos = { line, ch };
+                cm.setCursor(pos);
+
+                announceToScreenReader(
+                  `Jumped to definition of ${varName} in ${file.name}`
+                );
+                foundInThisFile = true;
+                path.stop();
+              }
+            },
+            VariableDeclarator(path) {
+              if (path.node.id?.name === varName) {
+                const targetFileObj = file;
+
+                const fileContent = targetFileObj.content;
+                const beforeText = fileContent.slice(0, path.node.start);
+                const line = beforeText.split('\n').length - 1;
+                const ch = beforeText.split('\n').pop().length;
+
+                store.dispatch(setSelectedFile(targetFileObj.id));
+                pos = { line, ch };
+                cm.setCursor(pos);
+
+                announceToScreenReader(
+                  `Jumped to definition of ${varName} in ${file.name}`
+                );
+                foundInThisFile = true;
+                path.stop();
+              }
+            }
+          });
+
+          if (foundInThisFile) break;
+        }
+      }
+    }
+  }
 
   traverse(ast, {
     VariableDeclarator(path) {
@@ -215,36 +307,6 @@ export function jumpToDefinition(pos) {
         }
       }
     });
-  }
-  if (!found) {
-    const scriptOrder = getScriptLoadOrder(files);
-
-    const projectSymbolTable =
-      buildProjectSymbolTable(files, scriptOrder) || {};
-    const globalSymbol = projectSymbolTable[varName];
-
-    if (globalSymbol) {
-      const targetFileObj = files.find((f) => f.name === globalSymbol.file);
-      if (!targetFileObj) {
-        return;
-      }
-
-      store.dispatch(setSelectedFile(targetFileObj.id));
-
-      if (!targetFileObj.cmInstance) {
-        return;
-      }
-
-      const targetFileCM = targetFileObj.cmInstance;
-      const defPos = targetFileCM.posFromIndex(globalSymbol.pos);
-      targetFileCM.setCursor(defPos);
-      targetFileCM.focus();
-
-      announceToScreenReader(
-        `Jumped to definition of ${varName} in ${globalSymbol.file}`
-      );
-      found = true;
-    }
   }
 
   if (!found) {
