@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import MenubarSubmenu from '../../../../components/Menubar/MenubarSubmenu';
 import MenubarItem from '../../../../components/Menubar/MenubarItem';
 import { availableLanguages, languageKeyToLabel } from '../../../../i18n';
-import getConfig from '../../../../utils/getConfig';
+import { getConfig } from '../../../../utils/getConfig';
 import { parseBoolean } from '../../../../utils/parseStringToType';
 import { showToast } from '../../actions/toast';
 import { setLanguage } from '../../actions/preferences';

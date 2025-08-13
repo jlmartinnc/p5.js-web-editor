@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import prettyBytes from 'pretty-bytes';
-import getConfig from '../../../utils/getConfig';
+import { getConfig } from '../../../utils/getConfig';
 import { closeUploadFileModal } from '../actions/ide';
 import FileUploader from './FileUploader';
 import { getreachedTotalSizeLimit } from '../selectors/users';

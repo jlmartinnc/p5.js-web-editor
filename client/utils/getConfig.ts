@@ -24,7 +24,7 @@ type GetConfigOptions = {
  *   - `nullishString`: if true, returns `''` instead of `undefined` when missing.
  * @returns String value of the env var, or `''` or `undefined` if missing.
  */
-function getConfig(
+export function getConfig(
   key: string,
   options: GetConfigOptions = {}
 ): string | undefined {
@@ -46,5 +46,3 @@ function getConfig(
 
   return value;
 }
-
-export default getConfig;

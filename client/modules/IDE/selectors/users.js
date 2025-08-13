@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import getConfig from '../../../utils/getConfig';
+import { getConfig } from '../../../utils/getConfig';
 import { parseNumber } from '../../../utils/parseStringToType';
 
 export const getAuthenticated = (state) => state.user.authenticated;

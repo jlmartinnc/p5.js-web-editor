@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import prettyBytes from 'pretty-bytes';
-import getConfig from '../../../utils/getConfig';
+import { getConfig } from '../../../utils/getConfig';
 import { parseNumber } from '../../../utils/parseStringToType';
 
 const limit = parseNumber(getConfig('UPLOAD_LIMIT')) || 250000000;

@@ -7,7 +7,7 @@ import { Transition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import getConfig from '../../../utils/getConfig';
+import { getConfig } from '../../../utils/getConfig';
 import { setUserCookieConsent } from '../actions';
 import { remSize, prop, device } from '../../../theme';
 import Button from '../../../common/Button';

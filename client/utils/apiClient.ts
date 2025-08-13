@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import getConfig from './getConfig';
+import { getConfig } from './getConfig';
 
 const ROOT_URL = getConfig('API_URL', { nullishString: true });
 
