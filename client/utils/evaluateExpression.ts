@@ -5,14 +5,14 @@ type EvalResult = {
 
 type EvalInClosureFn = (expr: string) => EvalResult;
 
-function __makeEvaluateExpression(evalInClosure: EvalInClosureFn) {
+function makeEvaluateExpression(evalInClosure: EvalInClosureFn) {
   return (expr: string) =>
     evalInClosure(`
     ${expr}`);
 }
 
 function evaluateExpression(): (expr: string) => EvalResult {
-  return __makeEvaluateExpression((expr: string): EvalResult => {
+  return makeEvaluateExpression((expr: string): EvalResult => {
     let newExpr = expr;
     let result = null;
     let error = false;
