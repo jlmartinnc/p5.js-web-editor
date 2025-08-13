@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 type SkipLinkProps = {
-  targetId: string,
-  text: string
+  targetId: string;
+  text: string;
 };
 
 const SkipLink = ({ targetId, text }: SkipLinkProps) => {

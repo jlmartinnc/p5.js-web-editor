@@ -1,6 +1,6 @@
 type EvalResult = {
-  result: unknown,
-  error: boolean
+  result: unknown;
+  error: boolean;
 };
 
 type EvalInClosureFn = (expr: string) => EvalResult;
@@ -12,31 +12,33 @@ function makeEvaluateExpression(evalInClosure: EvalInClosureFn) {
 }
 
 function evaluateExpression(): (expr: string) => EvalResult {
-  return makeEvaluateExpression((expr: string): EvalResult => {
-    let newExpr = expr;
-    let result = null;
-    let error = false;
-    try {
+  return makeEvaluateExpression(
+    (expr: string): EvalResult => {
+      let newExpr = expr;
+      let result = null;
+      let error = false;
       try {
-        const wrapped = `(${expr})`;
-        // eslint-disable-next-line no-new-func
-        const validate = new Function(wrapped);
-        newExpr = wrapped;
+        try {
+          const wrapped = `(${expr})`;
+          // eslint-disable-next-line no-new-func
+          const validate = new Function(wrapped);
+          newExpr = wrapped;
+        } catch (e) {
+          // We shouldn't wrap the expression
+        }
+        // eslint-disable-next-line no-eval
+        result = (0, eval)(newExpr);
       } catch (e) {
-        // We shouldn't wrap the expression
+        if (e instanceof Error) {
+          result = `${e.name}: ${e.message}`;
+        } else {
+          result = String(e);
+        }
+        error = true;
       }
-      // eslint-disable-next-line no-eval
-      result = (0, eval)(newExpr);
-    } catch (e) {
-      if (e instanceof Error) {
-        result = `${e.name}: ${e.message}`;
-      } else {
-        result = String(e);
-      }
-      error = true;
+      return { result, error };
     }
-    return { result, error };
-  });
+  );
 }
 
 export default evaluateExpression();

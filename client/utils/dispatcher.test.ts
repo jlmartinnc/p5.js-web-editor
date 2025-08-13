@@ -5,7 +5,6 @@ import {
   MessageTypes
 } from './dispatcher';
 
-
 describe('dispatcher', () => {
   let mockFrame: Window;
   let origin: string;
@@ -49,8 +48,8 @@ describe('dispatcher', () => {
     });
 
     it('sends a deep-copied message to all registered frames', () => {
-      const frame1 = { postMessage: jest.fn() } as unknown as Window;
-      const frame2 = { postMessage: jest.fn() } as unknown as Window;
+      const frame1 = ({ postMessage: jest.fn() } as unknown) as Window;
+      const frame2 = ({ postMessage: jest.fn() } as unknown) as Window;
 
       const remove1 = registerFrame(frame1, origin);
       const remove2 = registerFrame(frame2, origin);

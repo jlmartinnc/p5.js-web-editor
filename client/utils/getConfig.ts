@@ -10,8 +10,8 @@ function getEnvVar(key: string): string | undefined {
 }
 
 type GetConfigOptions = {
-  warn?: boolean,
-  nullishString?: boolean
+  warn?: boolean;
+  nullishString?: boolean;
 };
 
 /**
