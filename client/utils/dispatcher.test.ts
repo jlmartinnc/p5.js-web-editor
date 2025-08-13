@@ -12,8 +12,7 @@ describe('dispatcher', () => {
 
   beforeEach(() => {
     origin = 'https://example.com';
-    // eslint-disable-next-line prettier/prettier
-    mockFrame = { postMessage: jest.fn() } as unknown as Window;
+    mockFrame = ({ postMessage: jest.fn() } as unknown) as Window;
   });
 
   afterEach(() => {

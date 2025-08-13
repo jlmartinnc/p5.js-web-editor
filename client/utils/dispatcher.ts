@@ -14,7 +14,6 @@ export const MessageTypes = {
   SKETCH: 'SKETCH',
   REGISTER: 'REGISTER',
   EXECUTE: 'EXECUTE'
-  // eslint-disable-next-line prettier/prettier
 } as const;
 
 /** Codesandbox dispatcher message types */
