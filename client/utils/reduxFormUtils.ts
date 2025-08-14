@@ -1,9 +1,8 @@
 import i18n from 'i18next';
 
-/* eslint-disable */
+// eslint-disable-next-line max-len
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
-const USERNAME_REGEX = /^[a-zA-Z0-9._-]{1,20}$/
-/* eslint-enable */
+const USERNAME_REGEX = /^[a-zA-Z0-9._-]{1,20}$/;
 
 type Email = { email: string };
 type Username = { username: string };
@@ -25,7 +24,7 @@ export type FormErrors = Partial<
 /** Processes form & mutates errors to add any `username` & `email` errors */
 function validateUsernameEmail(
   formProps: Partial<UsernameAndEmail>,
-  errors: Partial<FormErrors>
+  errors: FormErrors
 ) {
   if (!formProps.username) {
     errors.username = i18n.t('ReduxFormUtils.errorEmptyUsername');
@@ -45,7 +44,7 @@ function validateUsernameEmail(
 /** Processes form & mutates errors to add any `password` and `confirmPassword` errors */
 function validatePasswords(
   formProps: Partial<PasswordsConfirm>,
-  errors: Partial<FormErrors>
+  errors: FormErrors
 ) {
   if (!formProps.password) {
     errors.password = i18n.t('ReduxFormUtils.errorEmptyPassword');
@@ -69,13 +68,12 @@ function validatePasswords(
 
 // Account Form:
 export type AccountForm = UsernameAndEmail & CurrentPassword & NewPassword;
-export type AccountFormErrors = Partial<AccountForm>;
 
 /** Validation for the Account Form */
 export function validateSettings(
   formProps: Partial<AccountForm>
-): AccountFormErrors {
-  const errors: AccountFormErrors = {};
+): Partial<AccountForm> {
+  const errors: Partial<AccountForm> = {};
 
   validateUsernameEmail(formProps, errors);
 
@@ -96,11 +94,12 @@ export function validateSettings(
 
 // Login form:
 export type LoginForm = UsernameAndEmail & Password;
-export type LoginFormErrors = Partial<LoginForm>;
 
 /** Validation for the Login Form */
-export function validateLogin(formProps: Partial<LoginForm>): LoginFormErrors {
-  const errors: LoginFormErrors = {};
+export function validateLogin(
+  formProps: Partial<LoginForm>
+): Partial<LoginForm> {
+  const errors: Partial<LoginForm> = {};
   if (!formProps.email && !formProps.username) {
     errors.email = i18n.t('ReduxFormUtils.errorEmptyEmailorUserName');
   }
@@ -111,12 +110,11 @@ export function validateLogin(formProps: Partial<LoginForm>): LoginFormErrors {
 }
 
 export type NewPasswordForm = PasswordsConfirm;
-export type NewPasswordFormErrors = Partial<NewPasswordForm>;
 
 /** Validation for the New Password Form */
 export function validateNewPassword(
   formProps: Partial<NewPasswordForm>
-): NewPasswordFormErrors {
+): Partial<NewPasswordForm> {
   const errors = {};
   validatePasswords(formProps, errors);
   return errors;
@@ -124,13 +122,12 @@ export function validateNewPassword(
 
 // Signup Form:
 export type SignupForm = UsernameAndEmail & PasswordsConfirm;
-export type SignupFormErrors = Partial<SignupForm>;
 
 /** Validation for the Signup Form */
 export function validateSignup(
   formProps: Partial<SignupForm>
-): SignupFormErrors {
-  const errors: SignupFormErrors = {};
+): Partial<SignupForm> {
+  const errors = {};
 
   validateUsernameEmail(formProps, errors);
   validatePasswords(formProps, errors);
@@ -140,13 +137,12 @@ export function validateSignup(
 
 // Reset Password Form:
 export type ResetPasswordForm = Email;
-export type ResetPasswordFormErrors = Partial<ResetPasswordForm>;
 
 /** Validation for the Reset Password Form */
 export function validateResetPassword(
   formProps: Partial<ResetPasswordForm>
-): ResetPasswordFormErrors {
-  const errors: ResetPasswordFormErrors = {};
+): Partial<ResetPasswordForm> {
+  const errors: Partial<ResetPasswordForm> = {};
   if (!formProps.email) {
     errors.email = i18n.t('ReduxFormUtils.errorEmptyEmail');
   } else if (!formProps.email.match(EMAIL_REGEX)) {
