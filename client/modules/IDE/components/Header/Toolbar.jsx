@@ -122,7 +122,6 @@ const Toolbar = (props) => {
           </div>
         )}
 
-        {/* ✅ Still show owner if not you */}
         {project?.owner && !userIsOwner && (
           <p className="toolbar__project-owner">
             {t('Toolbar.By')}{' '}

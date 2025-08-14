@@ -125,7 +125,7 @@ const SketchListRowBase = ({
       <th scope="row">{name}</th>
       <td>{formatDateCell(sketch.createdAt, mobile)}</td>
       <td>{formatDateCell(sketch.updatedAt, mobile)}</td>
-      <td hidden={!userIsOwner}>
+      <td hidden={!userIsOwner || mobile}>
         <VisibilityDropdown
           sketch={sketch}
           onVisibilityChange={handleVisibilityChange}
