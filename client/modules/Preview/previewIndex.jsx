@@ -26,7 +26,7 @@ const App = () => {
   const [gridOutput, setGridOutput] = useState(false);
   registerFrame(
     window.parent,
-    getConfig('EDITOR_URL', { failOnNotFound: true })
+    getConfig('EDITOR_URL', { throwErrorIfNotFound: true })
   );
 
   function handleMessageEvent(message) {

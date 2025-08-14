@@ -15,11 +15,11 @@ import {
 } from './ide';
 import { clearState, saveState } from '../../../persistState';
 
-const ROOT_URL = getConfig('API_URL', { failOnNotFound: true });
+const ROOT_URL = getConfig('API_URL', { throwErrorIfNotFound: true });
 const S3_BUCKET_URL_BASE = getConfig('S3_BUCKET_URL_BASE', {
-  failOnNotFound: true
+  throwErrorIfNotFound: true
 });
-const S3_BUCKET = getConfig('S3_BUCKET', { failOnNotFound: true });
+const S3_BUCKET = getConfig('S3_BUCKET', { throwErrorIfNotFound: true });
 
 export function setProject(project) {
   return {

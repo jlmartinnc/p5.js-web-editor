@@ -12,8 +12,8 @@ function getEnvVar(key: string): string | undefined {
 interface GetConfigOptions {
   warn?: boolean;
   nullishString?: boolean;
-  failOnNotFound?: boolean;
-  failInTestEnv?: boolean; // this is only to test getConfig and should never be set to override defaults
+  throwErrorIfNotFound?: boolean;
+  throwErrorInTestEnv?: boolean; // this is only to test getConfig and should never be set to override defaults
 }
 
 export const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
@@ -21,19 +21,20 @@ export const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
 const defaultGetConfigOptions: GetConfigOptions = {
   warn: !isTestEnvironment,
   nullishString: false,
-  failOnNotFound: false,
-  failInTestEnv: false
+  throwErrorIfNotFound: false,
+  throwErrorInTestEnv: false
 };
 
 /**
  * Returns a string config value from environment variables.
- * Logs a warning or throws an error if the value is missing, if `warn` and `failOnNotFound` are true in options
+ * Logs a warning or throws an error if the value is missing, if `warn` and `throwErrorIfNotFound` are true in options
  *
  * @param key - The environment variable key to fetch.
  * @param options - Optional settings:
- *   - `failOnNotFound`: whether to throw an error if the value is missing (default to `false`).
+ *   - `throwErrorIfNotFound`: whether to throw an error if the value is missing (default to `false`).
  *   - `warn`: whether to warn if the value is missing (default `true` unless in test env).
  *   - `nullishString`: if true, returns `''` instead of `undefined` when missing.
+ *   - `throwErrorInTestEnv`: this is to test getConfig and should not be overridden (default to `false`).
  * @returns String value of the env var, or `''` or `undefined` if missing.
  */
 export function getConfig(
@@ -45,7 +46,7 @@ export function getConfig(
   }
 
   // override default options with param options
-  const { warn, nullishString, failOnNotFound, failInTestEnv } = {
+  const { warn, nullishString, throwErrorIfNotFound, throwErrorInTestEnv } = {
     ...defaultGetConfigOptions,
     ...options
   };
@@ -59,8 +60,8 @@ export function getConfig(
 
     // error, warn or continue if no value found:
     if (
-      (failOnNotFound && !isTestEnvironment) ||
-      (failOnNotFound && isTestEnvironment && failInTestEnv) // this is just to enable us to test getConfig's error throwing
+      (throwErrorIfNotFound && !isTestEnvironment) ||
+      (throwErrorIfNotFound && isTestEnvironment && throwErrorInTestEnv) // this is just to enable us to test getConfig's error throwing
     ) {
       throw new Error(notFoundMessage);
     }
