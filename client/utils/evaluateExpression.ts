@@ -11,7 +11,7 @@ function makeEvaluateExpression(evalInClosure: EvalInClosureFn) {
     ${expr}`);
 }
 
-function evaluateExpression(): (expr: string) => EvalResult {
+export function evaluateExpressionWrapper(): (expr: string) => EvalResult {
   return makeEvaluateExpression(
     (expr: string): EvalResult => {
       let newExpr = expr;
@@ -41,4 +41,4 @@ function evaluateExpression(): (expr: string) => EvalResult {
   );
 }
 
-export default evaluateExpression();
+export const evaluateExpression = evaluateExpressionWrapper();
