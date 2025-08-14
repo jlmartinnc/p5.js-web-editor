@@ -9,7 +9,7 @@ import {
 } from '../../utils/dispatcher';
 import { filesReducer, setFiles } from './filesReducer';
 import EmbedFrame from './EmbedFrame';
-import { getConfig } from '../../utils/getConfig';
+import { getConfig, isTestEnvironment } from '../../utils/getConfig';
 import { initialState } from '../IDE/reducers/files';
 
 const GlobalStyle = createGlobalStyle`
@@ -24,7 +24,10 @@ const App = () => {
   const [basePath, setBasePath] = useState('');
   const [textOutput, setTextOutput] = useState(false);
   const [gridOutput, setGridOutput] = useState(false);
-  registerFrame(window.parent, getConfig('EDITOR_URL'));
+  registerFrame(
+    window.parent,
+    getConfig('EDITOR_URL', { failOnNotFound: true })
+  );
 
   function handleMessageEvent(message) {
     const { type, payload } = message;

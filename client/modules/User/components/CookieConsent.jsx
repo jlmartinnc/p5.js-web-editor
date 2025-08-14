@@ -77,6 +77,8 @@ const CookieConsentButtons = styled.div`
   }
 `;
 
+const GOOGLE_ANALYTICS_ID = getConfig('GA_MEASUREMENT_ID');
+
 function CookieConsent({ hide }) {
   const user = useSelector((state) => state.user);
   const [cookieConsent, setBrowserCookieConsent] = useState('none');
@@ -133,15 +135,15 @@ function CookieConsent({ hide }) {
       initializeCookieConsent();
     }
 
-    if (getConfig('GA_MEASUREMENT_ID')) {
+    if (GOOGLE_ANALYTICS_ID) {
       if (p5CookieConsent === 'essential') {
-        ReactGA.initialize(getConfig('GA_MEASUREMENT_ID'), {
+        ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
           gaOptions: {
             storage: 'none'
           }
         });
       } else {
-        ReactGA.initialize(getConfig('GA_MEASUREMENT_ID'));
+        ReactGA.initialize(GOOGLE_ANALYTICS_ID);
       }
       ReactGA.pageview(window.location.pathname + window.location.search);
     }

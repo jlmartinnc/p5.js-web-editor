@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { getConfig } from './getConfig';
 
-const ROOT_URL = getConfig('API_URL', { nullishString: true });
+const ROOT_URL = getConfig('API_URL', { failOnNotFound: true });
 
 /**
  * Configures an Axios instance with the correct API URL

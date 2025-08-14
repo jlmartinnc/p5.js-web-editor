@@ -11,7 +11,7 @@ import MenuItem from '../../../components/Dropdown/MenuItem';
 import { formatDateToString } from '../../../utils/formatDate';
 import { getConfig } from '../../../utils/getConfig';
 
-const ROOT_URL = getConfig('API_URL', { nullishString: true });
+const ROOT_URL = getConfig('API_URL', { failOnNotFound: true });
 
 const formatDateCell = (date, mobile = false) =>
   formatDateToString(date, { showTime: !mobile });

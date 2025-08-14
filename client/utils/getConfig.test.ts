@@ -33,8 +33,12 @@ describe('utils/getConfig()', () => {
     });
 
     it('throws an error if failOnNotFound is true', () => {
+      process.env.NODE_ENV = 'not_test';
       expect(() =>
-        getConfig('CONFIG_TEST_KEY_NAME', { failOnNotFound: true })
+        getConfig('CONFIG_TEST_KEY_NAME', {
+          failOnNotFound: true,
+          failInTestEnv: true
+        })
       ).toThrow();
     });
 
@@ -62,7 +66,10 @@ describe('utils/getConfig()', () => {
 
     it('throws an error if failOnNotFound is true', () => {
       expect(() =>
-        getConfig('CONFIG_TEST_KEY_NAME', { failOnNotFound: true })
+        getConfig('CONFIG_TEST_KEY_NAME', {
+          failOnNotFound: true,
+          failInTestEnv: true
+        })
       ).toThrow();
     });
 

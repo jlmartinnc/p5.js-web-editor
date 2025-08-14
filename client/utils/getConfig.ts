@@ -13,14 +13,16 @@ interface GetConfigOptions {
   warn?: boolean;
   nullishString?: boolean;
   failOnNotFound?: boolean;
+  failInTestEnv?: boolean; // this is only to test getConfig and should never be set to override defaults
 }
 
-const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
+export const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
 
 const defaultGetConfigOptions: GetConfigOptions = {
   warn: !isTestEnvironment,
   nullishString: false,
-  failOnNotFound: false
+  failOnNotFound: false,
+  failInTestEnv: false
 };
 
 /**
@@ -43,7 +45,7 @@ export function getConfig(
   }
 
   // override default options with param options
-  const { warn, nullishString, failOnNotFound } = {
+  const { warn, nullishString, failOnNotFound, failInTestEnv } = {
     ...defaultGetConfigOptions,
     ...options
   };
@@ -56,7 +58,10 @@ export function getConfig(
     const notFoundMessage = `getConfig("${key}") returned null or undefined`;
 
     // error, warn or continue if no value found:
-    if (failOnNotFound) {
+    if (
+      (failOnNotFound && !isTestEnvironment) ||
+      (failOnNotFound && isTestEnvironment && failInTestEnv) // this is just to enable us to test getConfig's error throwing
+    ) {
       throw new Error(notFoundMessage);
     }
     if (warn) {
