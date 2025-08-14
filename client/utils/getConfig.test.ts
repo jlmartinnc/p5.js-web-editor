@@ -27,18 +27,55 @@ describe('utils/getConfig()', () => {
   });
 
   // check returns unhappy path
-  it('warns but does not throw if no value found', () => {
-    expect(() => getConfig('CONFIG_TEST_KEY_NAME')).not.toThrow();
+  describe('and when the key does not exist in the env file', () => {
+    it('warns but does not throw if failOnNotFound is false (default)', () => {
+      expect(() => getConfig('CONFIG_TEST_KEY_NAME')).not.toThrow();
+    });
+
+    it('throws an error if failOnNotFound is true', () => {
+      expect(() =>
+        getConfig('CONFIG_TEST_KEY_NAME', { failOnNotFound: true })
+      ).toThrow();
+    });
+
+    it('returns undefined by default', () => {
+      const result = getConfig('CONFIG_TEST_KEY_NAME');
+      expect(result).toBe(undefined);
+      expect(!result).toBe(true);
+      expect(`${result}`).toBe('undefined');
+    });
+
+    it('can be set to return an empty string as the nullish value', () => {
+      const result = getConfig('CONFIG_TEST_KEY_NAME', { nullishString: true });
+      expect(`${result}`).toBe('');
+    });
   });
 
-  it('returns the expected nullish value when no value is found', () => {
-    const result = getConfig('CONFIG_TEST_KEY_NAME');
-    expect(result).toBe(undefined);
-    expect(!result).toBe(true);
-    expect(`${result}`).toBe('undefined');
-  });
-  it('can be set to return an empty string as the nullish value', () => {
-    const result = getConfig('CONFIG_TEST_KEY_NAME', { nullishString: true });
-    expect(`${result}`).toBe('');
+  describe('and when the key exists in the env file but the value is empty', () => {
+    beforeEach(() => {
+      global.process.env.CONFIG_TEST_KEY_NAME = '';
+    });
+
+    it('warns but does not throw if failOnNotFound is false (default)', () => {
+      expect(() => getConfig('CONFIG_TEST_KEY_NAME')).not.toThrow();
+    });
+
+    it('throws an error if failOnNotFound is true', () => {
+      expect(() =>
+        getConfig('CONFIG_TEST_KEY_NAME', { failOnNotFound: true })
+      ).toThrow();
+    });
+
+    it('returns undefined by default', () => {
+      const result = getConfig('CONFIG_TEST_KEY_NAME');
+      expect(result).toBe(undefined);
+      expect(!result).toBe(true);
+      expect(`${result}`).toBe('undefined');
+    });
+
+    it('can be set to return an empty string as the nullish value', () => {
+      const result = getConfig('CONFIG_TEST_KEY_NAME', { nullishString: true });
+      expect(`${result}`).toBe('');
+    });
   });
 });

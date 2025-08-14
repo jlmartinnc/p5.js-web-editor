@@ -3,23 +3,33 @@
  * @returns String value of env variable or undefined if not found.
  */
 function getEnvVar(key: string): string | undefined {
-  const env: Record<string, string | undefined> =
-    (typeof global !== 'undefined' ? global : window)?.process?.env || {};
+  const configSource = global ?? window;
+  const env = configSource?.process?.env ?? {};
 
   return env[key];
 }
 
-type GetConfigOptions = {
+interface GetConfigOptions {
   warn?: boolean;
   nullishString?: boolean;
+  failOnNotFound?: boolean;
+}
+
+const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
+
+const defaultGetConfigOptions: GetConfigOptions = {
+  warn: !isTestEnvironment,
+  nullishString: false,
+  failOnNotFound: false
 };
 
 /**
  * Returns a string config value from environment variables.
- * Logs a warning if the value is missing and `warn` is not explicitly disabled.
+ * Logs a warning or throws an error if the value is missing, if `warn` and `failOnNotFound` are true in options
  *
  * @param key - The environment variable key to fetch.
  * @param options - Optional settings:
+ *   - `failOnNotFound`: whether to throw an error if the value is missing (default to `false`).
  *   - `warn`: whether to warn if the value is missing (default `true` unless in test env).
  *   - `nullishString`: if true, returns `''` instead of `undefined` when missing.
  * @returns String value of the env var, or `''` or `undefined` if missing.
@@ -31,15 +41,26 @@ export function getConfig(
   if (!key) {
     throw new Error('"key" must be provided to getConfig()');
   }
-  const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
 
-  const { warn = !isTestEnvironment, nullishString = false } = options;
+  // override default options with param options
+  const { warn, nullishString, failOnNotFound } = {
+    ...defaultGetConfigOptions,
+    ...options
+  };
 
   const value = getEnvVar(key);
 
-  if (value == null) {
+  // value == null when the key is not present in the env file
+  // value === '' when the key is present but is empty (eg. TEST_CONFIG_VALUE=)
+  if (value == null || value === '') {
+    const notFoundMessage = `getConfig("${key}") returned null or undefined`;
+
+    // error, warn or continue if no value found:
+    if (failOnNotFound) {
+      throw new Error(notFoundMessage);
+    }
     if (warn) {
-      console.warn(`getConfig("${key}") returned null or undefined`);
+      console.warn(notFoundMessage);
     }
     return nullishString ? '' : undefined;
   }
