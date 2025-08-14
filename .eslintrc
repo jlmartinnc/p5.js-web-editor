@@ -40,7 +40,7 @@
     "no-import-assign": 2,
     "no-promise-executor-return": 0, //temporarily off
     "no-restricted-exports": 1,
-    "no-underscore-dangle": 1,
+    "no-underscore-dangle": 0,
     "no-useless-catch": 2,
     "no-plusplus": "off",
     "prefer-object-spread": 0,
@@ -133,7 +133,9 @@
       "rules": {
         "no-use-before-define": "off",
         "import/no-extraneous-dependencies": "off",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "import/no-default-export": "warn",
+        "no-underscore-dangle": "warn",
       }
     },
     {
