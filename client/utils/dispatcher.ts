@@ -6,18 +6,17 @@ const frames: {
 } = {};
 let frameIndex = 1;
 
-/** Codesandbox dispatcher message types */
-export const MessageTypes = {
-  START: 'START',
-  STOP: 'STOP',
-  FILES: 'FILES',
-  SKETCH: 'SKETCH',
-  REGISTER: 'REGISTER',
-  EXECUTE: 'EXECUTE'
-} as const;
-
-/** Codesandbox dispatcher message types */
-export type MessageType = typeof MessageTypes[keyof typeof MessageTypes];
+/* eslint-disable no-shadow */
+/** Codesandbox dispatcher message types: */
+export enum MessageTypes {
+  START = 'START',
+  STOP = 'STOP',
+  FILES = 'FILES',
+  SKETCH = 'SKETCH',
+  REGISTER = 'REGISTER',
+  EXECUTE = 'EXECUTE'
+}
+/* eslint-enable no-shadow */
 
 /**
  * Codesandbox dispatcher message
@@ -25,7 +24,7 @@ export type MessageType = typeof MessageTypes[keyof typeof MessageTypes];
  *   - payload: additional data for that message type
  */
 export type Message = {
-  type: MessageType;
+  type: MessageTypes;
   payload?: any;
 };
 
