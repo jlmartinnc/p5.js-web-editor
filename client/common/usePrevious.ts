@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Used in Menubar to store the previous value of a number.
+ * Used in Menubar to store the previous value.
  * @param value - The current value to track.
  * @returns The previous value before the current render, or undefined if none.
  */
-export default function usePrevious(value: number): number | undefined {
-  const ref = useRef<number>();
+export default function usePrevious(value: unknown): unknown | undefined {
+  const ref = useRef<unknown>();
 
   useEffect(() => {
     ref.current = value;
