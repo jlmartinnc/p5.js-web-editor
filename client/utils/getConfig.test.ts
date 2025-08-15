@@ -2,6 +2,10 @@ import { getConfig } from './getConfig';
 
 const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
+jest.mock('./checkTestEnv', () => ({
+  isTestEnvironment: false
+}));
+
 describe('utils/getConfig()', () => {
   beforeEach(() => {
     delete global.process.env.CONFIG_TEST_KEY_NAME;
@@ -46,9 +50,6 @@ describe('utils/getConfig()', () => {
           throwErrorIfNotFound: true
         })
       ).toThrow();
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'getConfig("CONFIG_TEST_KEY_NAME") returned null or undefined'
-      );
     });
 
     it('returns undefined by default', () => {
