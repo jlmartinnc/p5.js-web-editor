@@ -15,14 +15,12 @@ interface GetConfigOptions {
   warn?: boolean;
   nullishString?: boolean;
   throwErrorIfNotFound?: boolean;
-  throwErrorInTestEnv?: boolean; // this is only to test getConfig and should never be set to override defaults
 }
 
 const defaultGetConfigOptions: GetConfigOptions = {
   warn: !isTestEnvironment,
   nullishString: false,
-  throwErrorIfNotFound: false,
-  throwErrorInTestEnv: false
+  throwErrorIfNotFound: false
 };
 
 /**
@@ -34,7 +32,6 @@ const defaultGetConfigOptions: GetConfigOptions = {
  *   - `throwErrorIfNotFound`: whether to throw an error if the value is missing (default to `false`).
  *   - `warn`: whether to warn if the value is missing (default `true` unless in test env).
  *   - `nullishString`: if true, returns `''` instead of `undefined` when missing.
- *   - `throwErrorInTestEnv`: this is to test getConfig and should not be overridden (default to `false`).
  * @returns String value of the env var, or `''` or `undefined` if missing.
  */
 export function getConfig(
@@ -46,7 +43,7 @@ export function getConfig(
   }
 
   // override default options with param options
-  const { warn, nullishString, throwErrorIfNotFound, throwErrorInTestEnv } = {
+  const { warn, nullishString, throwErrorIfNotFound } = {
     ...defaultGetConfigOptions,
     ...options
   };
@@ -59,10 +56,7 @@ export function getConfig(
     const notFoundMessage = `getConfig("${key}") returned null or undefined`;
 
     // error, warn or continue if no value found:
-    if (
-      (throwErrorIfNotFound && !isTestEnvironment) ||
-      (throwErrorIfNotFound && isTestEnvironment && throwErrorInTestEnv) // this is just to enable us to test getConfig's error throwing
-    ) {
+    if (throwErrorIfNotFound && !isTestEnvironment) {
       throw new Error(notFoundMessage);
     }
     if (warn) {

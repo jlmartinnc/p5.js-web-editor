@@ -1,9 +1,17 @@
 import { getConfig } from './getConfig';
 
+const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
 describe('utils/getConfig()', () => {
   beforeEach(() => {
     delete global.process.env.CONFIG_TEST_KEY_NAME;
     delete window.process.env.CONFIG_TEST_KEY_NAME;
+
+    consoleWarnSpy.mockClear();
+  });
+
+  afterAll(() => {
+    consoleWarnSpy.mockRestore();
   });
 
   // check for key
@@ -33,13 +41,14 @@ describe('utils/getConfig()', () => {
     });
 
     it('throws an error if throwErrorIfNotFound is true', () => {
-      process.env.NODE_ENV = 'not_test';
       expect(() =>
         getConfig('CONFIG_TEST_KEY_NAME', {
-          throwErrorIfNotFound: true,
-          throwErrorInTestEnv: true
+          throwErrorIfNotFound: true
         })
       ).toThrow();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'getConfig("CONFIG_TEST_KEY_NAME") returned null or undefined'
+      );
     });
 
     it('returns undefined by default', () => {
@@ -67,8 +76,7 @@ describe('utils/getConfig()', () => {
     it('throws an error if throwErrorIfNotFound is true', () => {
       expect(() =>
         getConfig('CONFIG_TEST_KEY_NAME', {
-          throwErrorIfNotFound: true,
-          throwErrorInTestEnv: true
+          throwErrorIfNotFound: true
         })
       ).toThrow();
     });
