@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -92,6 +92,7 @@ const Toolbar = (props) => {
       >
         <StopIcon focusable="false" aria-hidden="true" />
       </button>
+
       <div className="toolbar__autorefresh">
         <input
           id="autorefresh"
@@ -112,29 +113,31 @@ const Toolbar = (props) => {
 
       <div className="toolbar__project-name-container">
         <ProjectName />
-
-        {showVisibilityDropdown && (
-          <div className="toolbar__visibility">
-            <VisibilityDropdown
-              sketch={project}
-              onVisibilityChange={handleVisibilityChange}
-            />
-          </div>
-        )}
-
-        {project?.owner && !userIsOwner && (
-          <p className="toolbar__project-owner">
-            {t('Toolbar.By')}{' '}
-            <Link to={`/${project.owner.username}/sketches`}>
-              {project.owner.username}
-            </Link>
-          </p>
-        )}
-
-        <VersionIndicator />
       </div>
 
       <div style={{ flex: 1 }} />
+
+      {showVisibilityDropdown && (
+        <div className="toolbar__visibility">
+          <VisibilityDropdown
+            sketch={project}
+            onVisibilityChange={handleVisibilityChange}
+            location="toolbar"
+          />
+        </div>
+      )}
+
+      {/* Still show owner if not you */}
+      {project?.owner && !userIsOwner && (
+        <p className="toolbar__project-owner">
+          {t('Toolbar.By')}{' '}
+          <Link to={`/${project.owner.username}/sketches`}>
+            {project.owner.username}
+          </Link>
+        </p>
+      )}
+
+      <VersionIndicator />
 
       <button
         className={preferencesButtonClass}

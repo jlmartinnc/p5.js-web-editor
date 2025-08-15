@@ -2,10 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import LockIcon from '../../../images/lock.svg';
 import EarthIcon from '../../../images/earth.svg';
-import DownArrowIcon from '../../../images/down-filled-triangle.svg';
 import CheckmarkIcon from '../../../images/checkmark.svg';
 
-const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
+const VisibilityDropdown = ({ sketch, onVisibilityChange, location }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -56,7 +55,9 @@ const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
   return (
     <div className="visibility-dropdown" ref={dropdownRef}>
       <button
-        className="visibility-dropdown__trigger"
+        className={`visibility-dropdown__trigger ${
+          location === 'toolbar' ? 'visibility-dropdown__trigger-toolbar' : ''
+        }`}
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -64,7 +65,6 @@ const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
       >
         {currentVisibility.icon}
         <span className="visibility-label">{currentVisibility.label}</span>
-        <DownArrowIcon focusable="false" aria-hidden="true" />
       </button>
 
       {isOpen && (
@@ -87,7 +87,11 @@ const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
                   <CheckmarkIcon focusable="false" aria-hidden="true" />
                 )}
               </div>
-              <div className="visibility-option__description">
+              <div
+                className={`visibility-option__description ${
+                  option.value === sketch.visibility ? 'selected' : ''
+                }`}
+              >
                 {option.description}
               </div>
             </div>
@@ -98,13 +102,18 @@ const VisibilityDropdown = ({ sketch, onVisibilityChange }) => {
   );
 };
 
+VisibilityDropdown.defaultProps = {
+  location: 'sketchlist'
+};
+
 VisibilityDropdown.propTypes = {
   sketch: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     visibility: PropTypes.string.isRequired
   }).isRequired,
-  onVisibilityChange: PropTypes.func.isRequired
+  onVisibilityChange: PropTypes.func.isRequired,
+  location: PropTypes.string
 };
 
 export default VisibilityDropdown;

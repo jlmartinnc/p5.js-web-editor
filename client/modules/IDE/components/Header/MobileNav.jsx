@@ -35,7 +35,6 @@ import { setLanguage } from '../../actions/preferences';
 import Overlay from '../../../App/components/Overlay';
 import ProjectName from './ProjectName';
 import CollectionCreate from '../../../User/components/CollectionCreate';
-import { changeVisibility } from '../../actions/project';
 
 const Nav = styled(Menubar)`
   background: ${prop('MobilePanel.default.background')};
@@ -220,7 +219,6 @@ const MobileMenuItem = ({ children, ...props }) => (
 const MobileNav = () => {
   const project = useSelector((state) => state.project);
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
 
   const { t } = useTranslation();
 
@@ -251,20 +249,6 @@ const MobileNav = () => {
 
   const showOwner = project?.owner && title === project.name && !userIsOwner;
 
-  const toggleVisibility = (e) => {
-    try {
-      const isChecked = e.target.checked;
-      dispatch(
-        changeVisibility(
-          project.id,
-          project.name,
-          isChecked ? 'Private' : 'Public'
-        )
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <Nav>
       <LogoContainer>
