@@ -1,14 +1,14 @@
 import { getPreferredLanguage } from './language-utils';
 
 describe('getPreferredLanguage', () => {
-  const originalNavigator = global.navigator;
+  const originalNavigator = window.navigator;
 
   afterEach(() => {
-    global.navigator = originalNavigator;
+    window.navigator = originalNavigator;
   });
 
   const mockNavigator = (language: string, languages: string[] = []) => {
-    global.navigator = {
+    window.navigator = {
       ...originalNavigator,
       language,
       languages
@@ -17,15 +17,15 @@ describe('getPreferredLanguage', () => {
 
   describe('when navigator is undefined', () => {
     it('returns the default language', () => {
-      const oldNavigator = global.navigator;
+      const oldNavigator = window.navigator;
 
       // @ts-expect-error TS2790: The operand of a 'delete' operator must be optional
-      delete global.navigator;
+      delete window.navigator;
 
       const result = getPreferredLanguage(['en', 'fr'], 'en');
       expect(result).toBe('en');
 
-      global.navigator = oldNavigator;
+      window.navigator = oldNavigator;
     });
   });
 

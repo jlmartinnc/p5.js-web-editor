@@ -6,7 +6,9 @@ export function getPreferredLanguage(
   supportedLanguages: string[] = [],
   defaultLanguage: string = 'en'
 ): string | undefined {
-  if (typeof navigator === 'undefined') {
+  const { navigator } = window;
+
+  if (!navigator) {
     return defaultLanguage;
   }
 
