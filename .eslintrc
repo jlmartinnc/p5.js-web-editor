@@ -133,7 +133,9 @@
         "no-use-before-define": "off",
         "import/no-extraneous-dependencies": "off",
         "no-unused-vars": "off",
-        "react/require-default-props": "off"
+        "react/require-default-props": "off",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     },
     {
