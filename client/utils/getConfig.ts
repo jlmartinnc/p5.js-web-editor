@@ -1,8 +1,10 @@
+import { isTestEnvironment } from './checkTestEnv';
+
 /**
- * Internal function to retrieve env vars, with no error handling.
+ * Function to retrieve env vars, with no error handling.
  * @returns String value of env variable or undefined if not found.
  */
-function getEnvVar(key: string): string | undefined {
+export function getEnvVar(key: string): string | undefined {
   const configSource = global ?? window;
   const env = configSource?.process?.env ?? {};
 
@@ -15,8 +17,6 @@ interface GetConfigOptions {
   throwErrorIfNotFound?: boolean;
   throwErrorInTestEnv?: boolean; // this is only to test getConfig and should never be set to override defaults
 }
-
-export const isTestEnvironment = getEnvVar('NODE_ENV') === 'test';
 
 const defaultGetConfigOptions: GetConfigOptions = {
   warn: !isTestEnvironment,

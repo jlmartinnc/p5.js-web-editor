@@ -1,3 +1,4 @@
+import { isTestEnvironment } from './checkTestEnv';
 /* eslint-disable consistent-return */
 /**
  * Parses a string into a number.
@@ -9,7 +10,9 @@ export function parseNumber(
   nullishNumber = false
 ): number | undefined {
   if (!str) {
-    console.warn(`parseNumber: got nullish input`);
+    if (!isTestEnvironment) {
+      console.warn(`parseNumber: got nullish input`);
+    }
     return nullishNumber ? 0 : undefined;
   }
 
@@ -32,7 +35,9 @@ export function parseBoolean(
   nullishBool = false
 ): boolean | undefined {
   if (!str) {
-    console.warn('parseBoolean: got nullish input');
+    if (!isTestEnvironment) {
+      console.warn('parseBoolean: got nullish input');
+    }
     return nullishBool ? false : undefined;
   }
 

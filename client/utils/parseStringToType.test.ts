@@ -1,5 +1,9 @@
 import { parseNumber, parseBoolean } from './parseStringToType';
 
+jest.mock('./checkTestEnv', () => ({
+  isTestEnvironment: false
+}));
+
 describe('parseNumber', () => {
   beforeEach(() => {
     jest.spyOn(console, 'warn').mockImplementation(() => {});

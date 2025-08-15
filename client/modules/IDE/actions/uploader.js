@@ -1,6 +1,7 @@
 import { TEXT_FILE_REGEX } from '../../../../server/utils/fileUtils';
 import { apiClient } from '../../../utils/apiClient';
-import { getConfig, isTestEnvironment } from '../../../utils/getConfig';
+import { getConfig } from '../../../utils/getConfig';
+import { isTestEnvironment } from '../../../utils/checkTestEnv';
 import { handleCreateFile } from './files';
 
 const s3BucketUrlBase = getConfig('S3_BUCKET_URL_BASE');
