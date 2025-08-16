@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 /**
  * Accepts all the props of an HTML <a> or <button> tag.
  */
-export type ButtonOrLinkProps = {
+export interface ButtonOrLinkProps {
   /**
    * Can be internal or external ('http'- or 'https'-).
    */
@@ -18,7 +18,7 @@ export type ButtonOrLinkProps = {
   onClick?: (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
   ) => void;
-};
+}
 
 export type Ref = HTMLAnchorElement | HTMLButtonElement;
 
