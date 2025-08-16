@@ -15,7 +15,7 @@ export type IconButtonProps = Omit<
   ButtonProps,
   'iconBefore' | 'display' | 'focusable'
 > & {
-  icon?: ComponentType<{ 'aria-label'?: string }> | null;
+  icon?: ComponentType<{ 'aria-label'?: string }>;
 };
 
 const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
