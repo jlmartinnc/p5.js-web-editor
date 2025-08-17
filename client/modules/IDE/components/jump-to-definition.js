@@ -1,7 +1,7 @@
 /* eslint-disable */
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import * as parser from '@babel/parser';
-import { getAST, getContext } from './rename-variable';
+import { getContext, getAST } from '../utils/renameVariableHelper';
 import { selectFiles } from '../selectors/files';
 import { setSelectedFile } from '../actions/ide';
 import announceToScreenReader from '../utils/ScreenReaderHelper';

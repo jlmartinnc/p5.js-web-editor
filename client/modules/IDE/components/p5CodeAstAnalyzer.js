@@ -79,7 +79,10 @@ function _p5CodeAstAnalyzer(_cm) {
         const className = node.id.name;
         const classInfo = {
           const: new Set(),
-          methods: []
+          fields: new Set(),
+          methods: [],
+          constructor_params: [],
+          methodVars: {}
         };
 
         node.body.body.forEach((element) => {
@@ -87,36 +90,110 @@ function _p5CodeAstAnalyzer(_cm) {
             const methodName = element.key.name;
 
             if (element.kind === 'constructor') {
-              element.body.body.forEach((stmt) => {
-                if (
-                  stmt.type === 'ExpressionStatement' &&
-                  stmt.expression.type === 'AssignmentExpression'
+              // constructor params
+              element.params.forEach((param) => {
+                if (param.type === 'Identifier') {
+                  classInfo.constructor_params.push(param.name);
+                } else if (
+                  param.type === 'AssignmentPattern' &&
+                  param.left.type === 'Identifier'
                 ) {
-                  const expr = stmt.expression;
+                  classInfo.constructor_params.push(param.left.name);
+                } else if (param.type === 'ObjectPattern') {
+                  param.properties.forEach((prop) => {
+                    if (prop.key && prop.key.type === 'Identifier') {
+                      classInfo.constructor_params.push(prop.key.name);
+                    }
+                  });
+                } else if (param.type === 'ArrayPattern') {
+                  param.elements.forEach((el) => {
+                    if (el && el.type === 'Identifier') {
+                      classInfo.constructor_params.push(el.name);
+                    }
+                  });
+                }
+              });
+
+              // collect constructor locals
+              traverse(
+                element,
+                {
+                  VariableDeclaration(innerPath) {
+                    innerPath.node.declarations.forEach((decl) => {
+                      if (decl.id.type === 'Identifier') {
+                        classInfo.const.add(decl.id.name);
+                      }
+                    });
+                  }
+                },
+                path.scope,
+                path
+              );
+            } else {
+              classInfo.methods.push(methodName);
+
+              // collect local vars inside method
+              const localVars = [];
+              element.body.body.forEach((stmt) => {
+                if (stmt.type === 'VariableDeclaration') {
+                  stmt.declarations.forEach((decl) => {
+                    if (decl.id.type === 'Identifier') {
+                      localVars.push(decl.id.name);
+                    }
+                  });
+                }
+              });
+
+              classInfo.methodVars[methodName] = localVars;
+            }
+
+            // ✅ Collect this.* assignments and this.* calls in *all* methods (incl constructor)
+            traverse(
+              element,
+              {
+                AssignmentExpression(innerPath) {
+                  const expr = innerPath.node;
                   if (
                     expr.left.type === 'MemberExpression' &&
                     expr.left.object.type === 'ThisExpression' &&
                     expr.left.property.type === 'Identifier'
                   ) {
                     const propName = expr.left.property.name;
-                    classInfo.const.add(propName);
+                    classInfo.fields.add(propName);
+                  }
+                },
+
+                CallExpression(innerPath) {
+                  const callee = innerPath.node.callee;
+                  if (
+                    callee.type === 'MemberExpression' &&
+                    callee.object.type === 'ThisExpression' &&
+                    callee.property.type === 'Identifier'
+                  ) {
+                    const methodName = callee.property.name;
+                    classInfo.fields.add(methodName);
                   }
                 }
-              });
-            } else {
-              classInfo.methods.push(methodName);
-            }
+              },
+              path.scope,
+              path
+            );
           }
         });
 
         userDefinedClassMetadata[className] = {
           const: Array.from(classInfo.const),
+          fields: Array.from(classInfo.fields),
           methods: classInfo.methods,
-          initializer: ''
+          constructor_params: classInfo.constructor_params,
+          initializer: '',
+          methodVars: classInfo.methodVars
         };
       }
-    },
+    }
+  });
 
+  traverse(ast, {
     AssignmentExpression(path) {
       const node = path.node;
       if (
@@ -127,7 +204,6 @@ function _p5CodeAstAnalyzer(_cm) {
       ) {
         const varName = node.left.name;
         const fnName = node.right.callee.name;
-
         const cls = functionToClass[fnName];
         const userCls = userDefinedClassMetadata[fnName];
         if (userCls) {
@@ -211,6 +287,7 @@ function _p5CodeAstAnalyzer(_cm) {
   };
 
   lastValidResult = result;
+  console.log(result);
   return result;
 }
 
