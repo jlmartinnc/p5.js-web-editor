@@ -3,31 +3,28 @@ import styled from 'styled-components';
 import { Link, LinkProps } from 'react-router-dom';
 import { remSize, prop } from '../theme';
 
-const kinds = {
-  primary: 'primary',
-  secondary: 'secondary'
-} as const;
+enum Kinds {
+  primary = 'primary',
+  secondary = 'secondary'
+}
 
-const displays = {
-  block: 'block',
-  inline: 'inline'
-} as const;
+enum Displays {
+  block = 'block',
+  inline = 'inline'
+}
 
-const buttonTypes = {
-  button: 'button',
-  submit: 'submit'
-} as const;
-
-type Kind = keyof typeof kinds;
-type Display = keyof typeof displays;
-type ButtonType = keyof typeof buttonTypes;
+enum ButtonTypes {
+  button = 'button',
+  submit = 'submit'
+}
 
 type StyledButtonProps = {
-  kind: Kind;
-  display: Display;
-};
+  kind: ButtonTypes;
+  display: Displays;
+  type?: ButtonTypes;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-type SharedButtonProps = {
+interface SharedButtonProps {
   /**
    * The visible part of the button, telling the user what
    * the action is
@@ -40,7 +37,7 @@ type SharedButtonProps = {
   /**
    * The display type of the button—inline or block
    */
-  display?: Display;
+  display?: Displays;
   /**
    * SVG icon to place after child content
    */
@@ -56,29 +53,29 @@ type SharedButtonProps = {
   /**
    * The kind of button - determines how it appears visually
    */
-  kind?: Kind;
+  kind?: Kinds;
   /**
    * Specifying an href will use an <a> to link to the URL
    */
-  href?: string | null;
+  href?: string;
   /**
    * An ARIA Label used for accessibility
    */
-  'aria-label'?: string | null;
+  'aria-label'?: string;
   /**
    * Specifying a to URL will use a react-router Link
    */
-  to?: string | null;
+  to?: string;
   /**
    * If using a button, then type is defines the type of button
    */
-  type?: ButtonType;
+  type?: ButtonTypes;
   /**
    * Allows for IconButton to pass `focusable="false"` as a prop for SVGs.
    * See @types/react > interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T>
    */
   focusable?: boolean | 'true' | 'false';
-};
+}
 
 export type ButtonProps = SharedButtonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> &
@@ -92,7 +89,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   &&& {
     font-weight: bold;
     display: ${({ display }) =>
-      display === displays.inline ? 'inline-flex' : 'flex'};
+      display === Displays.inline ? 'inline-flex' : 'flex'};
     justify-content: center;
     align-items: center;
 
@@ -183,15 +180,15 @@ const StyledInlineButton = styled.button`
  */
 const Button = ({
   children = null,
-  display = displays.block,
+  display = Displays.block,
   href,
-  kind = kinds.primary,
+  kind = Kinds.primary,
   iconBefore = null,
   iconAfter = null,
   iconOnly = false,
   'aria-label': ariaLabel,
   to,
-  type = buttonTypes.button,
+  type = ButtonTypes.button,
   ...props
 }: ButtonProps) => {
   const hasChildren = React.Children.count(children) > 0;
@@ -249,7 +246,7 @@ const Button = ({
   );
 };
 
-Button.kinds = kinds;
-Button.displays = displays;
+Button.kinds = Kinds;
+Button.displays = Displays;
 
 export default Button;
