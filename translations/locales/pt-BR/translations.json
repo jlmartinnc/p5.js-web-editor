@@ -42,8 +42,8 @@
       "My": "Meu",
       "MySketches": "Meus Esboços",
       "MyCollections": "Minhas Coleções",
-      "Asset": "Recursos",
-      "MyAssets": "Meus Recursos",
+      "Asset": "Ativo",
+      "MyAssets": "Meus Ativos",
       "LogOut": "Sair"
     }
   },
@@ -245,7 +245,7 @@
       "ReplaceTextMatch": "Substituir texto encontrado",
       "IndentCodeLeft": "Indentar código à esquerda",
       "IndentCodeRight": "Indentar código à direita",
-      "CommentLine": "Comentar linha",
+      "CommentLine": "Comentar linhas",
       "FindNextTextMatch": "Localizar próxima ocorrência de texto",
       "FindPreviousTextMatch": "Localizar ocorrência de texto anterior",
       "CodeEditing": "Edição de código",
@@ -434,11 +434,11 @@
     "InvalidState": "O token é inválido ou expirou."
   },
   "AssetList": {
-    "Title": "Editor Web p5.js | Meus recursos",
-    "ToggleOpenCloseARIA": "Alternar entre abrir/fechar opções de recursos",
+    "Title": "Editor Web p5.js | Meus ativos",
+    "ToggleOpenCloseARIA": "Alternar entre abrir/fechar opções de ativos",
     "Delete": "Remover",
     "OpenNewTab": "Abrir em nova aba",
-    "NoUploadedAssets": " Nenhum recurso foi carregado.",
+    "NoUploadedAssets": " Nenhum ativo foi carregado.",
     "HeaderName": "Nome",
     "HeaderSize": "Tamanho",
     "HeaderSketch": "Esboço"
@@ -534,7 +534,7 @@
   "DashboardTabSwitcher": {
     "Sketches": "Esboços",
     "Collections": "Coleções",
-    "Assets": "Recursos"
+    "Assets": "Ativos"
   },
   "CollectionList": {
     "Title": "Editor Web p5.js | Minhas coleções",
@@ -655,7 +655,7 @@
     "Examples": "Exemplos",
     "Sketches": "Esboços",
     "Collections": "Coleções",
-    "Assets": "Recursos",
+    "Assets": "Ativos",
     "MyStuff": "Minhas coisas",
     "CreateSketch": "Criar esboço",
     "CreateCollection": "Criar coleção"
