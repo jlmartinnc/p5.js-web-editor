@@ -302,7 +302,7 @@
   },
   "NewFileModal": {
     "Title": "Criar Arquivos",
-    "CloseButtonARIA": "Fechar Módulo de Criação de Arquivos",
+    "CloseButtonARIA": "Fechar módulo de criação de arquivos",
     "EnterName": "Por favor coloque um nome",
     "InvalidType": "Tipo de arquivo invalido. Extensões válidas são .js, .css, .json, .xml, .txt, .csv, .tsv, .frag, and .vert."
   },
@@ -312,7 +312,7 @@
   },
   "NewFolderModal": {
     "Title": "Criar",
-    "CloseButtonARIA": "Fechar Módulo de Criação de Pasta",
+    "CloseButtonARIA": "Fechar módulo de criação de pasta",
     "EnterName": "Por favor coloque um nome",
     "EmptyName": "Nomes de pastas não podem conter apenas espaços",
     "InvalidExtension": "Nomes de pastas não podem conter extensões"
@@ -341,11 +341,11 @@
     "errorEmptyPassword": "Por favor coloque sua senha",
     "errorShortPassword": "Senha deve ter no mínimo 6 caracteres",
     "errorConfirmPassword": "Por favor coloque a senha de confirmação",
-    "errorNewPassword": "Por favor, adicione uma senha nova ou deixe a atual em branco.",
-    "errorNewPasswordRepeat": "Your New Password must differ from the current one.",
+    "errorNewPassword": "Por favor adicione uma senha nova ou deixe a atual em branco.",
+    "errorNewPasswordRepeat": "Sua nova senha precisa ser distinta da senha atual.",
     "errorEmptyUsername": "Por favor coloque um nome de usuário",
     "errorLongUsername": "Nome de usuário deve ter menos de 20 caracteres.",
-    "errorValidUsername": "Nome de usuário pode apenas consistir de números, letras, pontos, Hífens e linha sublinhada.",
+    "errorValidUsername": "Nome de usuário deve conter apenas números, letras, pontos, hífens e underscores.",
     "errorEmptyEmailorUserName": "Por favor insira um email ou nome de usuário"
   },
   "NewPasswordView": {
