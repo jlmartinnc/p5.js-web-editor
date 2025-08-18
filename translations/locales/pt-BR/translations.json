@@ -96,7 +96,6 @@
     "NewP5": "Novo ao p5.js?",
     "Report": "Reporte um erro",
     "Learn": "Aprender",
-    "Twitter": "Twitter",
     "Home": "Página Inicial",
     "Instagram": "Instagram",
     "Discord": "Discord",
@@ -368,7 +367,6 @@
     "CurrentPasswordARIA": "Senha atual",
     "NewPassword": "Nova senha",
     "NewPasswordARIA": "Nova senha",
-    "SubmitSaveAllSettings": "Salvar todas as configurações",
     "SaveAccountDetails": "Salvar detalhes da conta"
   },
   "AccountView": {
