@@ -17,7 +17,6 @@ Object.entries(classMap).forEach(([className, classData]) => {
   });
 });
 
-// Cache to store last valid result
 let lastValidResult = {
   variableToP5ClassMap: {},
   scopeToDeclaredVarsMap: {},
@@ -90,7 +89,6 @@ function _p5CodeAstAnalyzer(_cm) {
             const methodName = element.key.name;
 
             if (element.kind === 'constructor') {
-              // constructor params
               element.params.forEach((param) => {
                 if (param.type === 'Identifier') {
                   classInfo.constructor_params.push(param.name);
@@ -114,7 +112,6 @@ function _p5CodeAstAnalyzer(_cm) {
                 }
               });
 
-              // collect constructor locals
               traverse(
                 element,
                 {
@@ -132,7 +129,6 @@ function _p5CodeAstAnalyzer(_cm) {
             } else {
               classInfo.methods.push(methodName);
 
-              // collect local vars inside method
               const localVars = [];
               element.body.body.forEach((stmt) => {
                 if (stmt.type === 'VariableDeclaration') {
@@ -147,7 +143,6 @@ function _p5CodeAstAnalyzer(_cm) {
               classInfo.methodVars[methodName] = localVars;
             }
 
-            // ✅ Collect this.* assignments and this.* calls in *all* methods (incl constructor)
             traverse(
               element,
               {
@@ -258,7 +253,6 @@ function _p5CodeAstAnalyzer(_cm) {
             })
             .filter(Boolean);
 
-          // Store function metadata for hinting
           userDefinedFunctionMetadata[fnName] = {
             text: fnName,
             type: 'fun',
@@ -287,11 +281,9 @@ function _p5CodeAstAnalyzer(_cm) {
   };
 
   lastValidResult = result;
-  console.log(result);
   return result;
 }
 
-// Export a debounced version
 export default debounce(_p5CodeAstAnalyzer, 200, {
   leading: true,
   trailing: true,

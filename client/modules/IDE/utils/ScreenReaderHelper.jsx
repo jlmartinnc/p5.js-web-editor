@@ -5,7 +5,6 @@ export default function announceToScreenReader(message, assertive = false) {
   // liveRegion.setAttribute('aria-live', assertive ? 'assertive' : 'polite');
   liveRegion.setAttribute('aria-live', 'assertive');
 
-  // Clear first to ensure repeated messages are read
   liveRegion.textContent = '';
   setTimeout(() => {
     liveRegion.textContent = message;

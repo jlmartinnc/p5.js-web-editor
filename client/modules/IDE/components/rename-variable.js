@@ -30,8 +30,11 @@ export function handleRename(fromPos, oldName, newName, cm) {
 function startRenaming(cm, ast, fromPos, newName, oldName) {
   const code = cm.getValue();
   const fromIndex = cm.indexFromPos(fromPos);
-  const { scopeToDeclaredVarsMap = {}, userDefinedClassMetadata = {} } =
-    p5CodeAstAnalyzer(cm) || {};
+  const {
+    scopeToDeclaredVarsMap = {},
+    userDefinedClassMetadata = {},
+    userDefinedFunctionMetadata = {}
+  } = p5CodeAstAnalyzer(cm) || {};
 
   const baseContext = getContext(
     cm,
@@ -40,22 +43,18 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
     scopeToDeclaredVarsMap,
     userDefinedClassMetadata
   );
+
   const isInsideClassContext = baseContext in userDefinedClassMetadata;
-
-  const bc = getClassContext(cm, ast, fromPos);
-
+  const baseClassContext = getClassContext(cm, ast, fromPos);
   const isBaseThis = isThisReference(cm, ast, fromPos, oldName);
   const isGlobal = isGlobalReference(
     oldName,
     baseContext,
     scopeToDeclaredVarsMap,
     userDefinedClassMetadata,
-    bc,
+    baseClassContext,
     isBaseThis
   );
-
-  console.log('Clicked identifier isThisReference? →', isBaseThis);
-  console.log(fromPos, isGlobal, 'iscc=', isInsideClassContext);
 
   const replacements = [];
 
@@ -77,11 +76,8 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           parent.type === 'ArrowFunctionExpression') &&
         parent.params.some((p) => p.type === 'Identifier' && p.name === oldName)
       ) {
-        // If the node *is* one of the parameters being declared, allow renaming
         if (parent.params.includes(node)) {
-          // parameter declaration → mark for renaming
         } else {
-          // usage inside param list → skip
           return;
         }
       }
@@ -109,7 +105,6 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       const isThis = isThisReference(cm, ast, pos, oldName);
 
       if (isInsideClassContext) {
-        // Case: inside a class
         const classContext = getClassContext(cm, ast, fromPos);
         let baseMethodName = null;
         if (classContext && classContext.includes('.')) {
@@ -130,21 +125,15 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           }
         }
 
-        // 1. Constructor parameter renaming
-        console.log(baseMethodName, isThis, isBaseThis);
         if (
           baseMethodName === 'constructor' &&
           classMeta.constructor_params.includes(oldName) &&
           isThis === isBaseThis &&
           baseContext === thisContext
         ) {
-          // Only rename inside the constructor body
-          console.log(pos, 'constructor=', thisContext, baseContext);
-
           for (const [methodName, vars] of Object.entries(
             classMeta.methodVars || {}
           )) {
-            // console.log(pos, !vars.includes(oldName), thisContext, methodName);
             if (!vars.includes(oldName) && thisContext === methodName) {
               shouldRenameMethodVar = true;
             }
@@ -152,9 +141,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           shouldRename =
             thisContext === baseContext &&
             (currentMethodName == 'constructor' || shouldRenameGlobalVar);
-        }
-        // 2. Local variable inside a method (methodVars)
-        else {
+        } else {
           for (const [methodName, vars] of Object.entries(
             classMeta.methodVars || {}
           )) {
@@ -192,6 +179,24 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           !isInBaseScope && thisScopeVars.hasOwnProperty(oldName);
         const isDeclaredInBaseScope = baseScopeVars.hasOwnProperty(oldName);
         const isDeclaredGlobally = globalScopeVars.hasOwnProperty(oldName);
+        const isThisGlobal = isGlobalReference(
+          oldName,
+          thisContext,
+          scopeToDeclaredVarsMap,
+          userDefinedClassMetadata,
+          baseClassContext,
+          isBaseThis
+        );
+
+        if (
+          isThisGlobal &&
+          thisContext in userDefinedFunctionMetadata &&
+          userDefinedFunctionMetadata[thisContext].params.some(
+            (param) => param.p === oldName
+          )
+        ) {
+          return;
+        }
 
         const methodPath = path.findParent((p) => p.isClassMethod());
         let currentMethodName = null;
@@ -206,7 +211,6 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           }
         }
 
-        // ✅ NEW: If we're in a class constructor and "oldName" is a parameter, skip
         if (
           thisContext in userDefinedClassMetadata &&
           currentMethodName === 'constructor' &&
@@ -214,7 +218,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
             oldName
           )
         ) {
-          return; //don’t rename constructor param or its usages
+          return;
         }
 
         if (

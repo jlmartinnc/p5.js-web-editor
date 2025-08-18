@@ -227,7 +227,9 @@ class Editor extends React.Component {
     }
 
     this._cm.on('keydown', (_cm, e) => {
-      // Show hint
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+        return;
+      }
       const mode = this._cm.getOption('mode');
       if (/^[a-z]$/i.test(e.key) && (mode === 'css' || mode === 'javascript')) {
         this.showHint(_cm);
