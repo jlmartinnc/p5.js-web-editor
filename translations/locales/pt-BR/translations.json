@@ -36,7 +36,7 @@
     "LoginOr": "ou",
     "SignUp": "Registrar-se",
     "Auth": {
-      "Welcome": "Bem-vindo",
+      "Welcome": "Bem-vindo(a)",
       "Hello": "Olá",
       "MyAccount": "Minha Conta",
       "My": "Meu",
@@ -505,7 +505,7 @@
     "TableSummary": "tabela contendo todas as coleções",
     "HeaderName": "Nome",
     "HeaderCreatedAt": "Data adicionada",
-    "HeaderUser": "Dono",
+    "HeaderUser": "Dono(a)",
     "DirectionAscendingARIA": "Ascendente",
     "DirectionDescendingARIA": "Descendente",
     "ButtonLabelAscendingARIA": "Ordenar por {{displayName}} ascendente.",
