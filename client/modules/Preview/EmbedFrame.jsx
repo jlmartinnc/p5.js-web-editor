@@ -245,9 +245,7 @@ p5.prototype.registerMethod('afterSetup', p5.prototype.ensureAccessibleCanvas);`
     window.offs = ${JSON.stringify(scriptOffs)};
     window.objectUrls = ${JSON.stringify(objectUrls)};
     window.objectPaths = ${JSON.stringify(objectPaths)};
-    window.editorOrigin = '${getConfig('EDITOR_URL', {
-      throwErrorIfNotFound: true
-    })}';
+    window.editorOrigin = '${getConfig('EDITOR_URL')}';
   `;
   addLoopProtect(sketchDoc);
   sketchDoc.head.prepend(consoleErrorsScript);

@@ -24,10 +24,7 @@ const App = () => {
   const [basePath, setBasePath] = useState('');
   const [textOutput, setTextOutput] = useState(false);
   const [gridOutput, setGridOutput] = useState(false);
-  registerFrame(
-    window.parent,
-    getConfig('EDITOR_URL', { throwErrorIfNotFound: true })
-  );
+  registerFrame(window.parent, getConfig('EDITOR_URL'));
 
   function handleMessageEvent(message) {
     const { type, payload } = message;
