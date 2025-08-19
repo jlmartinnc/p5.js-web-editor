@@ -14,22 +14,19 @@ export function getEnvVar(key: string): string | undefined {
 interface GetConfigOptions {
   warn?: boolean;
   nullishString?: boolean;
-  throwErrorIfNotFound?: boolean;
 }
 
 const DEFAULT_GET_CONFIG_OPTIONS: GetConfigOptions = {
   warn: !isTestEnvironment,
-  nullishString: false,
-  throwErrorIfNotFound: false
+  nullishString: false
 };
 
 /**
  * Returns a string config value from environment variables.
- * Logs a warning or throws an error if the value is missing, if `warn` and `throwErrorIfNotFound` are true in options
+ * Logs a warning if the value is missing, if `warn` is true in options
  *
  * @param key - The environment variable key to fetch.
  * @param options - Optional settings:
- *   - `throwErrorIfNotFound`: whether to throw an error if the value is missing (default to `false`).
  *   - `warn`: whether to warn if the value is missing (default `true` unless in test env).
  *   - `nullishString`: if true, returns `''` instead of `undefined` when missing.
  * @returns String value of the env var, or `''` or `undefined` if missing.
@@ -43,7 +40,7 @@ export function getConfig(
   }
 
   // override default options with param options
-  const { warn, nullishString, throwErrorIfNotFound } = {
+  const { warn, nullishString } = {
     ...DEFAULT_GET_CONFIG_OPTIONS,
     ...options
   };
@@ -55,10 +52,7 @@ export function getConfig(
   if (value == null || value === '') {
     const notFoundMessage = `getConfig("${key}") returned null or undefined`;
 
-    // error, warn or continue if no value found:
-    if (throwErrorIfNotFound && !isTestEnvironment) {
-      throw new Error(notFoundMessage);
-    }
+    // warn or continue if no value found:
     if (warn) {
       console.warn(notFoundMessage);
     }

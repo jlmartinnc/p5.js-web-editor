@@ -40,16 +40,8 @@ describe('utils/getConfig()', () => {
 
   // check returns unhappy path
   describe('and when the key does not exist in the env file', () => {
-    it('warns but does not throw if throwErrorIfNotFound is false (default)', () => {
+    it('warns but does not throw', () => {
       expect(() => getConfig('CONFIG_TEST_KEY_NAME')).not.toThrow();
-    });
-
-    it('throws an error if throwErrorIfNotFound is true', () => {
-      expect(() =>
-        getConfig('CONFIG_TEST_KEY_NAME', {
-          throwErrorIfNotFound: true
-        })
-      ).toThrow();
     });
 
     it('returns undefined by default', () => {
@@ -70,16 +62,8 @@ describe('utils/getConfig()', () => {
       global.process.env.CONFIG_TEST_KEY_NAME = '';
     });
 
-    it('warns but does not throw if throwErrorIfNotFound is false (default)', () => {
+    it('warns but does not throw', () => {
       expect(() => getConfig('CONFIG_TEST_KEY_NAME')).not.toThrow();
-    });
-
-    it('throws an error if throwErrorIfNotFound is true', () => {
-      expect(() =>
-        getConfig('CONFIG_TEST_KEY_NAME', {
-          throwErrorIfNotFound: true
-        })
-      ).toThrow();
     });
 
     it('returns undefined by default', () => {
