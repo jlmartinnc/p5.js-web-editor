@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import useModalClose from './useModalClose';
+import { useModalClose } from './useModalClose';
 import useKeyDownHandlers from './useKeyDownHandlers';
 
 jest.mock('./useKeyDownHandlers');

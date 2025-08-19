@@ -18,7 +18,7 @@ import useKeyDownHandlers from './useKeyDownHandlers';
  * @param passedRef - Optional ref to the modal element. If not provided, one is created internally.
  * @returns A ref to be attached to the modal DOM element
  */
-export default function useModalClose(
+export function useModalClose(
   onClose: () => void,
   passedRef?: MutableRefObject<HTMLElement | null>
 ): MutableRefObject<HTMLElement | null> {

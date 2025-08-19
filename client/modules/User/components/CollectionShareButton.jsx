@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '../../../common/Button';
 import { DropdownArrowIcon } from '../../../common/icons';
-import useModalClose from '../../../common/useModalClose';
+import { useModalClose } from '../../../common/useModalClose';
 import CopyableInput from '../../IDE/components/CopyableInput';
 
 const ShareURL = ({ value }) => {
