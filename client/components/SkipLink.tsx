@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-type SkipLinkProps = {
+interface SkipLinkProps {
   targetId: string;
   text: string;
-};
+}
 
 const SkipLink = ({ targetId, text }: SkipLinkProps) => {
   const [focus, setFocus] = useState(false);
