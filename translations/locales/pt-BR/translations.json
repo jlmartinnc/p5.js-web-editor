@@ -37,7 +37,6 @@
     "Auth": {
       "Hello": "Olá",
       "MyAccount": "Minha Conta",
-      "My": "Meu",
       "MySketches": "Meus Esboços",
       "MyCollections": "Minhas Coleções",
       "MyAssets": "Meus Ativos",
@@ -46,7 +45,6 @@
   },
   "CodemirrorFindAndReplace": {
     "ToggleReplace": "Alternar entre localizar/substituir",
-    "Find": "Localizar",
     "FindPlaceholder": "Localizar em arquivos",
     "Replace": "Substituir",
     "ReplaceAll": "Substituir tudo",
@@ -159,9 +157,7 @@
     "Title": "Terminal",
     "Clear": "Limpar",
     "ClearARIA": "Limpar terminal",
-    "Close": "Fechar",
     "CloseARIA": "Fechar terminal",
-    "Open": "Abrir",
     "OpenARIA": "Abrir terminal"
   },
   "Preferences": {
@@ -472,7 +468,6 @@
     "SketchDeleted": "Esboço apagado",
     "SketchRemoveARIA": "Remover esboço da coleção",
     "DescriptionPlaceholder": "Adicionar descrição",
-    "Description": "descrição",
     "NumSketches": "{{count}} esboço",
     "By": "Coleção por ",
     "NoSketches": "Não há esboços na coleção",
