@@ -7,7 +7,7 @@ interface SkipLinkProps {
   text: string;
 }
 
-const SkipLink = ({ targetId, text }: SkipLinkProps) => {
+export const SkipLink = ({ targetId, text }: SkipLinkProps) => {
   const [focus, setFocus] = useState(false);
   const { t } = useTranslation();
   const handleFocus = () => {
@@ -30,5 +30,3 @@ const SkipLink = ({ targetId, text }: SkipLinkProps) => {
     </a>
   );
 };
-
-export default SkipLink;
