@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import useKeyDownHandlers from './useKeyDownHandlers';
+import { useKeyDownHandlers } from './useKeyDownHandlers';
 import { isMac } from '../utils/device';
 
 jest.mock('../utils/device');

@@ -1,5 +1,5 @@
 import { useEffect, useRef, MutableRefObject } from 'react';
-import useKeyDownHandlers from './useKeyDownHandlers';
+import { useKeyDownHandlers } from './useKeyDownHandlers';
 
 /**
  * Common logic for Modal, Overlay, etc.

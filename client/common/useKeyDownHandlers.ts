@@ -13,7 +13,7 @@ export type KeydownHandlerMap = Record<string, KeydownHandler>;
  * @param keyHandlers - an object which maps from the key to its event handler. The object keys are a combination of the key and prefixes `ctrl-` `shift-`
  * (ie. 'ctrl-f', 'ctrl-shift-f') and the values are the function to call when that specific key is pressed.
  */
-export default function useKeyDownHandlers(keyHandlers: KeydownHandlerMap) {
+export function useKeyDownHandlers(keyHandlers: KeydownHandlerMap) {
   /**
    * Instead of memoizing the handlers, use a ref and call the current
    * handler at the time of the event.
