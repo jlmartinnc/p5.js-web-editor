@@ -23,10 +23,10 @@ export enum MessageTypes {
  *   - type: 'START', 'STOP' etc
  *   - payload: additional data for that message type
  */
-export type Message = {
+export interface Message {
   type: MessageTypes;
   payload?: any;
-};
+}
 
 let listener: ((message: Message) => void) | null = null;
 
