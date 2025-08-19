@@ -17,7 +17,7 @@ interface GetConfigOptions {
   throwErrorIfNotFound?: boolean;
 }
 
-const defaultGetConfigOptions: GetConfigOptions = {
+const DEFAULT_GET_CONFIG_OPTIONS: GetConfigOptions = {
   warn: !isTestEnvironment,
   nullishString: false,
   throwErrorIfNotFound: false
@@ -44,7 +44,7 @@ export function getConfig(
 
   // override default options with param options
   const { warn, nullishString, throwErrorIfNotFound } = {
-    ...defaultGetConfigOptions,
+    ...DEFAULT_GET_CONFIG_OPTIONS,
     ...options
   };
 
