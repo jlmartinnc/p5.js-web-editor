@@ -174,7 +174,10 @@ const StyledInlineButton = styled.button`
 `;
 
 /**
- * A Button performs an primary action
+ * Renders a component with a button appearance, but which is:
+ *  - External anchor link if passed a `href`
+ *  - Internal React Router link if passed a `to`
+ *  - Default: Native Button
  */
 export const Button = ({
   children = null,
