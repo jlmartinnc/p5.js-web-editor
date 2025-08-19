@@ -6,7 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Button from '../../../common/Button';
 import { validateLogin } from '../../../utils/reduxFormUtils';
 import { validateAndLoginUser } from '../actions';
-import useSyncFormTranslations from '../../../common/useSyncFormTranslations';
+import { useSyncFormTranslations } from '../../../common/useSyncFormTranslations';
 
 function LoginForm() {
   const { t, i18n } = useTranslation();

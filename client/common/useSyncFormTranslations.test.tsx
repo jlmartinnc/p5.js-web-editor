@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { render } from '@testing-library/react';
-import useSyncFormTranslations from './useSyncFormTranslations';
+import { useSyncFormTranslations } from './useSyncFormTranslations';
 
 describe('useSyncFormTranslations', () => {
   it('resets and re-applies non-empty form values on language change', () => {

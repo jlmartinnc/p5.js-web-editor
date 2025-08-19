@@ -11,7 +11,7 @@ export interface FormLike {
  * @param formRef
  * @param language
  */
-const useSyncFormTranslations = (
+export const useSyncFormTranslations = (
   formRef: MutableRefObject<FormLike>,
   language: string
 ) => {
@@ -29,5 +29,3 @@ const useSyncFormTranslations = (
     });
   }, [language]);
 };
-
-export default useSyncFormTranslations;
