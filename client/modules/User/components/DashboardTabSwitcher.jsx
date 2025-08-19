@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FilterIcon } from '../../../common/icons';
 import IconButton from '../../../common/IconButton';
-import RouterTab from '../../../common/RouterTab';
+import { RouterTab } from '../../../common/RouterTab';
 import { Options } from '../../IDE/components/Header/MobileNav';
 import { toggleDirectionForField } from '../../IDE/actions/sorting';
 import useIsMobile from '../../IDE/hooks/useIsMobile';

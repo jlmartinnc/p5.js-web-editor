@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, history } from '../test-utils';
-import Tab from './RouterTab';
+import { RouterTab } from './RouterTab';
 
 const mockPath = '/projects';
 const mockLinkText = 'Projects';
 
-describe('Tab', () => {
+describe('RouterTab', () => {
   function mountComponent() {
-    return render(<Tab to={mockPath}>{mockLinkText}</Tab>);
+    return render(<RouterTab to={mockPath}>{mockLinkText}</RouterTab>);
   }
 
   it('renders a react-router NavLink with correct text and path', async () => {

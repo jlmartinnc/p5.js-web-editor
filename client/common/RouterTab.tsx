@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 
-export interface TabProps {
+export interface RouterTabProps {
   children: ReactNode;
   to: string;
 }
@@ -9,7 +9,7 @@ export interface TabProps {
 /**
  * Wraps the react-router `NavLink` with dashboard-header__tab styling.
  */
-const Tab = ({ children, to }: TabProps) => (
+export const RouterTab = ({ children, to }: RouterTabProps) => (
   <li className="dashboard-header__tab">
     <NavLink
       className="dashboard-header__tab__title"
@@ -20,5 +20,3 @@ const Tab = ({ children, to }: TabProps) => (
     </NavLink>
   </li>
 );
-
-export default Tab;
