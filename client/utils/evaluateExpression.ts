@@ -1,7 +1,7 @@
-type EvalResult = {
+interface EvalResult {
   result: unknown;
   error: boolean;
-};
+}
 
 type EvalInClosureFn = (expr: string) => EvalResult;
 
