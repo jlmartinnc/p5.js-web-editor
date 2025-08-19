@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import useModalClose from '../../common/useModalClose';
 import { MenuOpenContext, MenubarContext } from './contexts';
-import usePrevious from '../../common/usePrevious';
+import { usePrevious } from '../../common/usePrevious';
 
 /**
  * Menubar manages a collection of menu items and their submenus. It provides keyboard navigation,

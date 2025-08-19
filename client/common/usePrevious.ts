@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
  * @param value - The current value to track.
  * @returns The previous value before the current render, or undefined if none.
  */
-export default function usePrevious(value: unknown): unknown | undefined {
+export function usePrevious(value: unknown): unknown | undefined {
   const ref = useRef<unknown>();
 
   useEffect(() => {

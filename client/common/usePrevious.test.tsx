@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { render, screen } from '../test-utils';
-import usePrevious from './usePrevious';
+import { usePrevious } from './usePrevious';
 
 function TestComponent({ value }: { value: number }) {
   const prev = usePrevious(value);
