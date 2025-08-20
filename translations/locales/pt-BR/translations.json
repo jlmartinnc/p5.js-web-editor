@@ -603,5 +603,8 @@
     "PrivacyPolicy": "Política de Privacidade",
     "TermsOfUse": "Termos de Uso",
     "CodeOfConduct": "Código de Conduta"
+  },
+  "SkipLink": {
+    "PlaySketch": "Pular para reproduzir esboço"
   }
 }
