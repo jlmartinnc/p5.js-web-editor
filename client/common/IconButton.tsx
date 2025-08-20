@@ -11,14 +11,12 @@ const ButtonWrapper = styled(Button)`
   }
 `;
 
-export type IconButtonProps = Omit<
-  ButtonProps,
-  'iconBefore' | 'display' | 'focusable'
-> & {
+export interface IconButtonProps
+  extends Omit<ButtonProps, 'iconBefore' | 'display' | 'focusable'> {
   icon?: ComponentType<{ 'aria-label'?: string }>;
-};
+}
 
-const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
+export const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
   <ButtonWrapper
     iconBefore={Icon ? <Icon /> : undefined}
     iconOnly
@@ -27,5 +25,3 @@ const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
     {...otherProps}
   />
 );
-
-export default IconButton;

@@ -11,7 +11,7 @@ import { useMenuProps } from '../../../../components/Menubar/MenubarSubmenu';
 import { ButtonOrLink } from '../../../../common/ButtonOrLink';
 import { prop, remSize } from '../../../../theme';
 import AsteriskIcon from '../../../../images/p5-asterisk.svg';
-import IconButton from '../../../../common/IconButton';
+import { IconButton } from '../../../../common/IconButton';
 import {
   AccountIcon,
   AddIcon,
