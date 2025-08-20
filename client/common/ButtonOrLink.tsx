@@ -28,7 +28,7 @@ export type Ref = HTMLAnchorElement | HTMLButtonElement;
  *   - Internal links will use react-router.
  *   - External links should start with 'http' or 'https' and will open in a new window.
  */
-const ButtonOrLink = React.forwardRef(
+export const ButtonOrLink = React.forwardRef(
   (
     {
       href,
@@ -92,5 +92,3 @@ const ButtonOrLink = React.forwardRef(
     );
   }
 );
-
-export default ButtonOrLink;

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useContext, useRef } from 'react';
 import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
-import ButtonOrLink from '../../common/ButtonOrLink';
+import { ButtonOrLink } from '../../common/ButtonOrLink';
 
 /**
  * MenubarItem wraps a button or link in an accessible list item that
