@@ -289,7 +289,7 @@
     "Title": "Criar Arquivos",
     "CloseButtonARIA": "Fechar módulo de criação de arquivos",
     "EnterName": "Por favor coloque um nome",
-    "InvalidType": "Tipo de arquivo invalido. Extensões válidas são .js, .css, .json, .xml, .txt, .csv, .tsv, .frag, and .vert."
+    "InvalidType": "Tipo de arquivo inválido. Extensões válidas são .js, .css, .json, .xml, .txt, .csv, .tsv, .frag e .vert."
   },
   "NewFileForm": {
     "AddFileSubmit": "Adicionar arquivo",
@@ -307,9 +307,9 @@
     "Placeholder": "Nome"
   },
   "ResetPasswordForm": {
-    "Email": "Email usado para conta",
+    "Email": "Email usado para a conta",
     "EmailARIA": "email",
-    "Submit": "Enviar Email Para Recuperar Senha"
+    "Submit": "Enviar email para recuperar senha"
   },
   "ResetPasswordView": {
     "Title": "Editor Web p5.js | Recuperar Senha",
@@ -322,27 +322,27 @@
   "ReduxFormUtils": {
     "errorInvalidEmail": "Por favor coloque um endereço de email válido",
     "errorEmptyEmail": "Por favor coloque um endereço de email",
-    "errorPasswordMismatch": "Senhas devem coincidir",
+    "errorPasswordMismatch": "As senhas devem coincidir",
     "errorEmptyPassword": "Por favor coloque sua senha",
-    "errorShortPassword": "Senha deve ter no mínimo 6 caracteres",
+    "errorShortPassword": "A senha deve ter no mínimo 6 caracteres",
     "errorConfirmPassword": "Por favor coloque a senha de confirmação",
     "errorNewPassword": "Por favor adicione uma senha nova ou deixe a atual em branco.",
     "errorNewPasswordRepeat": "Sua nova senha precisa ser distinta da senha atual.",
     "errorEmptyUsername": "Por favor coloque um nome de usuário",
-    "errorLongUsername": "Nome de usuário deve ter menos de 20 caracteres.",
-    "errorValidUsername": "Nome de usuário deve conter apenas números, letras, pontos, hífens e underscores.",
+    "errorLongUsername": "O nome de usuário deve ter menos de 20 caracteres.",
+    "errorValidUsername": "O nome de usuário deve conter apenas números, letras, pontos, hífens e underscores.",
     "errorEmptyEmailorUserName": "Por favor insira um email ou nome de usuário"
   },
   "NewPasswordView": {
     "Title": "Editor Web p5.js | Nova Senha",
     "Description": "Definir a Nova Senha",
-    "TokenInvalidOrExpired": "O token de recuperação de seha é inválido ou expirou."
+    "TokenInvalidOrExpired": "O token de recuperação de senha é inválido ou expirou."
   },
   "AccountForm": {
     "Email": "Email",
     "EmailARIA": "email",
     "Unconfirmed": "Não confirmado.",
-    "EmailSent": "Confirmação enviada, cheque seu email.",
+    "EmailSent": "Confirmação enviada, verifique seu email.",
     "Resend": "Reenviar confirmação de email",
     "UserName": "Nome de usuário",
     "UserNameARIA": "Nome de usuário",
@@ -358,11 +358,11 @@
     "Title": "Editor Web p5.js | Configurações de Conta",
     "Settings": "Configurações de Conta",
     "AccountTab": "Conta",
-    "AccessTokensTab": "Acessar Tokens"
+    "AccessTokensTab": "Tokens de Acesso"
   },
   "APIKeyForm": {
     "ConfirmDelete": "Realmente quer remover {{key_label}}?",
-    "Summary": "Tokens de Acesso Pessoal atual como sua senha para permitir que scripts automáticos\n acessem o API do editor. Criar um token para cada scripts \n que necessite acesso.",
+    "Summary": "Tokens de Acesso Pessoal atuam como sua senha para permitir que scripts automáticos\n acessem a API do editor. Crie um token para cada script \n que necessite acesso.",
     "CreateToken": "Criar novo token",
     "TokenLabel": "Para que este token será utilizado?",
     "TokenPlaceholder": "Para que este token será utilizado? Por exemplo, para importar um arquivo",
@@ -378,7 +378,7 @@
     "LastUsed": "Usado por último",
     "Actions": "Ações",
     "Never": "Nunca",
-    "DeleteARIA": "Deletar chave de API"
+    "DeleteARIA": "Excluir chave de API"
   },
   "NewPasswordForm": {
     "Title": "Senha",
@@ -419,7 +419,7 @@
     "ToggleOpenCloseARIA": "Alternar entre abrir/fechar opções de ativos",
     "Delete": "Remover",
     "OpenNewTab": "Abrir em nova aba",
-    "NoUploadedAssets": " Nenhum ativo foi carregado.",
+    "NoUploadedAssets": "Nenhum ativo foi carregado.",
     "HeaderName": "Nome",
     "HeaderSize": "Tamanho",
     "HeaderSketch": "Esboço",
@@ -436,7 +436,7 @@
   "UploadFileModal": {
     "Title": "Carregar Arquivos",
     "CloseButtonARIA": "Fechar módulo de carregamento de arquivos",
-    "SizeLimitError": "Erro: Você não pode carregar mais arquivos. Você alcançou o tamanho limite de {{sizeLimit}}.\nSe quiser carregar mais arquivos, por favor apague os que não estão sendo utilizados\n em seu "
+    "SizeLimitError": "Erro: Você não pode carregar mais arquivos. Você alcançou o tamanho limite de {{sizeLimit}}.\nSe quiser carregar mais arquivos, por favor apague os que não estão sendo utilizados\n                em seu "
   },
   "FileUploader": {
     "DictDefaultMessage": "Arraste e solte arquivos aqui ou clique para usar o navegador de arquivos"
@@ -450,7 +450,7 @@
     "LogIn": "entrar",
     "SavedDifferentWindow": "O projeto que você tentou salvar foi salvo em outra janela.\n Por favor recarregue a página para ver a última versão.",
     "LinkTitle": "Erro ao Conectar Conta",
-    "LinkMessage": "Ocorreu um problema ao conectar sua conta {{serviceauth}} com sua conta do Editor Web p5.js. Sua {{serviceauth}} conta já foi conectada com outra conta do Editor Web p5.js."
+    "LinkMessage": "Ocorreu um problema ao conectar sua conta {{serviceauth}} com sua conta do Editor Web p5.js. Sua conta {{serviceauth}} já foi conectada com outra conta do Editor Web p5.js."
   },
   "ShareModal": {
     "Embed": "Embutir",
@@ -460,7 +460,7 @@
   },
   "Collection": {
     "Title": "Editor Web p5.js | Minhas coleções",
-    "AnothersTitle": "Editor Web p5.js | coleção de {{anotheruser}}",
+    "AnothersTitle": "Editor Web p5.js | Coleção de {{anotheruser}}",
     "Share": "Compartilhar",
     "URLLink": "Conectar à Coleção",
     "AddSketch": "Adicionar Esboço",
@@ -468,7 +468,7 @@
     "SketchDeleted": "Esboço apagado",
     "SketchRemoveARIA": "Remover esboço da coleção",
     "DescriptionPlaceholder": "Adicionar descrição",
-    "NumSketches": "{{count}} esboço",
+    "NumSketches": "{{count}} esboço(s)",
     "By": "Coleção por ",
     "NoSketches": "Não há esboços na coleção",
     "TableSummary": "tabela contendo todas as coleções",
@@ -511,9 +511,9 @@
     "NoCollections": "Nenhuma coleção foi encontrada.",
     "TableSummary": "tabela contendo todas as coleções",
     "HeaderName": "Nome",
-    "HeaderCreatedAt": "Data de criação",
-    "HeaderUpdatedAt": "Data de atualização",
-    "HeaderNumItems": "# esboços",
+    "HeaderCreatedAt": "Data adicionada",
+    "HeaderUpdatedAt": "Data atualizada",
+    "HeaderNumItems": "# de esboços",
     "DirectionAscendingARIA": "Ascendente",
     "DirectionDescendingARIA": "Descendente",
     "ButtonLabelAscendingARIA": "Ordenar por {{displayName}} ascendente.",
@@ -550,7 +550,7 @@
     "AddToCollectionOverlayTitle": "Adicionar à coleção",
     "TableSummary": "tabela contendo todos os projetos salvos",
     "HeaderName": "Esboço",
-    "HeaderCreatedAt": "Data de criação",
+    "HeaderCreatedAt": "Data adicionada",
     "HeaderUpdatedAt": "Data atualizada",
     "NoSketches": "Nenhum esboço foi encontrado."
   },
@@ -595,7 +595,7 @@
   },
   "Cookies": {
     "Header": "Cookies",
-    "Body": "O editor p5.js usa cookies. Alguns são essenciais para a funcionalidade do site e permitem que você gerencie uma conta e preferências. Outros não são essenciais - são usados para análises e nos permitem aprender mais sobre nossa comunidade. <strong> Nunca vendemos esses dados ou os usamos para publicidade. </strong> Você pode decidir quais cookies gostaria de permitir e saber mais em nossa <0>Política de Privacidade<0>.",
+    "Body": "O editor p5.js usa cookies. Alguns são essenciais para a funcionalidade do site e permitem que você gerencie uma conta e preferências. Outros não são essenciais - são usados para análises e nos permitem aprender mais sobre nossa comunidade. <strong> Nunca vendemos esses dados ou os usamos para publicidade. </strong> Você pode decidir quais cookies gostaria de permitir e saber mais em nossa <0>Política de Privacidade</0>.",
     "AllowAll": "Permitir todos",
     "AllowEssential": "Permitir essenciais"
   },
