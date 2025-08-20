@@ -7,7 +7,7 @@
       "Duplicate": "Duplicar",
       "Open": "Abrir",
       "Download": "Baixar",
-      "AddToCollection": "Adicionar à coleção",
+      "AddToCollection": "Adicionar à Coleção",
       "Examples": "Exemplos"
     },
     "Edit": {
@@ -195,7 +195,7 @@
     "LintWarningOffARIA": "Som de aviso do Lint desativado",
     "PreviewSound": "Prévia do Som",
     "PreviewSoundARIA": "prever som",
-    "AccessibleTextBasedCanvas": "Tela acessivel por texto",
+    "AccessibleTextBasedCanvas": "Tela acessível por texto",
     "UsedScreenReader": "Uso com Leitor de Tela",
     "PlainText": "Texto sem formatação",
     "TextOutputARIA": "Saída de texto ativada",
