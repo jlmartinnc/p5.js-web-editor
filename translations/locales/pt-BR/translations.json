@@ -77,10 +77,10 @@
     "ResetPassword": "Recuperar sua senha"
   },
   "SocialAuthButton": {
-    "Connect": "Conectar {{serviceauth}} Conta",
-    "Unlink": "Desvincular {{serviceauth}} Conta",
+    "Connect": "Conectar usando conta {{serviceauth}}",
+    "Unlink": "Desvincular usado conta {{serviceauth}}",
     "Login": "Entrar com {{serviceauth}}",
-    "LogoARIA": "{{serviceauth}} logo"
+    "LogoARIA": "Logo {{serviceauth}}"
   },
   "About": {
     "Title": "Sobre",
@@ -292,7 +292,7 @@
     "InvalidType": "Tipo de arquivo invalido. Extensões válidas são .js, .css, .json, .xml, .txt, .csv, .tsv, .frag, and .vert."
   },
   "NewFileForm": {
-    "AddFileSubmit": "Adicionar Arquivo",
+    "AddFileSubmit": "Adicionar arquivo",
     "Placeholder": "Nome"
   },
   "NewFolderModal": {
@@ -303,7 +303,7 @@
     "InvalidExtension": "Nomes de pastas não podem conter extensões"
   },
   "NewFolderForm": {
-    "AddFolderSubmit": "Adicionar Pasta",
+    "AddFolderSubmit": "Adicionar pasta",
     "Placeholder": "Nome"
   },
   "ResetPasswordForm": {
@@ -431,7 +431,7 @@
   "Searchbar": {
     "SearchSketch": "Localizar esboços...",
     "SearchCollection": "Localizar coleções...",
-    "ClearTerm": "limpar"
+    "ClearTerm": "Limpar"
   },
   "UploadFileModal": {
     "Title": "Carregar Arquivos",
