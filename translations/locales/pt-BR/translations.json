@@ -365,7 +365,7 @@
     "Summary": "Tokens de Acesso Pessoal atual como sua senha para permitir que scripts automáticos\n acessem o API do editor. Criar um token para cada scripts \n que necessite acesso.",
     "CreateToken": "Criar novo token",
     "TokenLabel": "Para que este token será utilizado?",
-    "TokenPlaceholder": "Para que este token será utilizado? e.x. Exemplo para importar um arquivo",
+    "TokenPlaceholder": "Para que este token será utilizado? Por exemplo, para importar um arquivo",
     "CreateTokenSubmit": "Criar",
     "NoTokens": "Não há tokens existentes.",
     "NewTokenTitle": "Seu novo token de acesso",
@@ -605,6 +605,6 @@
     "CodeOfConduct": "Código de Conduta"
   },
   "SkipLink": {
-    "PlaySketch": "Pular para reproduzir esboço"
+    "PlaySketch": "Pule para reproduzir o esboço"
   }
 }
