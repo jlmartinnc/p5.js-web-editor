@@ -77,8 +77,8 @@
     "ResetPassword": "Recuperar sua senha"
   },
   "SocialAuthButton": {
-    "Connect": "Conectar usando conta {{serviceauth}}",
-    "Unlink": "Desvincular usado conta {{serviceauth}}",
+    "Connect": "Conectar conta {{serviceauth}}",
+    "Unlink": "Desvincular conta {{serviceauth}}",
     "Login": "Entrar com {{serviceauth}}",
     "LogoARIA": "Logo {{serviceauth}}"
   },
