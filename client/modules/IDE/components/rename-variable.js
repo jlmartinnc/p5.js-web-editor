@@ -11,14 +11,6 @@ import {
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
-function SearchState(oldName) {
-  this.posFrom = this.posTo = null;
-  this.query = oldName;
-  this.regexp = false;
-  this.caseInsensitive = true;
-  this.wholeWord = true;
-}
-
 export function handleRename(fromPos, oldName, newName, cm) {
   if (!cm) {
     return;
@@ -36,6 +28,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
     userDefinedFunctionMetadata = {}
   } = p5CodeAstAnalyzer(cm) || {};
 
+  // Determine the context at the position where rename started
   const baseContext = getContext(
     cm,
     ast,
@@ -104,6 +97,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       let shouldRenameGlobalVar = false;
       const isThis = isThisReference(cm, ast, pos, oldName);
 
+      // Handle renaming inside classes
       if (isInsideClassContext) {
         const classContext = getClassContext(cm, ast, fromPos);
         let baseMethodName = null;
@@ -156,6 +150,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           }
         }
 
+        // Rename constructor parameters, class fields, and method variables carefully
         if (
           classMeta.fields?.includes(oldName) &&
           isThis === isBaseThis &&
@@ -169,7 +164,9 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           shouldRename = isGlobal && !thisScopeVars.hasOwnProperty(oldName);
         }
         shouldRenameGlobalVar = isGlobal && thisContext === 'global';
-      } else {
+      }
+      // Handle renaming outside classes
+      else {
         const thisScopeVars = scopeToDeclaredVarsMap[thisContext] || {};
         const baseScopeVars = scopeToDeclaredVarsMap[baseContext] || {};
         const globalScopeVars = scopeToDeclaredVarsMap['global'] || {};

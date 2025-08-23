@@ -227,7 +227,11 @@ class Editor extends React.Component {
     }
 
     this._cm.on('keydown', (_cm, e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+      if (
+        ((e.ctrlKey || e.metaKey) && e.key === 'v') ||
+        e.ctrlKey ||
+        e.altKey
+      ) {
         return;
       }
       const mode = this._cm.getOption('mode');

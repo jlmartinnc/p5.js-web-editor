@@ -18,6 +18,10 @@ export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
 
 function openRenameInputDialog(coords, oldName, onSubmit) {
   const dialog = document.createElement('div');
+  dialog.setAttribute('role', 'dialog');
+  dialog.setAttribute('aria-modal', 'true');
+  dialog.setAttribute('aria-label', `Rename ${oldName}`);
+
   dialog.style.position = 'absolute';
   dialog.style.left = `${coords.left}px`;
   dialog.style.top = `${coords.bottom + 5}px`;
@@ -29,6 +33,7 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
   dialog.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 
   const input = document.createElement('input');
+  input.setAttribute('aria-label', 'Enter new name');
   input.type = 'text';
   input.value = oldName;
   input.style.width = '200px';
@@ -42,32 +47,25 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
 
   function cleanup() {
     dialog.remove();
-    document.removeEventListener('mousedown', onClickOutside);
   }
 
-  function onClickOutside(e) {
-    if (!dialog.contains(e.target)) {
-      cleanup();
-    }
-  }
+  const cleanupClick = addClickOutsideHandler(dialog, cleanup);
+  const cleanupKeys = addKeyHandler(['Escape'], cleanup);
 
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const value = input.value.trim();
       if (value) {
         cleanup();
+        cleanupClick();
+        cleanupKeys();
         onSubmit(value);
         announceToScreenReader(
           `Renaming done from word ${oldName} to ${value}`
         );
-        cleanup();
       }
-    } else if (e.key === 'Escape') {
-      cleanup();
     }
   });
-
-  document.addEventListener('mousedown', onClickOutside);
 }
 
 function isValidIdentifierSelection(selection, tokenType) {
@@ -107,22 +105,38 @@ function showTemporaryDialog(coords, message) {
   function cleanup() {
     dialog.remove();
     clearTimeout(timeout);
-    document.removeEventListener('mousedown', onClickOutside);
-    document.removeEventListener('keydown', onKeyDown);
+    cleanupClick();
+    cleanupKeys();
   }
 
-  function onClickOutside(e) {
-    if (!dialog.contains(e.target)) {
-      cleanup();
+  const cleanupClick = addClickOutsideHandler(dialog, cleanup);
+  const cleanupKeys = addKeyHandler(['Escape'], cleanup);
+}
+
+function addClickOutsideHandler(element, onOutsideClick) {
+  function handler(e) {
+    if (!element.contains(e.target)) {
+      onOutsideClick();
+      remove();
     }
   }
+  function remove() {
+    document.removeEventListener('mousedown', handler);
+  }
+  document.addEventListener('mousedown', handler);
+  return remove;
+}
 
-  function onKeyDown(e) {
-    if (e.key === 'Escape') {
-      cleanup();
+function addKeyHandler(keys, onKeyPress) {
+  function handler(e) {
+    if (keys.includes(e.key)) {
+      onKeyPress(e.key);
+      remove();
     }
   }
-
-  document.addEventListener('mousedown', onClickOutside);
-  document.addEventListener('keydown', onKeyDown);
+  function remove() {
+    document.removeEventListener('keydown', handler);
+  }
+  document.addEventListener('keydown', handler);
+  return remove;
 }

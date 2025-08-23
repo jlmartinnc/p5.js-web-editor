@@ -116,14 +116,10 @@ export default function contextAwareHinter(cm, options = {}) {
         varName.toLowerCase().startsWith(lowerCurrentWord) && isInScope(varName)
     )
     .map((varName) => {
-      const isFunc = (() => {
-        const inCurrentScope =
-          scopeToDeclaredVarsMap[currentContext]?.[varName];
-        const inGlobalScope = scopeToDeclaredVarsMap['global']?.[varName];
-
-        if (inCurrentScope && inCurrentScope !== 'fun') return false;
-        return inGlobalScope === 'fun';
-      })();
+      const isFunc =
+        scopeToDeclaredVarsMap[currentContext]?.[varName] === 'fun' ||
+        (!scopeToDeclaredVarsMap[currentContext]?.[varName] &&
+          scopeToDeclaredVarsMap['global']?.[varName] === 'fun');
 
       const baseItem = isFunc
         ? { ...userDefinedFunctionMetadata[varName] }
