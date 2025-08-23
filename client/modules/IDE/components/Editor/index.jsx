@@ -419,12 +419,15 @@ class Editor extends React.Component {
   }
 
   showHint(_cm) {
+    if (!_cm) return;
+
     if (!this.props.autocompleteHinter) {
       CodeMirror.showHint(_cm, () => {}, {});
       return;
     }
 
     let focusedLinkElement = null;
+
     const setFocusedLinkElement = (set) => {
       if (set && !focusedLinkElement) {
         const activeItemLink = document.querySelector(
@@ -439,6 +442,7 @@ class Editor extends React.Component {
         }
       }
     };
+
     const removeFocusedLinkElement = () => {
       if (focusedLinkElement) {
         focusedLinkElement.classList.remove('focused-hint-link');
@@ -461,12 +465,8 @@ class Editor extends React.Component {
           );
           if (activeItemLink) activeItemLink.click();
         },
-        Right: (cm, e) => {
-          setFocusedLinkElement(true);
-        },
-        Left: (cm, e) => {
-          removeFocusedLinkElement();
-        },
+        Right: (cm, e) => setFocusedLinkElement(true),
+        Left: (cm, e) => removeFocusedLinkElement(),
         Up: (cm, e) => {
           const onLink = removeFocusedLinkElement();
           e.moveFocus(-1);
@@ -485,26 +485,28 @@ class Editor extends React.Component {
       closeOnUnfocus: false
     };
 
-    if (_cm.options.mode === 'javascript') {
-      // JavaScript
-      CodeMirror.showHint(
-        _cm,
-        () => {
-          const c = _cm.getCursor();
-          const token = _cm.getTokenAt(c);
-          const hints = contextAwareHinter(_cm, { hinter: this.hinter });
-          return {
-            list: hints,
-            from: CodeMirror.Pos(c.line, token.start),
-            to: CodeMirror.Pos(c.line, c.ch)
-          };
-        },
-        hintOptions
-      );
-    } else if (_cm.options.mode === 'css') {
-      // CSS
-      CodeMirror.showHint(_cm, CodeMirror.hint.css, hintOptions);
-    }
+    const triggerHints = () => {
+      if (_cm.options.mode === 'javascript') {
+        CodeMirror.showHint(
+          _cm,
+          () => {
+            const c = _cm.getCursor();
+            const token = _cm.getTokenAt(c);
+            const hints = contextAwareHinter(_cm, { hinter: this.hinter });
+            return {
+              list: hints,
+              from: CodeMirror.Pos(c.line, token.start),
+              to: CodeMirror.Pos(c.line, c.ch)
+            };
+          },
+          hintOptions
+        );
+      } else if (_cm.options.mode === 'css') {
+        CodeMirror.showHint(_cm, CodeMirror.hint.css, hintOptions);
+      }
+    };
+
+    setTimeout(triggerHints, 0);
   }
 
   showReplace() {
