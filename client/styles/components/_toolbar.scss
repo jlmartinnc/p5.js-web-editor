@@ -131,7 +131,6 @@
 	padding-left: #{math.div(10, $base-font-size)}rem;
 	display: flex;
 	align-items: center;
-	gap: #{math.div(16, $base-font-size)}rem; 
 
 	> section {
 		display: flex;

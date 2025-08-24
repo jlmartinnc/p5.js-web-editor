@@ -113,6 +113,15 @@ const Toolbar = (props) => {
 
       <div className="toolbar__project-name-container">
         <ProjectName />
+        {/* Still show owner if not you */}
+        {project?.owner && !userIsOwner && (
+          <p className="toolbar__project-owner">
+            {t('Toolbar.By')}{' '}
+            <Link to={`/${project.owner.username}/sketches`}>
+              {project.owner.username}
+            </Link>
+          </p>
+        )}
       </div>
 
       <div style={{ flex: 1 }} />
@@ -125,16 +134,6 @@ const Toolbar = (props) => {
             location="toolbar"
           />
         </div>
-      )}
-
-      {/* Still show owner if not you */}
-      {project?.owner && !userIsOwner && (
-        <p className="toolbar__project-owner">
-          {t('Toolbar.By')}{' '}
-          <Link to={`/${project.owner.username}/sketches`}>
-            {project.owner.username}
-          </Link>
-        </p>
       )}
 
       <VersionIndicator />
