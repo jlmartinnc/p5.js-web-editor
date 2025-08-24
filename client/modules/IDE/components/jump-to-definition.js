@@ -10,7 +10,8 @@ import {
   buildProjectSymbolTable,
   announceJump
 } from './jump-to-def-helper';
-import store from '../../../index';
+import store from '../../../../client/storeInstance';
+
 const traverse = require('@babel/traverse').default;
 
 export function jumpToDefinition(pos) {
