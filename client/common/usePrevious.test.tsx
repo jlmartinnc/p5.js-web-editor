@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { render, screen } from '../test-utils';
 import { usePrevious } from './usePrevious';
 
