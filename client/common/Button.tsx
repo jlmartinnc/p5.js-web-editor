@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { remSize, prop } from '../theme';
 
 enum Kinds {
@@ -18,13 +18,7 @@ enum ButtonTypes {
   submit = 'submit'
 }
 
-type StyledButtonProps = {
-  kind: ButtonTypes;
-  display: Displays;
-  type?: ButtonTypes;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-interface SharedButtonProps {
+export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * The visible part of the button, telling the user what
    * the action is
@@ -67,6 +61,10 @@ interface SharedButtonProps {
    */
   to?: string;
   /**
+   * If using a native button, specifies on an onClick action
+   */
+  onClick?: () => void;
+  /**
    * If using a button, then type is defines the type of button
    */
   type?: ButtonTypes;
@@ -77,10 +75,10 @@ interface SharedButtonProps {
   focusable?: boolean | 'true' | 'false';
 }
 
-export type ButtonProps = SharedButtonProps &
-  React.ButtonHTMLAttributes<HTMLButtonElement> &
-  React.AnchorHTMLAttributes<HTMLAnchorElement> &
-  Partial<LinkProps>;
+interface StyledButtonProps extends ButtonProps {
+  kind: Kinds;
+  display: Displays;
+}
 
 // The '&&&' will increase the specificity of the
 // component's CSS so that it overrides the more
@@ -203,6 +201,7 @@ export const Button = ({
     ? StyledInlineButton
     : StyledButton;
 
+  // Anchor Link
   if (href) {
     return (
       <StyledComponent
@@ -218,6 +217,7 @@ export const Button = ({
     );
   }
 
+  // Internal React Router Link
   if (to) {
     return (
       <StyledComponent
@@ -233,6 +233,7 @@ export const Button = ({
     );
   }
 
+  // Native Button
   return (
     <StyledComponent
       kind={kind}
