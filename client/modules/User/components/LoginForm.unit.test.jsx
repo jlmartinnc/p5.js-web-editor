@@ -24,7 +24,7 @@ jest.mock('../actions', () => ({
 }));
 
 jest.mock('../../../common/useSyncFormTranslations', () => ({
-  useSyncFormTranslations: jest.fn(),
+  useSyncFormTranslations: jest.fn()
 }));
 
 const subject = () => {
