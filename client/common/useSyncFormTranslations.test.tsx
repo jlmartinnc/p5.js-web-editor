@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { render } from '@testing-library/react';
+import React, { useRef } from 'react';
+import { render } from '../test-utils';
 import { useSyncFormTranslations } from './useSyncFormTranslations';
 
 describe('useSyncFormTranslations', () => {
