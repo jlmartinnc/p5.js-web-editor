@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import { PlusIcon } from '../../../common/icons';
 import CopyableInput from '../../IDE/components/CopyableInput';
 import { createApiKey, removeApiKey } from '../actions';

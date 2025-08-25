@@ -178,7 +178,7 @@ const StyledInlineButton = styled.button`
 /**
  * A Button performs an primary action
  */
-const Button = ({
+export const Button = ({
   children = null,
   display = Displays.block,
   href,
@@ -248,5 +248,3 @@ const Button = ({
 
 Button.kinds = Kinds;
 Button.displays = Displays;
-
-export default Button;

@@ -4,7 +4,7 @@ import { Form, Field } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateResetPassword } from '../../../utils/reduxFormUtils';
 import { initiateResetPassword } from '../actions';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 
 function ResetPasswordForm(props) {
   const { t } = useTranslation();

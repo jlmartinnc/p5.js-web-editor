@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import { DropdownArrowIcon } from '../../../common/icons';
 import { useModalClose } from '../../../common/useModalClose';
 import CopyableInput from '../../IDE/components/CopyableInput';

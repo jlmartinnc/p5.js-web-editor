@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { handleCreateFile } from '../actions/files';
 import { CREATE_FILE_REGEX } from '../../../../server/utils/fileUtils';
 
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 
 function NewFileForm() {
   const fileNameInput = useRef(null);

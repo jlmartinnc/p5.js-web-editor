@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { validateNewPassword } from '../../../utils/reduxFormUtils';
 import { updatePassword } from '../actions';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 
 function NewPasswordForm(props) {
   const { resetPasswordToken } = props;

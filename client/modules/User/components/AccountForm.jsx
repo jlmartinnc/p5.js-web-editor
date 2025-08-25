@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import { validateSettings } from '../../../utils/reduxFormUtils';
 import { updateSettings, initiateVerification } from '../actions';
 import apiClient from '../../../utils/apiClient';

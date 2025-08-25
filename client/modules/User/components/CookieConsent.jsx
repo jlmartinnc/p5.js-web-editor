@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import getConfig from '../../../utils/getConfig';
 import { setUserCookieConsent } from '../actions';
 import { remSize, prop, device } from '../../../theme';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 
 const CookieConsentContainer = styled.div`
   position: fixed;

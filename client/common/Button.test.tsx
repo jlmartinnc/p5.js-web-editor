@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '../test-utils';
-import Button from './Button';
+import { Button } from './Button';
 
 const MockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg data-testid="mock-icon" {...props} />

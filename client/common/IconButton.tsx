@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import styled from 'styled-components';
-import Button, { ButtonProps } from './Button';
+import { Button, ButtonProps } from './Button';
 import { remSize } from '../theme';
 
 const ButtonWrapper = styled(Button)`

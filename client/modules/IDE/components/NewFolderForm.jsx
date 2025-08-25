@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, Field } from 'react-final-form';
 import { useDispatch } from 'react-redux';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import { handleCreateFolder } from '../actions/files';
 
 function NewFolderForm() {

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, Field } from 'react-final-form';
 import { useDispatch } from 'react-redux';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import { validateLogin } from '../../../utils/reduxFormUtils';
 import { validateAndLoginUser } from '../actions';
 import { useSyncFormTranslations } from '../../../common/useSyncFormTranslations';
