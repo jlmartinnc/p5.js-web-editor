@@ -21,7 +21,7 @@ import {
   enIN
 } from 'date-fns/locale';
 
-import getPreferredLanguage from './utils/language-utils';
+import { getPreferredLanguage } from './utils/language-utils';
 
 const fallbackLng = ['en-US'];
 
