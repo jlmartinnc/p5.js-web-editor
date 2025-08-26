@@ -315,13 +315,13 @@
     "CurrentPasswordARIA": "বর্তমান পাসওয়ার্ড",
     "NewPassword": "নতুন পাসওয়ার্ড",
     "NewPasswordARIA": "নতুন পাসওয়ার্ড",
-    "SubmitSaveAllSettings": "সমস্ত সেটিংস সংরক্ষণ করুন"
+    "SaveAccountDetails": "অ্যাকাউন্টের বিবরণ সংরক্ষণ করুন"
   },
   "AccountView": {
     "SocialLogin": "সোশ্যাল লগইন",
     "SocialLoginDescription": "p5.js ওয়েব এডিটরে লগ ইন করতে আপনি আপনার GitHub বা Google অ্যাকাউন্ট ব্যবহার করতে পারেন।",
     "Title": "p5.js ওয়েব এডিটর | অ্যাকাউন্ট সেটিংস",
-    "Settings": "অ্যাকাউন্ট সেটিংস",
+    "Settings": "আমার অ্যাকাউন্ট",
     "AccountTab": "অ্যাকাউন্ট",
     "AccessTokensTab": "অ্যাক্সেস টোকেন"
   },
