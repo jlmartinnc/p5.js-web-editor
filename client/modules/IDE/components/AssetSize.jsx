@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import prettyBytes from 'pretty-bytes';
+import { getConfig } from '../../../utils/getConfig';
+import { parseNumber } from '../../../utils/parseStringToType';
 
-import getConfig from '../../../utils/getConfig';
-
-const limit = getConfig('UPLOAD_LIMIT') || 250000000;
+const limit = parseNumber(getConfig('UPLOAD_LIMIT')) || 250000000;
 const MAX_SIZE_B = limit;
 
 const formatPercent = (percent) => {
