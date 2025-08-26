@@ -68,9 +68,9 @@
     "Password": "Пароль",
     "PasswordARIA": "Пароль",
     "Submit": "Увійти",
-	"Errors": {
-      "invalidCredentials": "Недійсна електронна пошта або пароль."
-    }
+     "Errors": {
+     "invalidCredentials": "Неправильна електронна пошта або пароль."
+     }
   },
   "LoginView": {
     "Title": "p5.js вебредактор | Вхід",
