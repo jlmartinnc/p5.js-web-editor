@@ -1,6 +1,7 @@
 import { mapKeys } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
+import { isMac } from '../utils/device';
 
 /**
  * Attaches keydown handlers to the global document.
@@ -30,8 +31,7 @@ export default function useKeyDownHandlers(keyHandlers) {
    */
   const handleEvent = useCallback((e) => {
     if (!e.key) return;
-    const isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
-    const isCtrl = isMac ? e.metaKey : e.ctrlKey;
+    const isCtrl = isMac() ? e.metaKey : e.ctrlKey;
     if (e.shiftKey && isCtrl) {
       handlers.current[
         `ctrl-shift-${

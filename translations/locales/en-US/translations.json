@@ -439,7 +439,8 @@
     "NoUploadedAssets": "No uploaded assets.",
     "HeaderName": "Name",
     "HeaderSize": "Size",
-    "HeaderSketch": "Sketch"
+    "HeaderSketch": "Sketch",
+    "maximum": "Maximum"
   },
   "Feedback": {
     "Title": "p5.js Web Editor | Feedback",
