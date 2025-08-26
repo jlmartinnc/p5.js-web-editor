@@ -2,8 +2,8 @@ import objectID from 'bson-objectid';
 import each from 'async/each';
 import { isEqual } from 'lodash';
 import browserHistory from '../../../browserHistory';
-import apiClient from '../../../utils/apiClient';
-import getConfig from '../../../utils/getConfig';
+import { apiClient } from '../../../utils/apiClient';
+import { getConfig } from '../../../utils/getConfig';
 import * as ActionTypes from '../../../constants';
 import { showToast, setToastText } from './toast';
 import {
@@ -308,6 +308,8 @@ export function cloneProject(project) {
       (file, callback) => {
         if (
           file.url &&
+          S3_BUCKET &&
+          S3_BUCKET_URL_BASE &&
           (file.url.includes(S3_BUCKET_URL_BASE) ||
             file.url.includes(S3_BUCKET))
         ) {
