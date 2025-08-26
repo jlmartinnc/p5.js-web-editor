@@ -9,7 +9,7 @@ import Routing from './routes';
 import ThemeProvider from './modules/App/components/ThemeProvider';
 import Loader from './modules/App/components/loader';
 import './i18n';
-import SkipLink from './components/SkipLink';
+import { SkipLink } from './components/SkipLink';
 
 require('./styles/main.scss');
 
