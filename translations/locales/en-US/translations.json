@@ -476,10 +476,10 @@
     "LinkMessage": "There was a problem linking your {{serviceauth}} account to your p5.js Web Editor account. Your {{serviceauth}} account has already been linked to another p5.js Web Editor account."
   },
   "ShareModal": {
-    "Embed": "Embed",
+    "Embed": "Embed Sketch",
     "Present": "Present",
-    "Fullscreen": "Fullscreen",
-    "Edit": "Edit"
+    "Fullscreen": "Share Sketch As View-Only",
+    "Edit": "Share Sketch and Allow Editing"
   },
   "CollectionView": {
     "TitleCreate": "Create collection",
