@@ -69,10 +69,12 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
    */
   type?: ButtonTypes;
   /**
-   * Allows for IconButton to pass `focusable="false"` as a prop for SVGs.
-   * See @types/react > interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T>
+   * Controls whether the underlying SVG is focusable.
+   * Only relevant for IconButton (or buttons that render an SVG as content).
+   * In SVGs, the `focusable` attribute must be a string (`"true"` or `"false"`),
+   * but React will automatically convert a boolean prop to the correct string value.
    */
-  focusable?: boolean | 'true' | 'false';
+  focusable?: boolean;
 }
 
 interface StyledButtonProps extends ButtonProps {

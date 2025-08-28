@@ -24,7 +24,7 @@ export const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
     iconBefore={Icon ? <Icon /> : undefined}
     iconOnly
     display={Button.displays.inline}
-    focusable="false"
+    focusable={false}
     {...otherProps}
   />
 );
