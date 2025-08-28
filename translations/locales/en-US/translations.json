@@ -225,7 +225,7 @@
     "SoundAddon": "p5.sound.js Add-on Library",
     "PreloadAddon": "p5.js 1.x Compatibility Add-on Library — Preload",
     "ShapesAddon": "p5.js 1.x Compatibility Add-on Library — Shapes",
-    "DataAddon": "p5.js 1.x Compatibility Add-on Library — Data Structures",
+    "DataAddon": "p5.js 1.x Compatibility Add-on Library — Data & Events",
     "AddonOnARIA": "on",
     "AddonOffARIA": "off",
     "SoundReference": "View the reference for p5.sound compatible with p5.js $VERSION",
