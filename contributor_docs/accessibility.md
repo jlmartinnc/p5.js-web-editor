@@ -40,6 +40,7 @@ To make the editor accessible to color blind and low-vision users, it is importa
 * The [Colour Contrast Analyser](https://www.tpgi.com/color-contrast-checker/) tool by TPGi is a downloadable app that allows you to check color contrast and see if it complies with requirements for small text, large text, and GUI elements.
 
 * It is recommended that you adhere to the codelens color palettes (light, dark, and contrast)  when contributing to the p5 editor, which define different colors for different parts of the GUI. These colors can be found in client/styles/components/abstracts/variables.scss. Many components come with color defaults that use theme-wide color styles. Some color combinations within the palettes meet foreground/background contrast requirements and others do not, so it is important to check them.
+* A p5 editor contributor [(Izzy Snyder)]([url](https://github.com/Izzy-Snyder)) created a tool to check which colors in the editor palette do and do not comply with contrast standards. You can [check out the Github Repository]([url](https://github.com/Izzy-Snyder/contrast-palette-checker)) to try it out yourself.
 
 **Use of Color**
 * The [WCAG 2.2 accessibility guidelines](https://www.w3.org/TR/WCAG22/) include [guideline 1.4.1 - perceivable: use of color](https://www.w3.org/TR/WCAG22/#use-of-color). This guideline states that “Color is not used as the only visual means of conveying information, indicating an action, prompting a response, or distinguishing a visual element.” 
