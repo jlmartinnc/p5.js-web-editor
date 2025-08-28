@@ -290,7 +290,7 @@
     "errorShortPassword": "পাসওয়ার্ডটি কমপক্ষে 6 টি অক্ষর হতে হবে",
     "errorConfirmPassword": "আপনার পাসওয়ার্ড কনফার্ম করুন",
     "errorNewPassword": "দয়া করে একটি নতুন পাসওয়ার্ড লিখুন বা বর্তমান পাসওয়ার্ডটি ফাঁকা রাখুন।",
-    "errorNewPasswordRepeat":"নতুন পাসওয়ার্ডটি বর্তমান পাসওয়ার্ড এর থেকে অবশ্যই আলাদা হতে হবে।",
+    "errorNewPasswordRepeat": "নতুন পাসওয়ার্ডটি বর্তমান পাসওয়ার্ড এর থেকে অবশ্যই আলাদা হতে হবে।",
     "errorEmptyUsername": "দয়া করে একটি ইউজারনেম লিখুন",
     "errorLongUsername": "ইউজারনেম সর্বোচ্চ 20 টি অক্ষর হতে পারবে",
     "errorValidUsername": "ইউজারনেম কেবলমাত্র সংখ্যা, অক্ষর, দোতলা, ড্যাশ, এবং আন্ডারস্কোর থাকতে পারে"
@@ -315,13 +315,13 @@
     "CurrentPasswordARIA": "বর্তমান পাসওয়ার্ড",
     "NewPassword": "নতুন পাসওয়ার্ড",
     "NewPasswordARIA": "নতুন পাসওয়ার্ড",
-    "SubmitSaveAllSettings": "সমস্ত সেটিংস সংরক্ষণ করুন"
+    "SaveAccountDetails": "অ্যাকাউন্টের বিবরণ সংরক্ষণ করুন"
   },
   "AccountView": {
     "SocialLogin": "সোশ্যাল লগইন",
     "SocialLoginDescription": "p5.js ওয়েব এডিটরে লগ ইন করতে আপনি আপনার GitHub বা Google অ্যাকাউন্ট ব্যবহার করতে পারেন।",
     "Title": "p5.js ওয়েব এডিটর | অ্যাকাউন্ট সেটিংস",
-    "Settings": "অ্যাকাউন্ট সেটিংস",
+    "Settings": "আমার অ্যাকাউন্ট",
     "AccountTab": "অ্যাকাউন্ট",
     "AccessTokensTab": "অ্যাক্সেস টোকেন"
   },
@@ -533,7 +533,7 @@
     "HeaderName": "স্কেচ",
     "HeaderCreatedAt": "তারিখ তৈরি হয়েছে",
     "HeaderCreatedAt_mobile": "তৈরি হয়েছে",
-"HeaderUpdatedAt": "তারিখ আপডেট হয়েছে",
+    "HeaderUpdatedAt": "তারিখ আপডেট হয়েছে",
     "HeaderUpdatedAt_mobile": "আপডেট",
     "NoSketches": "কোন স্কেচ নেই।"
   },
