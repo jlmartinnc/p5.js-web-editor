@@ -3,19 +3,36 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { remSize, prop } from '../theme';
 
-enum Kinds {
-  primary = 'primary',
-  secondary = 'secondary'
+/**
+ * Enum for the visual style of a Button.
+ *
+ * These values transpile to lowercase strings (`'primary' | 'secondary'`)
+ * that map directly to keys in the `Button` object in `theme.js` for styling.
+ */
+export enum ButtonKinds {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary'
 }
-
-enum Displays {
-  block = 'block',
-  inline = 'inline'
+/**
+ * Enum for the display type of a Button.
+ *
+ * These values transpile to lowercase strings (`'block' | 'inline'`)
+ * and map to display styles in the `Button` object in `theme.js`.
+ */
+export enum ButtonDisplays {
+  BLOCK = 'block',
+  INLINE = 'inline'
 }
-
-enum ButtonTypes {
-  button = 'button',
-  submit = 'submit'
+/**
+ * Enum for the native HTML button type.
+ *
+ * These values transpile to lowercase strings (`'button' | 'submit'`)
+ * and correspond to the `type` attribute on a native <button>.
+ * They can also be used in `theme.js` if needed for button-specific styles.
+ */
+export enum ButtonTypes {
+  BUTTON = 'button',
+  SUBMIT = 'submit'
 }
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
@@ -31,7 +48,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * The display type of the button—inline or block
    */
-  display?: Displays;
+  display?: ButtonDisplays;
   /**
    * SVG icon to place after child content
    */
@@ -47,7 +64,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * The kind of button - determines how it appears visually
    */
-  kind?: Kinds;
+  kind?: ButtonKinds;
   /**
    * Specifying an href will use an <a> to link to the URL
    */
@@ -78,8 +95,8 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 interface StyledButtonProps extends ButtonProps {
-  kind: Kinds;
-  display: Displays;
+  kind: ButtonKinds;
+  display: ButtonDisplays;
 }
 
 // The '&&&' will increase the specificity of the
@@ -89,7 +106,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   &&& {
     font-weight: bold;
     display: ${({ display }) =>
-      display === Displays.inline ? 'inline-flex' : 'flex'};
+      display === ButtonDisplays.INLINE ? 'inline-flex' : 'flex'};
     justify-content: center;
     align-items: center;
 
@@ -183,15 +200,15 @@ const StyledInlineButton = styled.button`
  */
 export const Button = ({
   children = null,
-  display = Displays.block,
+  display = ButtonDisplays.BLOCK,
   href,
-  kind = Kinds.primary,
+  kind = ButtonKinds.PRIMARY,
   iconBefore = null,
   iconAfter = null,
   iconOnly = false,
   'aria-label': ariaLabel,
   to,
-  type = ButtonTypes.button,
+  type = ButtonTypes.BUTTON,
   ...props
 }: ButtonProps) => {
   const hasChildren = React.Children.count(children) > 0;
@@ -251,6 +268,3 @@ export const Button = ({
     </StyledComponent>
   );
 };
-
-Button.kinds = Kinds;
-Button.displays = Displays;

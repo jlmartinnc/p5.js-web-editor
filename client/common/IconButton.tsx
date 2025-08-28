@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import styled from 'styled-components';
-import { Button, ButtonProps } from './Button';
+import { Button, ButtonProps, ButtonDisplays } from './Button';
 import { remSize } from '../theme';
 
 const ButtonWrapper = styled(Button)`
@@ -23,7 +23,7 @@ export const IconButton = ({ icon: Icon, ...otherProps }: IconButtonProps) => (
   <ButtonWrapper
     iconBefore={Icon ? <Icon /> : undefined}
     iconOnly
-    display={Button.displays.inline}
+    display={ButtonDisplays.INLINE}
     focusable={false}
     {...otherProps}
   />

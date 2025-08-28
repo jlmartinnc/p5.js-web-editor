@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { getConfig } from '../../../utils/getConfig';
 import { setUserCookieConsent } from '../actions';
 import { remSize, prop, device } from '../../../theme';
-import { Button } from '../../../common/Button';
+import { Button, ButtonKinds } from '../../../common/Button';
 
 const CookieConsentContainer = styled.div`
   position: fixed;
@@ -177,10 +177,7 @@ function CookieConsent({ hide }) {
                 />
               </CookieConsentCopy>
               <CookieConsentButtons>
-                <Button
-                  kind={Button.kinds.secondary}
-                  onClick={acceptAllCookies}
-                >
+                <Button kind={ButtonKinds.SECONDARY} onClick={acceptAllCookies}>
                   {t('Cookies.AllowAll')}
                 </Button>
                 <Button onClick={acceptEssentialCookies}>
