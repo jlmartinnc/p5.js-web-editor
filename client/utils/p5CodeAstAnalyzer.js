@@ -1,12 +1,12 @@
 /* eslint-disable */
 import { debounce } from 'lodash';
 import * as eslintScope from 'eslint-scope';
-import classMap from './p5-instance-methods-and-creators.json';
+import classMap from '../utils/p5-instance-methods-and-creators.json';
 
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
-const allFuncs = require('./p5-reference-functions.json');
+const allFuncs = require('../utils/p5-reference-functions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 
 const functionToClass = {};

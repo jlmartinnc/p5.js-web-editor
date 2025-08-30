@@ -2,7 +2,6 @@ export default function announceToScreenReader(message, assertive = false) {
   const liveRegion = document.getElementById('rename-aria-live');
   if (!liveRegion) return;
 
-  // liveRegion.setAttribute('aria-live', assertive ? 'assertive' : 'polite');
   liveRegion.setAttribute('aria-live', 'assertive');
 
   liveRegion.textContent = '';

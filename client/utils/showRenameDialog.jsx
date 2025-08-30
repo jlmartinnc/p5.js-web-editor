@@ -1,5 +1,5 @@
 /* eslint-disable */
-import announceToScreenReader from '../utils/ScreenReaderHelper';
+import announceToScreenReader from './ScreenReaderHelper';
 const allFuncs = require('./p5-reference-functions.json');
 const allFunsList = new Set(allFuncs.functions.list);
 

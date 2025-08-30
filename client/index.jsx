@@ -43,15 +43,18 @@ const App = () => (
   </div>
 );
 
-render(
-  <Provider store={store}>
-    <ThemeProvider>
-      <Suspense fallback={<Loader />}>
-        <App />
-      </Suspense>
-    </ThemeProvider>
-  </Provider>,
-  document.getElementById('root')
-);
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  render(
+    <Provider store={store}>
+      <ThemeProvider>
+        <Suspense fallback={<Loader />}>
+          <App />
+        </Suspense>
+      </ThemeProvider>
+    </Provider>,
+    rootEl
+  );
+}
 
 export default store;

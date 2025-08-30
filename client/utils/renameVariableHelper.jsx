@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { includes } from 'lodash';
-import p5CodeAstAnalyzer from '../components/p5CodeAstAnalyzer';
+import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 

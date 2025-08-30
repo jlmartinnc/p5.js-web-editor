@@ -73,11 +73,12 @@ import { EditorContainer, EditorHolder } from './MobileEditor';
 import { FolderIcon } from '../../../../common/icons';
 import IconButton from '../../../../common/IconButton';
 
-import contextAwareHinter from '../contextAwareHinter';
-import showRenameDialog from '../showRenameDialog';
-import { handleRename } from '../rename-variable';
-import { jumpToDefinition } from '../jump-to-definition';
-import { ensureAriaLiveRegion } from '../../utils/ScreenReaderHelper';
+import contextAwareHinter from '../../../../utils/contextAwareHinter';
+import showRenameDialog from '../../../../utils/showRenameDialog';
+import { handleRename } from '../../../../utils/rename-variable';
+import { jumpToDefinition } from '../../../../utils/jump-to-definition';
+import { ensureAriaLiveRegion } from '../../../../utils/ScreenReaderHelper';
+import isMac from '../../../../utils/device';
 
 emmet(CodeMirror);
 
@@ -162,8 +163,7 @@ class Editor extends React.Component {
     delete this._cm.options.lint.options.errors;
 
     this._cm.getWrapperElement().addEventListener('click', (e) => {
-      const isMac = /Mac/.test(navigator.platform);
-      const isCtrlClick = isMac ? e.metaKey : e.ctrlKey;
+      const isCtrlClick = isMac() ? e.metaKey : e.ctrlKey;
 
       if (isCtrlClick) {
         const pos = this._cm.coordsChar({ left: e.clientX, top: e.clientY });

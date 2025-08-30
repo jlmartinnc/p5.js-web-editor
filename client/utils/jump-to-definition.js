@@ -1,16 +1,16 @@
 /* eslint-disable */
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import * as parser from '@babel/parser';
-import { getContext, getAST } from '../utils/renameVariableHelper';
-import { selectFiles } from '../selectors/files';
-import { setSelectedFile } from '../actions/ide';
-import announceToScreenReader from '../utils/ScreenReaderHelper';
+import { getContext, getAST } from './renameVariableHelper';
+import { selectFiles } from '../modules/IDE/selectors/files';
+import { setSelectedFile } from '../modules/IDE/actions/ide';
+import announceToScreenReader from './ScreenReaderHelper';
 import {
   getScriptLoadOrder,
   buildProjectSymbolTable,
   announceJump
 } from './jump-to-def-helper';
-import store from '../../../../client/storeInstance';
+import store from '../index';
 
 const traverse = require('@babel/traverse').default;
 

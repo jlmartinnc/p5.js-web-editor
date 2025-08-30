@@ -7,7 +7,7 @@ import {
   isGlobalReference,
   getClassContext,
   isThisReference
-} from '../utils/renameVariableHelper';
+} from './renameVariableHelper';
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 

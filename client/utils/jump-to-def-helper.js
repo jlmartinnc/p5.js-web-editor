@@ -1,7 +1,7 @@
 /* eslint-disable */
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import * as parser from '@babel/parser';
-import announceToScreenReader from '../utils/ScreenReaderHelper';
+import announceToScreenReader from './ScreenReaderHelper';
 const traverse = require('@babel/traverse').default;
 
 export function getScriptLoadOrder(files) {
