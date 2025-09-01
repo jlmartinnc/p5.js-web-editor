@@ -18,11 +18,11 @@ import { useKeyDownHandlers } from './useKeyDownHandlers';
  * @param passedRef - Optional ref to the modal element. If not provided, one is created internally.
  * @returns A ref to be attached to the modal DOM element
  */
-export function useModalClose(
+export function useModalClose<T extends HTMLElement = HTMLElement>(
   onClose: () => void,
-  passedRef?: MutableRefObject<HTMLElement | null>
-): MutableRefObject<HTMLElement | null> {
-  const createdRef = useRef<HTMLElement | null>(null);
+  passedRef?: MutableRefObject<T | null>
+): MutableRefObject<T | null> {
+  const createdRef = useRef<T | null>(null);
   const modalRef = passedRef ?? createdRef;
 
   useEffect(() => {
