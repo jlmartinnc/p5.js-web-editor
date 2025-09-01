@@ -37,15 +37,12 @@ jest.mock('../../../../components/Menubar/MenubarSubmenu', () => {
 });
 
 // mock MenubarItem
-jest.mock(
-  '../../../../components/Menubar/MenubarItem',
-  () =>
-    function MenubarItem({ children, hideIf }) {
-      if (hideIf) return null;
-
-      return <li>{children}</li>;
-    }
-);
+jest.mock('../../../../components/Menubar/MenubarItem', () => ({
+  MenubarItem: ({ children, hideIf }) => {
+    if (hideIf) return null;
+    return <li>{children}</li>;
+  }
+}));
 
 describe('Nav', () => {
   it('renders editor version for desktop', () => {

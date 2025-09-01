@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import MenubarSubmenu from '../../../../components/Menubar/MenubarSubmenu';
-import MenubarItem from '../../../../components/Menubar/MenubarItem';
+import { MenubarItem } from '../../../../components/Menubar/MenubarItem';
 import { availableLanguages, languageKeyToLabel } from '../../../../i18n';
 import { getConfig } from '../../../../utils/getConfig';
 import { parseBoolean } from '../../../../utils/parseStringToType';

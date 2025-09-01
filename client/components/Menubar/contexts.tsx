@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, RefObject } from 'react';
 
 export const ParentMenuContext = createContext<string>('none');
 
@@ -21,6 +21,7 @@ interface MenubarContextType {
     onFocus: (e: React.FocusEvent) => void;
   };
   toggleMenuOpen: (id: string) => void;
+  hasFocus: boolean;
 }
 
 export const MenubarContext = createContext<MenubarContextType>({
@@ -35,7 +36,18 @@ export const MenubarContext = createContext<MenubarContextType>({
     onBlur: () => {},
     onFocus: () => {}
   }),
-  toggleMenuOpen: () => {}
+  toggleMenuOpen: () => {},
+  hasFocus: false
 });
 
-export const SubmenuContext = createContext({});
+export interface SubmenuContextType {
+  submenuItems: Set<RefObject<HTMLElement>>;
+  setSubmenuActiveIndex: (index: number) => void;
+  registerSubmenuItem: (ref: RefObject<HTMLElement>) => () => void;
+}
+
+export const SubmenuContext = createContext<SubmenuContextType>({
+  submenuItems: new Set(),
+  setSubmenuActiveIndex: () => {},
+  registerSubmenuItem: () => () => {}
+});
