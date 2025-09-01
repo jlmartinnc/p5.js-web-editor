@@ -25,10 +25,6 @@ const DropdownWrapper = styled.ul<StyledDropdownMenuProps>`
   left: ${(props) =>
     props.align === DropdownMenuAlignment.LEFT ? 0 : 'initial'};
 
-  ${(props) => props.align === DropdownMenuAlignment.RIGHT && 'right: 0;'}
-  ${(props) => props.align === DropdownMenuAlignment.LEFT && 'left: 0;'}
-
-
   text-align: left;
   width: ${remSize(180)};
   display: flex;
