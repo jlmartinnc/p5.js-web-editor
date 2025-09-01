@@ -18,7 +18,7 @@ import {
 } from './contexts';
 import TriangleIcon from '../../images/down-filled-triangle.svg';
 
-export function useMenuProps(id) {
+export function useMenuProps(id: string) {
   const activeMenu = useContext(MenuOpenContext);
 
   const isOpen = id === activeMenu;
@@ -73,7 +73,7 @@ const MenubarTrigger = React.forwardRef(({ role, hasPopup, ...props }, ref) => {
   const { id, title, first, last } = useContext(SubmenuContext);
   const { isOpen, handlers } = useMenuProps(id);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (e: React.MouseEvent) => {
     if (hasFocus) {
       const items = Array.from(menuItems);
       const index = items.findIndex((item) => item === ref.current);
@@ -84,7 +84,7 @@ const MenubarTrigger = React.forwardRef(({ role, hasPopup, ...props }, ref) => {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowDown':
         if (!isOpen) {

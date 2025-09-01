@@ -44,10 +44,14 @@ export interface SubmenuContextType {
   submenuItems: Set<RefObject<HTMLElement>>;
   setSubmenuActiveIndex: (index: number) => void;
   registerSubmenuItem: (ref: RefObject<HTMLElement>) => () => void;
+  id: string;
+  title: string;
 }
 
 export const SubmenuContext = createContext<SubmenuContextType>({
   submenuItems: new Set(),
   setSubmenuActiveIndex: () => {},
-  registerSubmenuItem: () => () => {}
+  registerSubmenuItem: () => () => {},
+  id: '',
+  title: ''
 });
