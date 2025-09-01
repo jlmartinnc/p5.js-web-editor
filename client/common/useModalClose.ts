@@ -1,4 +1,4 @@
-import { useEffect, useRef, MutableRefObject } from 'react';
+import { useEffect, useRef, MutableRefObject, ForwardedRef } from 'react';
 import { useKeyDownHandlers } from './useKeyDownHandlers';
 
 /**
@@ -20,10 +20,27 @@ import { useKeyDownHandlers } from './useKeyDownHandlers';
  */
 export function useModalClose<T extends HTMLElement = HTMLElement>(
   onClose: () => void,
-  passedRef?: MutableRefObject<T | null>
+  passedRef?: MutableRefObject<T | null> | ForwardedRef<T>
 ): MutableRefObject<T | null> {
   const createdRef = useRef<T | null>(null);
-  const modalRef = passedRef ?? createdRef;
+
+  // Normalize any ref to a MutableRefObject internally
+  const modalRef: MutableRefObject<T | null> = (() => {
+    if (!passedRef) return createdRef;
+    if (typeof passedRef === 'function') {
+      // For function refs, write to createdRef and call the function
+      return {
+        get current() {
+          return createdRef.current;
+        },
+        set current(value: T | null) {
+          createdRef.current = value;
+          passedRef(value);
+        }
+      };
+    }
+    return passedRef;
+  })();
 
   useEffect(() => {
     modalRef.current?.focus();
