@@ -12,7 +12,7 @@ import {
   MessageTypes
 } from '../../../utils/dispatcher';
 import useInterval from '../hooks/useInterval';
-import RootPage from '../../../components/RootPage';
+import { RootPage } from '../../../components/RootPage';
 
 function FullView() {
   const dispatch = useDispatch();
