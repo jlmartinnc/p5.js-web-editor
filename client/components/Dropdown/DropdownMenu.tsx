@@ -4,7 +4,7 @@ import { remSize, prop } from '../../theme';
 import { useModalClose } from '../../common/useModalClose';
 import DownArrowIcon from '../../images/down-filled-triangle.svg';
 
-enum DropdownMenuAlignment {
+export enum DropdownMenuAlignment {
   RIGHT = 'right',
   LEFT = 'left'
 }

@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { withTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { MenuItem } from '../../../../components/Dropdown/MenuItem';
-import TableDropdown from '../../../../components/Dropdown/TableDropdown';
+import { TableDropdown } from '../../../../components/Dropdown/TableDropdown';
 import * as ProjectActions from '../../actions/project';
 import * as CollectionsActions from '../../actions/collections';
 import * as IdeActions from '../../actions/ide';

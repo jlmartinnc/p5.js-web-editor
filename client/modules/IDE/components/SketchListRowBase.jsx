@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from '../actions/project';
 import * as IdeActions from '../actions/ide';
-import TableDropdown from '../../../components/Dropdown/TableDropdown';
+import { TableDropdown } from '../../../components/Dropdown/TableDropdown';
 import { MenuItem } from '../../../components/Dropdown/MenuItem';
 import { formatDateToString } from '../../../utils/formatDate';
 import { getConfig } from '../../../utils/getConfig';
