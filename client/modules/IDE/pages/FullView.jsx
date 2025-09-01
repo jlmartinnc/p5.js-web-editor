@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PreviewFrame from '../components/PreviewFrame';
-import PreviewNav from '../../../components/PreviewNav';
+import { PreviewNav } from '../../../components/PreviewNav';
 import { getProject } from '../actions/project';
 import { startSketch } from '../actions/ide';
 import {
