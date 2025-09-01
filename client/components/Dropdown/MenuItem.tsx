@@ -1,10 +1,17 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { ButtonOrLink } from '../../common/ButtonOrLink';
+import { ButtonOrLink, ButtonOrLinkProps } from '../../common/ButtonOrLink';
 
 // TODO: combine with NavMenuItem
 
-function MenuItem({ hideIf, ...rest }) {
+export interface MenuItemProps extends ButtonOrLinkProps {
+  /**
+   * Provides a way to deal with optional items.
+   */
+  hideIf?: boolean;
+  value?: string;
+}
+
+export function MenuItem({ hideIf = false, ...rest }: MenuItemProps) {
   if (hideIf) {
     return null;
   }
@@ -15,21 +22,3 @@ function MenuItem({ hideIf, ...rest }) {
     </li>
   );
 }
-
-MenuItem.propTypes = {
-  ...ButtonOrLink.propTypes,
-  onClick: PropTypes.func,
-  value: PropTypes.string,
-  /**
-   * Provides a way to deal with optional items.
-   */
-  hideIf: PropTypes.bool
-};
-
-MenuItem.defaultProps = {
-  onClick: null,
-  value: null,
-  hideIf: false
-};
-
-export default MenuItem;

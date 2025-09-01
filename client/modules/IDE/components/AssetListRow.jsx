@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import prettyBytes from 'pretty-bytes';
-import MenuItem from '../../../components/Dropdown/MenuItem';
+import { MenuItem } from '../../../components/Dropdown/MenuItem';
 import TableDropdown from '../../../components/Dropdown/TableDropdown';
 import { deleteAssetRequest } from '../actions/assets';
 
