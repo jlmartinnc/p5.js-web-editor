@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '../../test-utils';
-import Menubar from './Menubar';
+import { Menubar } from './Menubar';
 import MenubarSubmenu from './MenubarSubmenu';
 import MenubarItem from './MenubarItem';
 

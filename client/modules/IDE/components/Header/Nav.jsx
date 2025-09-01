@@ -11,7 +11,7 @@ import { getConfig } from '../../../../utils/getConfig';
 import { parseBoolean } from '../../../../utils/parseStringToType';
 import { showToast } from '../../actions/toast';
 import { setLanguage } from '../../actions/preferences';
-import Menubar from '../../../../components/Menubar/Menubar';
+import { Menubar } from '../../../../components/Menubar/Menubar';
 import CaretLeftIcon from '../../../../images/left-arrow.svg';
 import LogoIcon from '../../../../images/p5js-logo-small.svg';
 import { selectRootFile } from '../../selectors/files';

@@ -7,17 +7,13 @@ import Nav from './Nav';
 jest.mock('../../../../utils/generateRandomName');
 
 // mock Menubar
-jest.mock(
-  '../../../../components/Menubar/Menubar',
-  () =>
-    function Menubar({ children, className = 'nav__menubar' }) {
-      return (
-        <ul className={className} role="menubar">
-          {children}
-        </ul>
-      );
-    }
-);
+jest.mock('../../../../components/Menubar/Menubar', () => ({
+  Menubar: ({ children, className = 'nav__menubar' }) => (
+    <ul className={className} role="menubar">
+      {children}
+    </ul>
+  )
+}));
 
 // mock MenubarSubmenu
 jest.mock('../../../../components/Menubar/MenubarSubmenu', () => {
