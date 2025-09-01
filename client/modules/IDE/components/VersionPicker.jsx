@@ -8,7 +8,7 @@ import { prop } from '../../../theme';
 import { useP5Version } from '../hooks/useP5Version';
 import { p5Versions } from '../../../../common/p5Versions';
 import MenuItem from '../../../components/Dropdown/MenuItem';
-import DropdownMenu from '../../../components/Dropdown/DropdownMenu';
+import { DropdownMenu } from '../../../components/Dropdown/DropdownMenu';
 import { updateFileContent } from '../actions/files';
 // eslint-disable-next-line import/no-cycle
 import { CmControllerContext } from '../pages/IDEView';

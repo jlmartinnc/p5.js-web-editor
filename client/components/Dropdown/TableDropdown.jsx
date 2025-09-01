@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { prop, remSize } from '../../theme';
-import DropdownMenu from './DropdownMenu';
+import { DropdownMenu } from './DropdownMenu';
 
 import DownFilledTriangleIcon from '../../images/down-filled-triangle.svg';
 import MoreIconSvg from '../../images/more.svg';
