@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 /**
  * Accepts all the props of an HTML <a> or <button> tag.
  */
-export interface ButtonOrLinkProps {
+export interface ButtonOrLinkProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * Can be internal or external ('http'- or 'https'-).
    */
