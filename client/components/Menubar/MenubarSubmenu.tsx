@@ -63,7 +63,10 @@ export function useMenuProps(id: string) {
  * </li>
  */
 
-const MenubarTrigger = React.forwardRef(({ role, hasPopup, ...props }, ref) => {
+const MenubarTrigger = React.forwardRef<
+  HTMLButtonElement,
+  { role?: string; hasPopup?: string } & React.ComponentProps<'button'>
+>(({ role, hasPopup, ...props }, ref) => {
   const {
     setActiveIndex,
     menuItems,
@@ -231,10 +234,10 @@ function MenubarSubmenu({
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const { setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
-  const submenuItems = useRef(new Set()).current;
+  const submenuItems = useRef<Set<HTMLElement>>(new Set()).current;
 
-  const buttonRef = useRef(null);
-  const listItemRef = useRef(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const listItemRef = useRef<HTMLLIElement | null>(null);
 
   const triggerRole = customTriggerRole || 'menuitem';
   const listRole = customListRole || 'menu';
@@ -315,7 +318,7 @@ function MenubarSubmenu({
     [submenuItems]
   );
 
-  const keyHandlers = {
+  const keyHandlers: Record<string, (e: React.KeyboardEvent) => void> = {
     ArrowUp: (e) => {
       if (!isOpen) return;
       e.preventDefault();
