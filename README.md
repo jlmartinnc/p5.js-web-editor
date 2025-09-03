@@ -14,7 +14,7 @@ Stay in touch with Processing Foundation across other platforms:
 - [Instagram](https://www.instagram.com/p5xjs)
 - [Youtube](https://www.youtube.com/@ProcessingFoundation)
 - [X](https://x.com/p5xjs)
-- Discord (invitation link coming soon!)
+- [Discord](https://discord.com/invite/esmGA6H6wm)
 - [Forum](https://discourse.processing.org)
 
 
