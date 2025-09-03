@@ -94,10 +94,12 @@ const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
     const { id, title, first, last } = useContext(SubmenuContext);
     const { isOpen, handlers } = useMenuProps(id);
 
+    const buttonRef = ref as React.RefObject<HTMLButtonElement>;
+
     const handleMouseEnter = (e: React.MouseEvent) => {
       if (hasFocus) {
         const items = Array.from(menuItems);
-        const index = items.findIndex((item) => item === ref.current);
+        const index = items.findIndex((item) => item === buttonRef.current);
 
         if (index !== -1) {
           setActiveIndex(index);
@@ -204,6 +206,14 @@ function MenubarList({
  * MenubarSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
+export interface MenubarSubmenuProps {
+  id: string;
+  children?: React.ReactNode;
+  title: string;
+  triggerRole?: string;
+  listRole?: MenubarListItemRole;
+}
+
 /**
  * MenubarSubmenu manages a triggerable submenu within a menubar. It is a compound component
  * that manages the state of the submenu and its items. It also provides keyboard navigation
@@ -225,15 +235,6 @@ function MenubarList({
  *  </MenubarSubmenu>
  * </Menubar>
  */
-
-export interface MenubarSubmenuProps {
-  id: string;
-  children?: React.ReactNode;
-  title: string;
-  triggerRole?: string;
-  listRole?: MenubarListItemRole;
-}
-
 export function MenubarSubmenu({
   children,
   id,
