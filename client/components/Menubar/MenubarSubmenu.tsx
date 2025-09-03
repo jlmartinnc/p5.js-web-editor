@@ -234,7 +234,7 @@ export interface MenubarSubmenuProps {
   listRole?: MenubarListItemRole;
 }
 
-function MenubarSubmenu({
+export function MenubarSubmenu({
   children,
   id,
   title,
@@ -457,5 +457,3 @@ function MenubarSubmenu({
     </SubmenuContext.Provider>
   );
 }
-
-export default MenubarSubmenu;
