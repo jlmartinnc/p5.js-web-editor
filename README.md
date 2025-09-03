@@ -10,6 +10,14 @@ We are a community of, and in solidarity with, people from every gender identity
 
 Learn more about [our community](https://p5js.org/community/) and read our [Community Statement and Code of Conduct](./.github/CODE_OF_CONDUCT.md). You can directly support our work with p5.js by [donating to the Processing Foundation](https://processingfoundation.org/support).
 
+Stay in touch with Processing Foundation across other platforms: 
+- [Instagram](https://www.instagram.com/p5xjs)
+- [Youtube](https://www.youtube.com/@ProcessingFoundation)
+- [X](https://x.com/p5xjs)
+- [Discord](https://discord.com/invite/esmGA6H6wm)
+- [Forum](https://discourse.processing.org)
+
+
 ## Using the p5.js Editor 🤔
 
 Make your first sketch in the [p5.js Editor](https://editor.p5js.org/)! Learn more about sketching with p5.js on the [Get Started](https://p5js.org/tutorials/get-started/) and find everything you can do in the [Reference](https://p5js.org/reference/). You can also look at [examples](https://editor.p5js.org/p5/sketches) and remix them in the p5.js Editor. 

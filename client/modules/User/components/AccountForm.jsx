@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../../common/Button';
 import { validateSettings } from '../../../utils/reduxFormUtils';
 import { updateSettings, initiateVerification } from '../actions';
-import apiClient from '../../../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 
 function asyncValidate(fieldToValidate, value) {
   if (!value || value.trim().length === 0) {
