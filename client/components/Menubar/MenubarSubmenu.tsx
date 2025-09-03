@@ -1,7 +1,6 @@
 // https://blog.logrocket.com/building-accessible-menubar-component-react
 
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import React, {
   useState,
   useEffect,
@@ -17,6 +16,12 @@ import {
   ParentMenuContext
 } from './contexts';
 import TriangleIcon from '../../images/down-filled-triangle.svg';
+
+/** Custom subset of valid list item roles for the Menubar list items */
+export enum MenubarListItemRole {
+  MENU = 'menu',
+  LISTBOX = 'listbox'
+}
 
 export function useMenuProps(id: string) {
   const activeMenu = useContext(MenuOpenContext);
@@ -37,14 +42,27 @@ export function useMenuProps(id: string) {
  * MenubarTrigger
  * -----------------------------------------------------------------------------------------------*/
 
+/** Custom subset of valid values for aria-hasPopup for the MenubarTrigger */
+export enum MenubarTriggerAriaHasPopup {
+  MENU = MenubarListItemRole.MENU,
+  LISTBOX = MenubarListItemRole.LISTBOX,
+  TRUE = 'true'
+}
+
+interface MenubarTriggerProps
+  extends Omit<
+    React.ComponentProps<'button'>,
+    'aria-haspopup' | 'aria-expanded' | 'onMouseEnter' | 'onKeyDown' | 'role'
+  > {
+  /** The ARIA role of the trigger button */
+  role?: string;
+  /** The ARIA property that indicates the presence of a popup */
+  hasPopup?: MenubarTriggerAriaHasPopup;
+}
+
 /**
  * MenubarTrigger renders a button that toggles a submenu. It handles keyboard navigation and supports
  * screen readers. It needs to be within a submenu context.
- *
- * @param {Object} props
- * @param {string} [props.role='menuitem'] - The ARIA role of the trigger button
- * @param {string} [props.hasPopup='menu'] - The ARIA property that indicates the presence of a popup
- * @returns {JSX.Element}
  *
  * @example
  * <li
@@ -62,115 +80,110 @@ export function useMenuProps(id: string) {
  *  ... menubar list
  * </li>
  */
+const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
+  (
+    { role = 'menuitem', hasPopup = MenubarTriggerAriaHasPopup.MENU, ...props },
+    ref
+  ) => {
+    const {
+      setActiveIndex,
+      menuItems,
+      registerTopLevelItem,
+      hasFocus
+    } = useContext(MenubarContext);
+    const { id, title, first, last } = useContext(SubmenuContext);
+    const { isOpen, handlers } = useMenuProps(id);
 
-const MenubarTrigger = React.forwardRef<
-  HTMLButtonElement,
-  { role?: string; hasPopup?: string } & React.ComponentProps<'button'>
->(({ role, hasPopup, ...props }, ref) => {
-  const {
-    setActiveIndex,
-    menuItems,
-    registerTopLevelItem,
-    hasFocus
-  } = useContext(MenubarContext);
-  const { id, title, first, last } = useContext(SubmenuContext);
-  const { isOpen, handlers } = useMenuProps(id);
+    const handleMouseEnter = (e: React.MouseEvent) => {
+      if (hasFocus) {
+        const items = Array.from(menuItems);
+        const index = items.findIndex((item) => item === ref.current);
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (hasFocus) {
-      const items = Array.from(menuItems);
-      const index = items.findIndex((item) => item === ref.current);
-
-      if (index !== -1) {
-        setActiveIndex(index);
+        if (index !== -1) {
+          setActiveIndex(index);
+        }
       }
-    }
-  };
+    };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        if (!isOpen) {
-          e.preventDefault();
-          e.stopPropagation();
-          first();
-        }
-        break;
-      case 'ArrowUp':
-        if (!isOpen) {
-          e.preventDefault();
-          e.stopPropagation();
-          last();
-        }
-        break;
-      case 'Enter':
-      case ' ':
-        if (!isOpen) {
-          e.preventDefault();
-          e.stopPropagation();
-          first();
-        }
-        break;
-      default:
-        break;
-    }
-  };
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          if (!isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            first();
+          }
+          break;
+        case 'ArrowUp':
+          if (!isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            last();
+          }
+          break;
+        case 'Enter':
+        case ' ':
+          if (!isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            first();
+          }
+          break;
+        default:
+          break;
+      }
+    };
 
-  useEffect(() => {
-    const unregister = registerTopLevelItem(ref, id);
-    return unregister;
-  }, [menuItems, registerTopLevelItem]);
+    useEffect(() => {
+      const unregister = registerTopLevelItem(ref, id);
+      return unregister;
+    }, [menuItems, registerTopLevelItem]);
 
-  return (
-    <button
-      {...props}
-      {...handlers}
-      ref={ref}
-      role={role}
-      onMouseEnter={handleMouseEnter}
-      onKeyDown={handleKeyDown}
-      aria-haspopup={hasPopup}
-      aria-expanded={isOpen}
-    >
-      <span className="nav__item-header">{title}</span>
-      <TriangleIcon
-        className="nav__item-header-triangle"
-        focusable="false"
-        aria-hidden="true"
-      />
-    </button>
-  );
-});
-
-MenubarTrigger.propTypes = {
-  role: PropTypes.string,
-  hasPopup: PropTypes.oneOf(['menu', 'listbox', 'true'])
-};
-
-MenubarTrigger.defaultProps = {
-  role: 'menuitem',
-  hasPopup: 'menu'
-};
+    return (
+      <button
+        {...props}
+        {...handlers}
+        ref={ref}
+        role={role}
+        onMouseEnter={handleMouseEnter}
+        onKeyDown={handleKeyDown}
+        aria-haspopup={hasPopup}
+        aria-expanded={isOpen}
+      >
+        <span className="nav__item-header">{title}</span>
+        <TriangleIcon
+          className="nav__item-header-triangle"
+          focusable="false"
+          aria-hidden="true"
+        />
+      </button>
+    );
+  }
+);
 
 /* -------------------------------------------------------------------------------------------------
  * MenubarList
  * -----------------------------------------------------------------------------------------------*/
 
+export interface MenubarListProps {
+  /** MenubarItems that should be rendered in the list */
+  children?: React.ReactNode;
+  /** The ARIA role of the list element */
+  role?: MenubarListItemRole;
+}
+
 /**
  * MenubarList renders the container for menu items in a submenu. It provides context and handles ARIA roles.
- *
- * @param {Object} props
- * @param {React.ReactNode} props.children - MenubarItems that should be rendered in the list
- * @param {string} [props.role='menu'] - The ARIA role of the list element
- * @returns {JSX.Element}
- *
  * @example
  * <MenubarList role={listRole}>
  *  ... <MenubarItem> elements
  * </MenubarList>
  */
-
-function MenubarList({ children, role, ...props }) {
+function MenubarList({
+  children,
+  role = MenubarListItemRole.MENU,
+  ...props
+}: MenubarListProps) {
   const { id, title } = useContext(SubmenuContext);
 
   return (
@@ -186,16 +199,6 @@ function MenubarList({ children, role, ...props }) {
     </ul>
   );
 }
-
-MenubarList.propTypes = {
-  children: PropTypes.node,
-  role: PropTypes.oneOf(['menu', 'listbox'])
-};
-
-MenubarList.defaultProps = {
-  children: null,
-  role: 'menu'
-};
 
 /* -------------------------------------------------------------------------------------------------
  * MenubarSubmenu
@@ -223,14 +226,22 @@ MenubarList.defaultProps = {
  * </Menubar>
  */
 
+export interface MenubarSubmenuProps {
+  id: string;
+  children?: React.ReactNode;
+  title: string;
+  triggerRole?: string;
+  listRole?: MenubarListItemRole;
+}
+
 function MenubarSubmenu({
   children,
   id,
   title,
-  triggerRole: customTriggerRole,
-  listRole: customListRole,
+  triggerRole = 'menuitem',
+  listRole = MenubarListItemRole.MENU,
   ...props
-}) {
+}: MenubarSubmenuProps) {
   const { isOpen, handlers } = useMenuProps(id);
   const [submenuActiveIndex, setSubmenuActiveIndex] = useState(0);
   const { setMenuOpen, toggleMenuOpen } = useContext(MenubarContext);
@@ -239,9 +250,10 @@ function MenubarSubmenu({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const listItemRef = useRef<HTMLLIElement | null>(null);
 
-  const triggerRole = customTriggerRole || 'menuitem';
-  const listRole = customListRole || 'menu';
-  const hasPopup = listRole === 'listbox' ? 'listbox' : 'menu';
+  const hasPopup =
+    listRole === MenubarListItemRole.LISTBOX
+      ? MenubarTriggerAriaHasPopup.LISTBOX
+      : MenubarTriggerAriaHasPopup.MENU;
 
   const prev = useCallback(() => {
     const newIndex =
@@ -445,19 +457,5 @@ function MenubarSubmenu({
     </SubmenuContext.Provider>
   );
 }
-
-MenubarSubmenu.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.node,
-  title: PropTypes.node.isRequired,
-  triggerRole: PropTypes.string,
-  listRole: PropTypes.string
-};
-
-MenubarSubmenu.defaultProps = {
-  children: null,
-  triggerRole: 'menuitem',
-  listRole: 'menu'
-};
 
 export default MenubarSubmenu;
