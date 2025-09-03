@@ -23,6 +23,10 @@ export enum MenubarListItemRole {
   LISTBOX = 'listbox'
 }
 
+/* -------------------------------------------------------------------------------------------------
+ * useMenuProps hook
+ * -----------------------------------------------------------------------------------------------*/
+
 export function useMenuProps(id: string) {
   const activeMenu = useContext(MenuOpenContext);
 
@@ -43,7 +47,7 @@ export function useMenuProps(id: string) {
  * -----------------------------------------------------------------------------------------------*/
 
 /** Custom subset of valid values for aria-hasPopup for the MenubarTrigger */
-export enum MenubarTriggerAriaHasPopup {
+enum MenubarTriggerAriaHasPopup {
   MENU = MenubarListItemRole.MENU,
   LISTBOX = MenubarListItemRole.LISTBOX,
   TRUE = 'true'
@@ -94,6 +98,7 @@ const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
     const { id, title, first, last } = useContext(SubmenuContext);
     const { isOpen, handlers } = useMenuProps(id);
 
+    // `ref` is always a button from MenubarSubmenu, so safe to cast.
     const buttonRef = ref as React.RefObject<HTMLButtonElement>;
 
     const handleMouseEnter = (e: React.MouseEvent) => {
@@ -167,7 +172,7 @@ const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
  * MenubarList
  * -----------------------------------------------------------------------------------------------*/
 
-export interface MenubarListProps {
+interface MenubarListProps {
   /** MenubarItems that should be rendered in the list */
   children?: React.ReactNode;
   /** The ARIA role of the list element */
@@ -205,12 +210,26 @@ function MenubarList({
 /* -------------------------------------------------------------------------------------------------
  * MenubarSubmenu
  * -----------------------------------------------------------------------------------------------*/
+/**
+ * Safely casts a value to an HTMLElement.
+ *
+ * @param {unknown | null} node - The value to check.
+ * @returns {HTMLElement | null} The node if it is an HTMLElement, otherwise null.
+ */
+function getHTMLElement(node: unknown | null): HTMLElement | null {
+  return node instanceof HTMLElement ? node : null;
+}
 
 export interface MenubarSubmenuProps {
+  /** The unique id of the submenu */
   id: string;
+  /** A list of menu items that will be rendered in the menubar */
   children?: React.ReactNode;
+  /** The title of the submenu */
   title: string;
+  /**  The ARIA role of the trigger button */
   triggerRole?: string;
+  /** The ARIA role of the list element */
   listRole?: MenubarListItemRole;
 }
 
@@ -218,14 +237,6 @@ export interface MenubarSubmenuProps {
  * MenubarSubmenu manages a triggerable submenu within a menubar. It is a compound component
  * that manages the state of the submenu and its items. It also provides keyboard navigation
  * and screen reader support. Supports menu and listbox roles. Needs to be a direct child of Menubar.
- *
- * @param {Object} props
- * @param {React.ReactNode} props.children - A list of menu items that will be rendered in the menubar
- * @param {string} props.id - The unique id of the submenu
- * @param {string} props.title - The title of the submenu
- * @param {string} [props.triggerRole='menuitem'] - The ARIA role of the trigger button
- * @param {string} [props.listRole='menu'] - The ARIA role of the list element
- * @returns {JSX.Element}
  *
  * @example
  * <Menubar>
@@ -288,23 +299,22 @@ export function MenubarSubmenu({
     const items = Array.from(submenuItems);
     const activeItem = items[submenuActiveIndex];
 
-    if (activeItem) {
-      const activeItemNode = activeItem.firstChild;
+    if (!activeItem) return;
 
-      const isDisabled =
-        activeItemNode.getAttribute('aria-disabled') === 'true';
+    const activeItemNode = getHTMLElement(activeItem.firstChild);
 
-      if (isDisabled) {
-        return;
-      }
+    if (!activeItemNode) return;
 
-      activeItemNode.click();
+    const isDisabled = activeItemNode.getAttribute('aria-disabled') === 'true';
 
-      toggleMenuOpen(id);
+    if (isDisabled) return;
 
-      if (buttonRef.current) {
-        buttonRef.current.focus();
-      }
+    activeItemNode.click();
+
+    toggleMenuOpen(id);
+
+    if (buttonRef.current) {
+      buttonRef.current.focus();
     }
   }, [submenuActiveIndex, submenuItems, buttonRef]);
 
@@ -404,14 +414,13 @@ export function MenubarSubmenu({
     if (isOpen && submenuItems.size > 0) {
       const items = Array.from(submenuItems);
       const activeItem = items[submenuActiveIndex];
+      if (!activeItem) return;
 
-      if (activeItem) {
-        const activeNode = activeItem.querySelector(
-          '[role="menuitem"], [role="option"]'
-        );
-        if (activeNode) {
-          activeNode.focus();
-        }
+      const activeNode = getHTMLElement(
+        activeItem.querySelector('[role="menuitem"], [role="option"]')
+      );
+      if (activeNode) {
+        activeNode.focus();
       }
     }
   }, [isOpen, submenuItems, submenuActiveIndex]);
