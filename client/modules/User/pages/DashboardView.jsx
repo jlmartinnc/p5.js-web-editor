@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-import Button from '../../../common/Button';
+import { Button } from '../../../common/Button';
 import Nav from '../../IDE/components/Header/Nav';
 import Overlay from '../../App/components/Overlay';
 import AssetList from '../../IDE/components/AssetList';

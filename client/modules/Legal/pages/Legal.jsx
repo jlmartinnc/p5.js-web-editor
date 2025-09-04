@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import RouterTab from '../../../common/RouterTab';
+import { RouterTab } from '../../../common/RouterTab';
 import RootPage from '../../../components/RootPage';
 import { remSize } from '../../../theme';
 import Loader from '../../App/components/loader';

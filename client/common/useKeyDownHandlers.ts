@@ -1,19 +1,19 @@
 import { mapKeys } from 'lodash';
-import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
 import { isMac } from '../utils/device';
 
+/** Function to call upon keydown */
+export type KeydownHandler = (e: KeyboardEvent) => void;
+/** An object mapping from keys like 'ctrl-s' or 'ctrl-shift-1' to handlers. */
+export type KeydownHandlerMap = Record<string, KeydownHandler>;
+
 /**
  * Attaches keydown handlers to the global document.
- *
  * Handles Mac/PC switching of Ctrl to Cmd.
- *
- * @param {Record<string, (e: KeyboardEvent) => void>} keyHandlers - an object
- * which maps from the key to its event handler.  The object keys are a combination
- * of the key and prefixes `ctrl-` `shift-` (ie. 'ctrl-f', 'ctrl-shift-f')
- * and the values are the function to call when that specific key is pressed.
+ * @param keyHandlers - an object which maps from the key to its event handler. The object keys are a combination of the key and prefixes `ctrl-` `shift-`
+ * (ie. 'ctrl-f', 'ctrl-shift-f') and the values are the function to call when that specific key is pressed.
  */
-export default function useKeyDownHandlers(keyHandlers) {
+export function useKeyDownHandlers(keyHandlers: KeydownHandlerMap) {
   /**
    * Instead of memoizing the handlers, use a ref and call the current
    * handler at the time of the event.
@@ -53,20 +53,3 @@ export default function useKeyDownHandlers(keyHandlers) {
     return () => document.removeEventListener('keydown', handleEvent);
   }, [handleEvent]);
 }
-
-/**
- * Component version can be used in class components where hooks can't be used.
- *
- * @param {Record<string, (e: KeyboardEvent) => void>} handlers
- */
-export const DocumentKeyDown = ({ handlers }) => {
-  useKeyDownHandlers(handlers);
-  return null;
-};
-DocumentKeyDown.propTypes = {
-  handlers: PropTypes.objectOf(PropTypes.func)
-};
-
-DocumentKeyDown.defaultProps = {
-  handlers: {}
-};
