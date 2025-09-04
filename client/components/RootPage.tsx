@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { prop } from '../theme';
 
-const RootPage = styled.div`
+interface RootPageProps {
+  fixedHeight?: string;
+}
+
+export const RootPage = styled.div<RootPageProps>`
   min-height: 100vh;
   height: ${({ fixedHeight }) => fixedHeight || '100vh'};
   display: flex;
@@ -21,5 +25,3 @@ const RootPage = styled.div`
     }
   }
 `;
-
-export default RootPage;

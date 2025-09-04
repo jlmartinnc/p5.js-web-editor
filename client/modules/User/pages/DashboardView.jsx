@@ -10,7 +10,7 @@ import AssetList from '../../IDE/components/AssetList';
 import AssetSize from '../../IDE/components/AssetSize';
 import CollectionList from '../../IDE/components/CollectionList';
 import SketchList from '../../IDE/components/SketchList';
-import RootPage from '../../../components/RootPage';
+import { RootPage } from '../../../components/RootPage';
 import { newProject } from '../../IDE/actions/project';
 import {
   CollectionSearchbar,
