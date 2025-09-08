@@ -46,6 +46,15 @@
       {
         "displayName": "server",
         "testEnvironment": "node",
+        "transform": {
+          "^.+\\.[jt]sx?$": "babel-jest"
+        },
+        "moduleFileExtensions": [
+          "ts",
+          "js",
+          "json",
+          "node"
+        ],
         "setupFilesAfterEnv": [
           "<rootDir>/server/jest.setup.js"
         ],
