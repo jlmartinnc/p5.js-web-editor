@@ -20,7 +20,10 @@ const initialState = window.__INITIAL_STATE__;
 
 const store = configureStore(initialState);
 
-if (window.location.href.indexOf('full') === -1) {
+if (
+  window.location.href.indexOf('full') === -1 &&
+  window.location.href.indexOf('embed') === -1
+) {
   // Add a banner to the page
   const banner = document.createElement('div');
   banner.id = 'processing-banner';
