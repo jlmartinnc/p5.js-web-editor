@@ -136,6 +136,9 @@
         "no-unused-vars": "off",
         "import/no-default-export": "warn",
         "no-underscore-dangle": "warn",
+        "react/require-default-props": "off",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     },
     {

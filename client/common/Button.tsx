@@ -1,28 +1,112 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 import { remSize, prop } from '../theme';
 
-const kinds = {
-  primary: 'primary',
-  secondary: 'secondary'
-};
+/**
+ * Enum for the visual style of a Button.
+ *
+ * These values transpile to lowercase strings (`'primary' | 'secondary'`)
+ * that map directly to keys in the `Button` object in `theme.js` for styling.
+ */
+export enum ButtonKinds {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary'
+}
+/**
+ * Enum for the display type of a Button.
+ *
+ * These values transpile to lowercase strings (`'block' | 'inline'`)
+ * and map to display styles in the `Button` object in `theme.js`.
+ */
+export enum ButtonDisplays {
+  BLOCK = 'block',
+  INLINE = 'inline'
+}
+/**
+ * Enum for the native HTML button type.
+ *
+ * These values transpile to lowercase strings (`'button' | 'submit'`)
+ * and correspond to the `type` attribute on a native <button>.
+ * They can also be used in `theme.js` if needed for button-specific styles.
+ */
+export enum ButtonTypes {
+  BUTTON = 'button',
+  SUBMIT = 'submit'
+}
 
-const displays = {
-  block: 'block',
-  inline: 'inline'
-};
+export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
+  /**
+   * The visible part of the button, telling the user what
+   * the action is
+   */
+  children?: React.ReactNode;
+  /**
+      If the button can be activated or not
+    */
+  disabled?: boolean;
+  /**
+   * The display type of the button—inline or block
+   */
+  display?: ButtonDisplays;
+  /**
+   * SVG icon to place after child content
+   */
+  iconAfter?: React.ReactNode;
+  /**
+   * SVG icon to place before child content
+   */
+  iconBefore?: React.ReactNode;
+  /**
+   * If the button content is only an SVG icon
+   */
+  iconOnly?: boolean;
+  /**
+   * The kind of button - determines how it appears visually
+   */
+  kind?: ButtonKinds;
+  /**
+   * Specifying an href will use an <a> to link to the URL
+   */
+  href?: string;
+  /**
+   * An ARIA Label used for accessibility
+   */
+  'aria-label'?: string;
+  /**
+   * Specifying a to URL will use a react-router Link
+   */
+  to?: string;
+  /**
+   * If using a native button, specifies on an onClick action
+   */
+  onClick?: () => void;
+  /**
+   * If using a button, then type is defines the type of button
+   */
+  type?: ButtonTypes;
+  /**
+   * Controls whether the underlying SVG is focusable.
+   * Only relevant for IconButton (or buttons that render an SVG as content).
+   * In SVGs, the `focusable` attribute must be a string (`"true"` or `"false"`),
+   * but React will automatically convert a boolean prop to the correct string value.
+   */
+  focusable?: boolean;
+}
+
+interface StyledButtonProps extends ButtonProps {
+  kind: ButtonKinds;
+  display: ButtonDisplays;
+}
 
 // The '&&&' will increase the specificity of the
 // component's CSS so that it overrides the more
 // general global styles
-const StyledButton = styled.button`
+const StyledButton = styled.button<StyledButtonProps>`
   &&& {
     font-weight: bold;
     display: ${({ display }) =>
-      display === displays.inline ? 'inline-flex' : 'flex'};
+      display === ButtonDisplays.INLINE ? 'inline-flex' : 'flex'};
     justify-content: center;
     align-items: center;
 
@@ -109,35 +193,37 @@ const StyledInlineButton = styled.button`
 `;
 
 /**
- * A Button performs an primary action
+ * Renders a component with a button appearance, but which is:
+ *  - External anchor link if passed a `href`
+ *  - Internal React Router link if passed a `to`
+ *  - Default: Native Button
  */
-const Button = ({
-  children,
-  display,
+export const Button = ({
+  children = null,
+  display = ButtonDisplays.BLOCK,
   href,
-  kind,
-  iconBefore,
-  iconAfter,
-  iconOnly,
+  kind = ButtonKinds.PRIMARY,
+  iconBefore = null,
+  iconAfter = null,
+  iconOnly = false,
   'aria-label': ariaLabel,
   to,
-  type,
+  type = ButtonTypes.BUTTON,
   ...props
-}) => {
+}: ButtonProps) => {
   const hasChildren = React.Children.count(children) > 0;
   const content = (
     <>
       {iconBefore}
-      {hasChildren && <span>{children}</span>}
+      {hasChildren && !iconOnly && <span>{children}</span>}
       {iconAfter}
     </>
   );
-  let StyledComponent = StyledButton;
+  const StyledComponent: React.ElementType = iconOnly
+    ? StyledInlineButton
+    : StyledButton;
 
-  if (iconOnly) {
-    StyledComponent = StyledInlineButton;
-  }
-
+  // Anchor Link
   if (href) {
     return (
       <StyledComponent
@@ -153,6 +239,7 @@ const Button = ({
     );
   }
 
+  // Internal React Router Link
   if (to) {
     return (
       <StyledComponent
@@ -168,6 +255,7 @@ const Button = ({
     );
   }
 
+  // Native Button
   return (
     <StyledComponent
       kind={kind}
@@ -180,70 +268,3 @@ const Button = ({
     </StyledComponent>
   );
 };
-
-Button.defaultProps = {
-  children: null,
-  disabled: false,
-  display: displays.block,
-  iconAfter: null,
-  iconBefore: null,
-  iconOnly: false,
-  kind: kinds.primary,
-  href: null,
-  'aria-label': null,
-  to: null,
-  type: 'button'
-};
-
-Button.kinds = kinds;
-Button.displays = displays;
-
-Button.propTypes = {
-  /**
-   * The visible part of the button, telling the user what
-   * the action is
-   */
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  /**
-    If the button can be activated or not
-  */
-  disabled: PropTypes.bool,
-  /**
-   * The display type of the button—inline or block
-   */
-  display: PropTypes.oneOf(Object.values(displays)),
-  /**
-   * SVG icon to place after child content
-   */
-  iconAfter: PropTypes.element,
-  /**
-   * SVG icon to place before child content
-   */
-  iconBefore: PropTypes.element,
-  /**
-   * If the button content is only an SVG icon
-   */
-  iconOnly: PropTypes.bool,
-  /**
-   * The kind of button - determines how it appears visually
-   */
-  kind: PropTypes.oneOf(Object.values(kinds)),
-  /**
-   * Specifying an href will use an <a> to link to the URL
-   */
-  href: PropTypes.string,
-  /**
-   * An ARIA Label used for accessibility
-   */
-  'aria-label': PropTypes.string,
-  /**
-   * Specifying a to URL will use a react-router Link
-   */
-  to: PropTypes.string,
-  /**
-   * If using a button, then type is defines the type of button
-   */
-  type: PropTypes.oneOf(['button', 'submit'])
-};
-
-export default Button;

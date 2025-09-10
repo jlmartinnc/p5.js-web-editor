@@ -1,7 +1,19 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useContext, useRef } from 'react';
 import { MenubarContext, SubmenuContext, ParentMenuContext } from './contexts';
-import ButtonOrLink from '../../common/ButtonOrLink';
+import { ButtonOrLink, ButtonOrLinkProps } from '../../common/ButtonOrLink';
+
+export enum MenubarItemRole {
+  MENU_ITEM = 'menuitem',
+  OPTION = 'option'
+}
+
+export interface MenubarItemProps extends Omit<ButtonOrLinkProps, 'role'> {
+  /**
+   * Provides a way to deal with optional items.
+   */
+  role?: MenubarItemRole;
+  selected?: boolean;
+}
 
 /**
  * MenubarItem wraps a button or link in an accessible list item that
@@ -36,14 +48,14 @@ import ButtonOrLink from '../../common/ButtonOrLink';
  * </MenubarItem>
  */
 
-function MenubarItem({
-  className,
+export function MenubarItem({
+  className = 'nav__dropdown-item',
   id,
-  role: customRole,
-  isDisabled,
-  selected,
+  role: customRole = MenubarItemRole.MENU_ITEM,
+  isDisabled = false,
+  selected = false,
   ...rest
-}) {
+}: MenubarItemProps) {
   const { createMenuItemHandlers, hasFocus } = useContext(MenubarContext);
   const {
     setSubmenuActiveIndex,
@@ -94,25 +106,3 @@ function MenubarItem({
     </li>
   );
 }
-
-MenubarItem.propTypes = {
-  ...ButtonOrLink.propTypes,
-  className: PropTypes.string,
-  id: PropTypes.string,
-  /**
-   * Provides a way to deal with optional items.
-   */
-  role: PropTypes.oneOf(['menuitem', 'option']),
-  isDisabled: PropTypes.bool,
-  selected: PropTypes.bool
-};
-
-MenubarItem.defaultProps = {
-  className: 'nav__dropdown-item',
-  id: undefined,
-  role: 'menuitem',
-  isDisabled: false,
-  selected: false
-};
-
-export default MenubarItem;
