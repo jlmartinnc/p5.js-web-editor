@@ -644,7 +644,9 @@
     "UsedScreenReader": "Used with screen reader",
     "PlainText": "Plain-text",
     "TableText": "Table-text",
-    "Sound": "Sound"
+    "Sound": "Sound",
+    "Preferences": "Preferences",
+    "Language": "Language"
   },
   "PreferenceCreators": {
     "On": "On",
