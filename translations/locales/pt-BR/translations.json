@@ -589,6 +589,11 @@
     "EditSketchARIA": "Editar esboço",
     "ByUser": "por"
   },
+  "MobilePreferences": {
+    "Settings": "Configurações",
+    "Preferences": "Preferências",
+    "Language": "Idioma"
+  },
   "PreferenceCreators": {
     "On": "Ligado",
     "Off": "Desligado"
