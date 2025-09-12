@@ -677,5 +677,16 @@
   },
   "SkipLink": {
     "PlaySketch": "Skip to Play Sketch"
+  },
+  "Visibility": {
+    "Label": "Visibility",
+    "Public": {
+      "Description": "Anyone can see this sketch.",
+      "Label": "Public"
+    },
+    "Private": {
+      "Description": "Only you can see this sketch.",
+      "Label": "Private"
+    }
   }
 }
