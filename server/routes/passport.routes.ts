@@ -1,7 +1,7 @@
 import Router from 'express';
 import passport from 'passport';
 
-const router = new Router();
+const router = Router();
 
 const authenticateOAuth = (service) => (req, res, next) => {
   passport.authenticate(service, { failureRedirect: '/login' }, (err, user) => {
@@ -32,4 +32,5 @@ router.get('/auth/github/callback', authenticateOAuth('github'));
 router.get('/auth/google', passport.authenticate('google'));
 router.get('/auth/google/callback', authenticateOAuth('google'));
 
+// eslint-disable-next-line import/no-default-export
 export default router;
