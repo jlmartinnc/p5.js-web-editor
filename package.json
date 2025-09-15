@@ -1,6 +1,6 @@
 {
   "name": "p5.js-web-editor",
-  "version": "2.18.1",
+  "version": "2.18.2",
   "description": "The web editor for p5.js.",
   "scripts": {
     "clean": "rimraf dist",
@@ -194,7 +194,7 @@
     "@redux-devtools/log-monitor": "^4.0.2",
     "@reduxjs/toolkit": "^1.9.3",
     "async": "^3.2.3",
-    "axios": "^1.8.2",
+    "axios": "^1.12.1",
     "babel-plugin-styled-components": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "blob-util": "^1.2.1",
