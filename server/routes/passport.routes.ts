@@ -1,10 +1,10 @@
-import Router from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 
 const router = Router();
 
-const authenticateOAuth = (service) => (req, res, next) => {
-  passport.authenticate(service, { failureRedirect: '/login' }, (err, user) => {
+const authenticateOAuth = (service: string) => (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate(service, { failureRedirect: '/login' }, (err: any, user: Express.User) => {
     if (err) {
       // use query string param to show error;
       res.redirect(`/account?error=${service}`);
