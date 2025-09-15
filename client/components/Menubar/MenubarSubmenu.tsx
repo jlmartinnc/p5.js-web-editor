@@ -23,6 +23,12 @@ export enum MenuContainerRole {
   LISTBOX = 'listbox'
 }
 
+/** Custom subset of valid roles for the Menubar items */
+export enum MenubarListItemRole {
+  MENUITEM = 'menuitem',
+  OPTION = 'option'
+}
+
 /* -------------------------------------------------------------------------------------------------
  * useMenuProps hook
  * -----------------------------------------------------------------------------------------------*/
@@ -58,7 +64,7 @@ interface MenubarTriggerProps
     'aria-haspopup' | 'aria-expanded' | 'onMouseEnter' | 'onKeyDown' | 'role'
   > {
   /** The ARIA role of the trigger button */
-  role?: string;
+  role?: MenubarListItemRole;
   /** The ARIA property that indicates the presence of a popup */
   hasPopup?: MenubarTriggerAriaHasPopup;
 }
@@ -85,7 +91,11 @@ interface MenubarTriggerProps
  */
 const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
   (
-    { role = 'menuitem', hasPopup = MenubarTriggerAriaHasPopup.MENU, ...props },
+    {
+      role = MenubarListItemRole.MENUITEM,
+      hasPopup = MenubarTriggerAriaHasPopup.MENU,
+      ...props
+    },
     ref
   ) => {
     const {
@@ -227,7 +237,7 @@ export interface MenubarSubmenuProps {
   /** The title of the submenu */
   title: string;
   /**  The ARIA role of the trigger button */
-  triggerRole?: string;
+  triggerRole?: MenubarListItemRole;
   /** The ARIA role of the list element */
   listRole?: MenuContainerRole;
 }
@@ -249,7 +259,7 @@ export function MenubarSubmenu({
   children,
   id,
   title,
-  triggerRole = 'menuitem',
+  triggerRole = MenubarListItemRole.MENUITEM,
   listRole = MenuContainerRole.MENU,
   ...props
 }: MenubarSubmenuProps) {
