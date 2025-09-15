@@ -17,8 +17,8 @@ import {
 } from './contexts';
 import TriangleIcon from '../../images/down-filled-triangle.svg';
 
-/** Custom subset of valid list item roles for the Menubar list items */
-export enum MenubarListItemRole {
+/** Custom subset of valid roles for the Menubar container */
+export enum MenuContainerRole {
   MENU = 'menu',
   LISTBOX = 'listbox'
 }
@@ -48,9 +48,8 @@ export function useMenuProps(id: string) {
 
 /** Custom subset of valid values for aria-hasPopup for the MenubarTrigger */
 enum MenubarTriggerAriaHasPopup {
-  MENU = MenubarListItemRole.MENU,
-  LISTBOX = MenubarListItemRole.LISTBOX,
-  TRUE = 'true'
+  MENU = MenuContainerRole.MENU,
+  LISTBOX = MenuContainerRole.LISTBOX
 }
 
 interface MenubarTriggerProps
@@ -176,7 +175,7 @@ interface MenubarListProps {
   /** MenubarItems that should be rendered in the list */
   children?: React.ReactNode;
   /** The ARIA role of the list element */
-  role?: MenubarListItemRole;
+  role?: MenuContainerRole;
 }
 
 /**
@@ -188,7 +187,7 @@ interface MenubarListProps {
  */
 function MenubarList({
   children,
-  role = MenubarListItemRole.MENU,
+  role = MenuContainerRole.MENU,
   ...props
 }: MenubarListProps) {
   const { id, title } = useContext(SubmenuContext);
@@ -230,7 +229,7 @@ export interface MenubarSubmenuProps {
   /**  The ARIA role of the trigger button */
   triggerRole?: string;
   /** The ARIA role of the list element */
-  listRole?: MenubarListItemRole;
+  listRole?: MenuContainerRole;
 }
 
 /**
@@ -251,7 +250,7 @@ export function MenubarSubmenu({
   id,
   title,
   triggerRole = 'menuitem',
-  listRole = MenubarListItemRole.MENU,
+  listRole = MenuContainerRole.MENU,
   ...props
 }: MenubarSubmenuProps) {
   const { isOpen, handlers } = useMenuProps(id);
@@ -263,7 +262,7 @@ export function MenubarSubmenu({
   const listItemRef = useRef<HTMLLIElement | null>(null);
 
   const hasPopup =
-    listRole === MenubarListItemRole.LISTBOX
+    listRole === MenuContainerRole.LISTBOX
       ? MenubarTriggerAriaHasPopup.LISTBOX
       : MenubarTriggerAriaHasPopup.MENU;
 
