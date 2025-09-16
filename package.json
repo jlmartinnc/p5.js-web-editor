@@ -27,8 +27,9 @@
     "storybook:build:css": "sass client/styles/main.scss client/styles/storybook.css",
     "storybook": "npm run storybook:build:css && storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "typecheck": "npm run typecheck:client",
-    "typecheck:client": "npx tsc --noEmit -p ./client/tsconfig.json"
+    "typecheck": "npm run typecheck:client && npm run typecheck:server",
+    "typecheck:client": "npx tsc --noEmit -p ./client/tsconfig.json",
+    "typecheck:server": "npx tsc --noEmit -p ./server/tsconfig.json"
   },
   "husky": {
     "hooks": {
@@ -45,6 +46,15 @@
       {
         "displayName": "server",
         "testEnvironment": "node",
+        "transform": {
+          "^.+\\.[jt]sx?$": "babel-jest"
+        },
+        "moduleFileExtensions": [
+          "ts",
+          "js",
+          "json",
+          "node"
+        ],
         "setupFilesAfterEnv": [
           "<rootDir>/server/jest.setup.js"
         ],
