@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import sendHtml, { renderIndex, renderProjectIndex } from '../views/index';
+import { sendHtml, renderIndex, renderProjectIndex } from '../views/index';
 import { userExists } from '../controllers/user.controller';
 import {
   projectExists,

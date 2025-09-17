@@ -10,14 +10,13 @@ import PreviewFrame from '../components/PreviewFrame';
 import Console from '../components/Console';
 import Toast from '../components/Toast';
 import { updateFileContent } from '../actions/files';
-
 import {
   autosaveProject,
   clearPersistedState,
   getProject
 } from '../actions/project';
 import { getIsUserOwner } from '../selectors/users';
-import RootPage from '../../../components/RootPage';
+import { RootPage } from '../../../components/RootPage';
 import Header from '../components/Header';
 import FloatingActionButton from '../components/FloatingActionButton';
 import Editor from '../components/Editor';
@@ -98,6 +97,7 @@ const IDEView = () => {
   const project = useSelector((state) => state.project);
   const isUserOwner = useSelector(getIsUserOwner);
   const dispatch = useDispatch();
+
   const { t } = useTranslation();
 
   const params = useParams();
