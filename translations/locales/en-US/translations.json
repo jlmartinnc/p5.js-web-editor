@@ -27,7 +27,10 @@
       "Title": "Help",
       "KeyboardShortcuts": "Keyboard Shortcuts",
       "Reference": "Reference",
-      "About": "About"
+      "About": "About",
+      "ReportBug": "Report a Bug",
+      "ChatOnDiscord":"Chat On Discord",
+      "PostOnTheForum":"Post on the Forum"
     },
     "Lang": "Language",
     "BackEditor": "Back to Editor",
