@@ -86,6 +86,15 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
 
       // Handle renaming inside classes
       if (isInsideClassContext) {
+        const tempPos = {
+          line: pos.line,
+          ch: pos.ch + oldName.length
+        };
+        const token = cm.getTokenAt(tempPos);
+        const tokenType = token.type;
+
+        if (tokenType === 'property' && baseContext !== thisContext) return;
+
         const classContext = getClassContext(cm, ast, fromPos);
         let baseMethodName = null;
         if (classContext && classContext.includes('.')) {
@@ -157,6 +166,15 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       }
       // Handle renaming outside classes
       else {
+        const tempPos = {
+          line: pos.line,
+          ch: pos.ch + oldName.length
+        };
+        const token = cm.getTokenAt(tempPos);
+        const tokenType = token.type;
+
+        if (tokenType === 'property') return;
+
         const thisScopeVars = scopeToDeclaredVarsMap[thisContext] || {};
         const baseScopeVars = scopeToDeclaredVarsMap[baseContext] || {};
         const globalScopeVars = scopeToDeclaredVarsMap.global || {};

@@ -1,10 +1,27 @@
 import announceToScreenReader from './ScreenReaderHelper';
+import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
+import { getClassContext, getContext, getAST } from './renameVariableHelper';
 
 const allFuncs = require('./p5-reference-functions.json');
 
 const allFunsList = new Set(allFuncs.functions.list);
 
-function isValidIdentifierSelection(selection, tokenType) {
+function isValidIdentifierSelection(cm, fromPos, selection, tokenType) {
+  const { scopeToDeclaredVarsMap = {}, userDefinedClassMetadata = {} } =
+    p5CodeAstAnalyzer(cm) || {};
+  const ast = getAST(cm);
+
+  const baseContext = getContext(
+    cm,
+    ast,
+    fromPos,
+    scopeToDeclaredVarsMap,
+    userDefinedClassMetadata
+  );
+
+  const isInsideClassContext = baseContext in userDefinedClassMetadata;
+
+  if (tokenType === 'property' && !isInsideClassContext) return false;
   if (!selection || selection.trim() === '') return false;
   if (
     tokenType === 'comment' ||
@@ -141,10 +158,17 @@ function openRenameInputDialog(coords, oldName, onSubmit) {
   });
 }
 
-export default function showRenameDialog(tokenType, coords, oldName, onSubmit) {
+export default function showRenameDialog(
+  cm,
+  fromPos,
+  tokenType,
+  coords,
+  oldName,
+  onSubmit
+) {
   if (
     (allFunsList.has(oldName) && tokenType !== 'p5-variable') ||
-    !isValidIdentifierSelection(oldName, tokenType)
+    !isValidIdentifierSelection(cm, fromPos, oldName, tokenType)
   ) {
     showTemporaryDialog(coords, 'You cannot rename this element');
     announceToScreenReader(`The word ${oldName} cannot be renamed`, true);

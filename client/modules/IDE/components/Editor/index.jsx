@@ -561,11 +561,18 @@ class Editor extends React.Component {
     const fromPos =
       CodeMirror.cmpPos(sel.anchor, sel.head) <= 0 ? sel.anchor : sel.head;
 
-    showRenameDialog(tokenType, cursorCoords, selection, (newName) => {
-      if (newName && newName.trim() !== '' && newName !== selection) {
-        handleRename(fromPos, selection, newName, cm);
+    showRenameDialog(
+      cm,
+      fromPos,
+      tokenType,
+      cursorCoords,
+      selection,
+      (newName) => {
+        if (newName && newName.trim() !== '' && newName !== selection) {
+          handleRename(fromPos, selection, newName, cm);
+        }
       }
-    });
+    );
   }
 
   initializeDocuments(files) {
