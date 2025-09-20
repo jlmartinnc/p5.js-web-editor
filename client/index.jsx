@@ -43,6 +43,7 @@ const App = () => (
   </div>
 );
 
+// This prevents crashes in test environments (like Jest) where document.getElementById('root') may return null.
 const rootEl = document.getElementById('root');
 if (rootEl) {
   render(

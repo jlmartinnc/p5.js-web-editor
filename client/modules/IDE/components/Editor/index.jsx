@@ -75,7 +75,7 @@ import IconButton from '../../../../common/IconButton';
 
 import contextAwareHinter from '../../../../utils/contextAwareHinter';
 import showRenameDialog from '../../../../utils/showRenameDialog';
-import { handleRename } from '../../../../utils/rename-variable';
+import handleRename from '../../../../utils/rename-variable';
 import { jumpToDefinition } from '../../../../utils/jump-to-definition';
 import { ensureAriaLiveRegion } from '../../../../utils/ScreenReaderHelper';
 import isMac from '../../../../utils/device';
@@ -171,6 +171,8 @@ class Editor extends React.Component {
       }
     });
 
+    const renameKey = isMac() ? 'Ctrl-F2' : 'F2';
+
     const replaceCommand =
       metaKey === 'Ctrl' ? `${metaKey}-H` : `${metaKey}-Option-F`;
     this._cm.setOption('extraKeys', {
@@ -189,7 +191,7 @@ class Editor extends React.Component {
       [`Shift-${metaKey}-E`]: (cm) => {
         cm.getInputField().blur();
       },
-      F2: (cm) => this.renameVariable(cm),
+      [renameKey]: (cm) => this.renameVariable(cm),
       [`Shift-Tab`]: false,
       [`${metaKey}-Enter`]: () => null,
       [`Shift-${metaKey}-Enter`]: () => null,
@@ -227,6 +229,7 @@ class Editor extends React.Component {
     }
 
     this._cm.on('keydown', (_cm, e) => {
+      // Skip hinting if the user is pasting (Ctrl/Cmd+V) or using modifier keys (Ctrl/Alt)
       if (
         ((e.ctrlKey || e.metaKey) && e.key === 'v') ||
         e.ctrlKey ||

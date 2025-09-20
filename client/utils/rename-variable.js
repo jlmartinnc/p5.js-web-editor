@@ -1,5 +1,3 @@
-/* eslint-disable */
-import { includes } from 'lodash';
 import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import {
   getContext,
@@ -8,20 +6,10 @@ import {
   getClassContext,
   isThisReference
 } from './renameVariableHelper';
-const parser = require('@babel/parser');
+
 const traverse = require('@babel/traverse').default;
 
-export function handleRename(fromPos, oldName, newName, cm) {
-  if (!cm) {
-    return;
-  }
-  const ast = getAST(cm);
-  startRenaming(cm, ast, fromPos, newName, oldName);
-}
-
 function startRenaming(cm, ast, fromPos, newName, oldName) {
-  const code = cm.getValue();
-  const fromIndex = cm.indexFromPos(fromPos);
   const {
     scopeToDeclaredVarsMap = {},
     userDefinedClassMetadata = {},
@@ -69,8 +57,7 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           parent.type === 'ArrowFunctionExpression') &&
         parent.params.some((p) => p.type === 'Identifier' && p.name === oldName)
       ) {
-        if (parent.params.includes(node)) {
-        } else {
+        if (!parent.params.includes(node)) {
           return;
         }
       }
@@ -125,29 +112,30 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           isThis === isBaseThis &&
           baseContext === thisContext
         ) {
-          for (const [methodName, vars] of Object.entries(
-            classMeta.methodVars || {}
-          )) {
-            if (!vars.includes(oldName) && thisContext === methodName) {
-              shouldRenameMethodVar = true;
+          Object.entries(classMeta.methodVars || {}).forEach(
+            ([methodName, vars]) => {
+              if (!vars.includes(oldName) && thisContext === methodName) {
+                const shouldRenameMethodVar = true;
+              }
             }
-          }
+          );
+
           shouldRename =
             thisContext === baseContext &&
-            (currentMethodName == 'constructor' || shouldRenameGlobalVar);
+            (currentMethodName === 'constructor' || shouldRenameGlobalVar);
         } else {
-          for (const [methodName, vars] of Object.entries(
-            classMeta.methodVars || {}
-          )) {
-            if (
-              !vars.includes(oldName) &&
-              baseMethodName === currentMethodName &&
-              isThis === isBaseThis &&
-              baseContext === thisContext
-            ) {
-              shouldRename = true;
+          Object.entries(classMeta.methodVars || {}).forEach(
+            ([methodName, vars]) => {
+              if (
+                !vars.includes(oldName) &&
+                baseMethodName === currentMethodName &&
+                isThis === isBaseThis &&
+                baseContext === thisContext
+              ) {
+                shouldRename = true;
+              }
             }
-          }
+          );
         }
 
         // Rename constructor parameters, class fields, and method variables carefully
@@ -161,7 +149,9 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
 
         if (!(thisContext in userDefinedClassMetadata)) {
           const thisScopeVars = scopeToDeclaredVarsMap[thisContext] || {};
-          shouldRename = isGlobal && !thisScopeVars.hasOwnProperty(oldName);
+          shouldRename =
+            isGlobal &&
+            !Object.prototype.hasOwnProperty.call(thisScopeVars, oldName);
         }
         shouldRenameGlobalVar = isGlobal && thisContext === 'global';
       }
@@ -169,13 +159,21 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
       else {
         const thisScopeVars = scopeToDeclaredVarsMap[thisContext] || {};
         const baseScopeVars = scopeToDeclaredVarsMap[baseContext] || {};
-        const globalScopeVars = scopeToDeclaredVarsMap['global'] || {};
+        const globalScopeVars = scopeToDeclaredVarsMap.global || {};
 
         const isInBaseScope = thisContext === baseContext;
         const isShadowedLocally =
-          !isInBaseScope && thisScopeVars.hasOwnProperty(oldName);
-        const isDeclaredInBaseScope = baseScopeVars.hasOwnProperty(oldName);
-        const isDeclaredGlobally = globalScopeVars.hasOwnProperty(oldName);
+          !isInBaseScope &&
+          Object.prototype.hasOwnProperty.call(thisScopeVars, oldName);
+        const isDeclaredInBaseScope = Object.prototype.hasOwnProperty.call(
+          baseScopeVars,
+          oldName
+        );
+        const isDeclaredGlobally = Object.prototype.hasOwnProperty.call(
+          globalScopeVars,
+          oldName
+        );
+
         const isThisGlobal = isGlobalReference(
           oldName,
           thisContext,
@@ -223,23 +221,24 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
           !(currentMethodName === 'constructor')
         ) {
           const classMeta = userDefinedClassMetadata[thisContext];
-          for (const [methodName, vars] of Object.entries(
-            classMeta.methodVars || {}
-          )) {
-            if (!vars.includes(oldName) && methodName === currentMethodName) {
-              shouldRename = true;
+          Object.entries(classMeta.methodVars || {}).forEach(
+            ([methodName, vars]) => {
+              if (!vars.includes(oldName) && methodName === currentMethodName) {
+                shouldRename = true;
+              }
             }
-          }
+          );
         } else {
           shouldRename =
             isInBaseScope ||
             (!isShadowedLocally &&
-              thisScopeVars.hasOwnProperty(oldName) === {} &&
+              Object.prototype.hasOwnProperty.call(thisScopeVars, oldName) ===
+                {} &&
               baseContext === 'global') ||
             (baseContext === 'global' &&
-              !thisScopeVars.hasOwnProperty(oldName)) ||
+              !Object.prototype.hasOwnProperty.call(thisScopeVars, oldName)) ||
             (isDeclaredGlobally &&
-              !thisScopeVars.hasOwnProperty(oldName) &&
+              !Object.prototype.hasOwnProperty.call(thisScopeVars, oldName) &&
               !isDeclaredInBaseScope);
 
           shouldRenameGlobalVar =
@@ -261,8 +260,16 @@ function startRenaming(cm, ast, fromPos, newName, oldName) {
   );
 
   cm.operation(() => {
-    for (const { from, to } of replacements) {
+    replacements.forEach(({ from, to }) => {
       cm.replaceRange(newName, from, to);
-    }
+    });
   });
+}
+
+export default function handleRename(fromPos, oldName, newName, cm) {
+  if (!cm) {
+    return;
+  }
+  const ast = getAST(cm);
+  startRenaming(cm, ast, fromPos, newName, oldName);
 }

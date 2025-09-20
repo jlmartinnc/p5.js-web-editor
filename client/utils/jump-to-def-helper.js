@@ -1,7 +1,6 @@
-/* eslint-disable */
-import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 import * as parser from '@babel/parser';
 import announceToScreenReader from './ScreenReaderHelper';
+
 const traverse = require('@babel/traverse').default;
 
 export function getScriptLoadOrder(files) {
@@ -10,19 +9,21 @@ export function getScriptLoadOrder(files) {
 
   const scriptRegex = /<script\s+[^>]*src=["']([^"']+)["']/g;
   const scripts = [];
-  let match;
-  while ((match = scriptRegex.exec(indexHtmlFile.content)) !== null) {
+  let match = scriptRegex.exec(indexHtmlFile.content);
+  while (match !== null) {
     scripts.push(match[1]);
+    match = scriptRegex.exec(indexHtmlFile.content);
   }
+
   return scripts;
 }
 
 export function buildProjectSymbolTable(files, scriptOrder) {
   const symbolTable = {};
 
-  for (const scriptName of scriptOrder) {
+  scriptOrder.forEach((scriptName) => {
     const file = files.find((f) => f.name.endsWith(scriptName));
-    if (!file) continue;
+    if (!file) return;
 
     let ast;
     try {
@@ -31,7 +32,7 @@ export function buildProjectSymbolTable(files, scriptOrder) {
         plugins: ['jsx', 'typescript']
       });
     } catch (e) {
-      continue;
+      return;
     }
 
     traverse(ast, {
@@ -54,7 +55,7 @@ export function buildProjectSymbolTable(files, scriptOrder) {
         }
       }
     });
-  }
+  });
 
   return symbolTable;
 }

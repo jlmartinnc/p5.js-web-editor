@@ -1,6 +1,3 @@
-/* eslint-disable */
-import { includes } from 'lodash';
-import p5CodeAstAnalyzer from './p5CodeAstAnalyzer';
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
@@ -12,13 +9,16 @@ export function isGlobalReference(
   baseClassContext,
   isBaseThis
 ) {
-  const globalVars = scopeToDeclaredVarsMap['global'] || {};
-  if (!globalVars.hasOwnProperty(varName)) {
+  const globalVars = scopeToDeclaredVarsMap.global || {};
+  if (!Object.prototype.hasOwnProperty.call(globalVars, varName)) {
     return false;
   }
 
   const localVars = scopeToDeclaredVarsMap[context] || {};
-  if (!(context === 'global') && localVars.hasOwnProperty(varName)) {
+  if (
+    !(context === 'global') &&
+    Object.prototype.hasOwnProperty.call(localVars, varName)
+  ) {
     return false;
   }
 
@@ -40,7 +40,10 @@ export function isGlobalReference(
       if (
         methodName &&
         classMeta.methodVars?.[methodName] &&
-        classMeta.methodVars[methodName].hasOwnProperty(varName)
+        Object.prototype.hasOwnProperty.call(
+          classMeta.methodVars[methodName],
+          varName
+        )
       ) {
         return false;
       }
@@ -143,18 +146,14 @@ export function getContext(
 
 export function getAST(cm) {
   const code = cm.getValue();
-  const cursor = cm.getCursor();
-  const offset = cm.indexFromPos(cursor);
 
-  let ast;
   try {
-    ast = parser.parse(code, {
+    return parser.parse(code, {
       sourceType: 'script',
       plugins: ['jsx', 'typescript']
     });
-    return ast;
   } catch (e) {
-    return;
+    return null;
   }
 }
 
@@ -176,14 +175,15 @@ export function getClassContext(cm, ast, fromPos) {
         const className = node.id?.name || '(anonymous class)';
         classContext = className;
 
-        const methodPath = path.get('body.body').find((p) => {
-          return (
-            (p.node.type === 'ClassMethod' ||
-              p.node.type === 'ClassPrivateMethod') &&
-            offset >= p.node.start &&
-            offset <= p.node.end
+        const methodPath = path
+          .get('body.body')
+          .find(
+            (p) =>
+              (p.node.type === 'ClassMethod' ||
+                p.node.type === 'ClassPrivateMethod') &&
+              offset >= p.node.start &&
+              offset <= p.node.end
           );
-        });
 
         if (methodPath) {
           let methodName;
