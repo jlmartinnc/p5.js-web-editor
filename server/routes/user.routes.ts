@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as UserController from '../controllers/user.controller';
 import isAuthenticated from '../utils/isAuthenticated';
 
-export const router = Router();
+const router = Router();
 
 router.post('/signup', UserController.createUser);
 
