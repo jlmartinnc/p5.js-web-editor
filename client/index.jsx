@@ -20,21 +20,25 @@ const initialState = window.__INITIAL_STATE__;
 
 const store = configureStore(initialState);
 
-// Add a banner to the page
-const banner = document.createElement('div');
-banner.id = 'processing-banner';
-document.body.appendChild(banner);
+if (
+  window.location.href.indexOf('full') === -1 &&
+  window.location.href.indexOf('embed') === -1
+) {
+  // Add a banner to the page
+  const banner = document.createElement('div');
+  banner.id = 'processing-banner';
+  document.body.appendChild(banner);
 
-const link = document.createElement('link');
-link.rel = 'stylesheet';
-link.href = 'https://foundation-donate-banner.netlify.app/static/css/main.css';
-document.head.appendChild(link);
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href =
+    'https://foundation-donate-banner.netlify.app/static/css/main.css';
+  document.head.appendChild(link);
 
-const script = document.createElement('script');
-script.src = 'https://foundation-donate-banner.netlify.app/static/js/main.js';
-document.body.appendChild(script);
+  const script = document.createElement('script');
+  script.src = 'https://foundation-donate-banner.netlify.app/static/js/main.js';
+  document.body.appendChild(script);
 
-if (window.location.href.indexOf('full') === -1) {
   const buttonScript = document.createElement('script');
   buttonScript.type = 'text/javascript';
   buttonScript.defer = true;
