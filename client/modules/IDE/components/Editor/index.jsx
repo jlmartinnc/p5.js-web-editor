@@ -78,7 +78,7 @@ import showRenameDialog from '../../../../utils/showRenameDialog';
 import handleRename from '../../../../utils/rename-variable';
 import { jumpToDefinition } from '../../../../utils/jump-to-definition';
 import { ensureAriaLiveRegion } from '../../../../utils/ScreenReaderHelper';
-import isMac from '../../../../utils/device';
+import { isMac } from '../../../../utils/device';
 
 emmet(CodeMirror);
 
