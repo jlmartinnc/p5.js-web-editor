@@ -3,6 +3,6 @@
  * This is the preferred method over `navigator.platform`, which is now deprecated:
  *   - see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
  */
-export default function isMac(): boolean {
+export function isMac(): boolean {
   return navigator?.userAgent?.toLowerCase().includes('mac') ?? false;
 }

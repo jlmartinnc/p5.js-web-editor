@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { ParentMenuContext } from '../../../../components/Menubar/contexts';
-import Menubar from '../../../../components/Menubar/Menubar';
+import { Menubar } from '../../../../components/Menubar/Menubar';
 import { useMenuProps } from '../../../../components/Menubar/MenubarSubmenu';
-import ButtonOrLink from '../../../../common/ButtonOrLink';
+import { ButtonOrLink } from '../../../../common/ButtonOrLink';
 import { prop, remSize } from '../../../../theme';
 import AsteriskIcon from '../../../../images/p5-asterisk.svg';
-import IconButton from '../../../../common/IconButton';
+import { IconButton } from '../../../../common/IconButton';
 import {
   AccountIcon,
   AddIcon,
@@ -437,17 +437,16 @@ const MoreMenu = () => {
           <MobileMenuItem onClick={() => dispatch(newFolder(rootFile.id))}>
             {t('Nav.Sketch.AddFolder')}
           </MobileMenuItem>
-          {/* TODO: Add Translations */}
-          <b>Settings</b>
+          <b>{t('MobilePreferences.Settings')}</b>
           <MobileMenuItem
             onClick={() => {
               dispatch(openPreferences());
             }}
           >
-            Preferences
+            {t('MobilePreferences.Preferences')}
           </MobileMenuItem>
           <MobileMenuItem onClick={() => setIsLanguageModalVisible(true)}>
-            Language
+            {t('MobilePreferences.Language')}
           </MobileMenuItem>
           <b>{t('Nav.Help.Title')}</b>
           <MobileMenuItem onClick={() => dispatch(showKeyboardShortcutModal())}>

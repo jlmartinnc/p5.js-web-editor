@@ -1,14 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import '@testing-library/jest-dom';
-import SkipLink from './SkipLink';
-
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key
-  })
-}));
+import { render, screen, fireEvent } from '../test-utils';
+import { SkipLink } from './SkipLink';
 
 describe('SkipLink', () => {
   const defaultProps = {

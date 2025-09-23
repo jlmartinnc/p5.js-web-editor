@@ -6,16 +6,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from '../actions/project';
 import * as IdeActions from '../actions/ide';
-import TableDropdown from '../../../components/Dropdown/TableDropdown';
-import MenuItem from '../../../components/Dropdown/MenuItem';
-import dates from '../../../utils/formatDate';
-import getConfig from '../../../utils/getConfig';
+import { TableDropdown } from '../../../components/Dropdown/TableDropdown';
+import { MenuItem } from '../../../components/Dropdown/MenuItem';
+import { formatDateToString } from '../../../utils/formatDate';
+import { getConfig } from '../../../utils/getConfig';
 import VisibilityDropdown from '../../User/components/VisibilityDropdown';
 
 const ROOT_URL = getConfig('API_URL');
 
 const formatDateCell = (date, mobile = false) =>
-  dates.format(date, { showTime: !mobile });
+  formatDateToString(date, { showTime: !mobile });
 
 const SketchListRowBase = ({
   sketch,

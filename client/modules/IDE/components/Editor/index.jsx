@@ -71,7 +71,7 @@ import EditorAccessibility from '../EditorAccessibility';
 import UnsavedChangesIndicator from '../UnsavedChangesIndicator';
 import { EditorContainer, EditorHolder } from './MobileEditor';
 import { FolderIcon } from '../../../../common/icons';
-import IconButton from '../../../../common/IconButton';
+import { IconButton } from '../../../../common/IconButton';
 
 import contextAwareHinter from '../../../../utils/contextAwareHinter';
 import showRenameDialog from '../../../../utils/showRenameDialog';
