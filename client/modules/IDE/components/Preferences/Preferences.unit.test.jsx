@@ -442,43 +442,43 @@ describe('<Preferences />', () => {
         );
       });
     });
-    describe('start wordwrap at false', () => {
-      it('wordwrap toggle, starting at false', () => {
-        // render the component with wordwrap prop set to false
-        subject({ wordwrap: false });
+    describe('start linewrap at false', () => {
+      it('linewrap toggle, starting at false', () => {
+        // render the component with linewrap prop set to false
+        subject({ linewrap: false });
 
-        // get ahold of the radio buttons for toggling wordwrap
-        const wordwrapRadioFalse = screen.getByRole('radio', {
-          name: /wordwrap off/i
+        // get ahold of the radio buttons for toggling linewrap
+        const linewrapRadioFalse = screen.getByRole('radio', {
+          name: /linewrap off/i
         });
-        const wordwrapRadioTrue = screen.getByRole('radio', {
-          name: /wordwrap on/i
+        const linewrapRadioTrue = screen.getByRole('radio', {
+          name: /linewrap on/i
         });
 
         testToggle(
-          wordwrapRadioFalse,
-          wordwrapRadioTrue,
+          linewrapRadioFalse,
+          linewrapRadioTrue,
           props.setLinewrap,
           true
         );
       });
     });
-    describe('start wordwrap at true', () => {
-      it('wordwrap toggle, starting at true', () => {
-        // render the component with wordwrap prop set to true
-        subject({ wordwrap: true });
+    describe('start linewrap at true', () => {
+      it('linewrap toggle, starting at true', () => {
+        // render the component with linewrap prop set to true
+        subject({ linewrap: true });
 
-        // get ahold of the radio buttons for toggling wordwrap
-        const wordwrapRadioFalse = screen.getByRole('radio', {
-          name: /wordwrap off/i
+        // get ahold of the radio buttons for toggling linewrap
+        const linewrapRadioFalse = screen.getByRole('radio', {
+          name: /linewrap off/i
         });
-        const wordwrapRadioTrue = screen.getByRole('radio', {
-          name: /wordwrap on/i
+        const linewrapRadioTrue = screen.getByRole('radio', {
+          name: /linewrap on/i
         });
 
         testToggle(
-          wordwrapRadioTrue,
-          wordwrapRadioFalse,
+          linewrapRadioTrue,
+          linewrapRadioFalse,
           props.setLinewrap,
           false
         );
@@ -511,7 +511,7 @@ describe('<Preferences />', () => {
       });
 
       const generalElement1 = screen.getByRole('radio', {
-        name: /wordwrap on/i
+        name: /linewrap on/i
       });
       expect(generalElement1).toBeInTheDocument();
     });
