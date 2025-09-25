@@ -135,6 +135,7 @@
     "@svgr/webpack": "^6.2.1",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/friendly-words": "^1.2.2",
     "@types/jest": "^29.5.14",
     "@types/mjml": "^4.7.4",
