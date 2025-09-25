@@ -1,5 +1,5 @@
 import renderMjml from '../utils/renderMjml';
-import mailLayout from './mailLayout';
+import { mailLayout } from './mailLayout';
 import consolidationMailLayout from './consolidationMailLayout';
 
 export const renderAccountConsolidation = (data) => {
