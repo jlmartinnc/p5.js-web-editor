@@ -1,4 +1,7 @@
-export default ({
+import type { AccountConsolidationEmailTemplate } from '../types/email';
+
+/** Returns mjml for an Account Consolidation email */
+export const consolidationMailLayout = ({
   domain,
   headingText,
   greetingText,
@@ -11,7 +14,7 @@ export default ({
   resetPasswordText,
   noteText,
   meta
-}) =>
+}: AccountConsolidationEmailTemplate) =>
   `
 <mjml>
   <mj-head>

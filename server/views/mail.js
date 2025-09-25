@@ -1,6 +1,6 @@
 import renderMjml from '../utils/renderMjml';
 import { mailLayout } from './mailLayout';
-import consolidationMailLayout from './consolidationMailLayout';
+import { consolidationMailLayout } from './consolidationMailLayout';
 
 export const renderAccountConsolidation = (data) => {
   const subject = 'p5.js Web Editor Account Consolidation';
