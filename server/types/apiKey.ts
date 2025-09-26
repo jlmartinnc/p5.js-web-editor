@@ -1,18 +1,26 @@
-import { Model, model, Document } from 'mongoose';
-import {
-  ApiKeySchemaType,
-  apiKeySchema,
-  ApiKeyVirtuals
-} from '../models/apiKey';
+import { Model, Document, Types } from 'mongoose';
+import { VirtualId, MongooseTimestamps } from './mongoose';
 
-export type ApiKeyDocument = Document & ApiKeySchemaType & ApiKeyVirtuals;
+export interface IApiKey extends VirtualId, MongooseTimestamps {
+  label: string;
+  lastUsedAt?: Date;
+  hashedKey: string;
+}
 
-export type ApiKeyModel = Model<ApiKeyDocument>;
+/** Mongoose document object for API Key */
+export interface ApiKeyDocument
+  extends IApiKey,
+    Omit<Document<Types.ObjectId>, 'id'> {
+  toJSON(options?: any): SanitisedApiKey;
+  toObject(options?: any): SanitisedApiKey;
+}
 
-export const ApiKey = model<ApiKeyDocument, ApiKeyModel>(
-  'ApiKey',
-  apiKeySchema
-);
-
+/**
+ * Sanitised API key object which hides the `hashedKey` field
+ * and can be exposed to the client
+ */
 export interface SanitisedApiKey
   extends Pick<ApiKeyDocument, 'id' | 'label' | 'lastUsedAt' | 'createdAt'> {}
+
+/** Mongoose model for API Key */
+export interface ApiKeyModel extends Model<ApiKeyDocument> {}

@@ -1,7 +1,7 @@
-import { Schema, InferSchemaType } from 'mongoose';
-import { SanitisedApiKey } from '../types/apiKey';
+import { Schema } from 'mongoose';
+import { SanitisedApiKey, ApiKeyDocument, ApiKeyModel } from '../types/apiKey';
 
-export const apiKeySchema = new Schema(
+export const apiKeySchema = new Schema<ApiKeyDocument, ApiKeyModel>(
   {
     label: { type: String, default: 'API Key' },
     lastUsedAt: { type: Date },
@@ -14,18 +14,12 @@ apiKeySchema.virtual('id').get(function getApiKeyId() {
   return this._id.toHexString();
 });
 
-export interface ApiKeyVirtuals {
-  id: string;
-}
-
-export type ApiKeySchemaType = InferSchemaType<typeof apiKeySchema>;
-
 /**
  * When serialising an APIKey instance, the `hashedKey` field
  * should never be exposed to the client. So we only return
  * a safe list of fields when toObject and toJSON are called.
  */
-function apiKeyMetadata(doc: any, _ret: any, _options: any): SanitisedApiKey {
+function apiKeyMetadata(doc: ApiKeyDocument): SanitisedApiKey {
   return {
     id: doc.id,
     label: doc.label,
