@@ -43,7 +43,7 @@ export default function Preferences() {
     tabIndex,
     fontSize,
     autosave,
-    wordwrap,
+    linewrap,
     lineNumbers,
     lintWarning,
     textOutput,
@@ -398,7 +398,7 @@ export default function Preferences() {
                 id="wordwrap-on"
                 className="preference__radio-button"
                 value="On"
-                checked={wordwrap}
+                checked={linewrap}
               />
               <label htmlFor="wordwrap-on" className="preference__option">
                 {t('Preferences.On')}
@@ -411,7 +411,7 @@ export default function Preferences() {
                 id="wordwrap-off"
                 className="preference__radio-button"
                 value="Off"
-                checked={!wordwrap}
+                checked={!linewrap}
               />
               <label htmlFor="wordwrap-off" className="preference__option">
                 {t('Preferences.Off')}
