@@ -52,7 +52,7 @@ const About = () => {
 
   const p5version = useSelector((state) => {
     const index = state.files.find((file) => file.name === 'index.html');
-    return index?.content.match(/\/p5\.js\/([\d.]+)\//)?.[1];
+    return index?.content.match(/\/p5@([\d.]+)\//)?.[1];
   });
 
   return (

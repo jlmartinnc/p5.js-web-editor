@@ -1,4 +1,7 @@
-export default ({
+import { EmailWithPrimaryButtonTemplate } from '../types/email';
+
+/** Returns mjml for a standard email with a primary action button */
+export const mailLayout = ({
   domain,
   headingText,
   greetingText,
@@ -8,7 +11,7 @@ export default ({
   directLinkText,
   noteText,
   meta
-}) =>
+}: EmailWithPrimaryButtonTemplate) =>
   `
 <mjml>
   <mj-head>
