@@ -1,4 +1,5 @@
-import { Schema, Model, InferSchemaType, model, Document } from 'mongoose';
+import { Schema, InferSchemaType } from 'mongoose';
+import { SanitisedApiKey } from '../types/apiKey';
 
 export const apiKeySchema = new Schema(
   {
@@ -13,23 +14,11 @@ apiKeySchema.virtual('id').get(function getApiKeyId() {
   return this._id.toHexString();
 });
 
-interface ApiKeyVirtuals {
+export interface ApiKeyVirtuals {
   id: string;
 }
 
-type ApiKeySchemaType = InferSchemaType<typeof apiKeySchema>;
-
-export type ApiKeyDocument = Document & ApiKeySchemaType & ApiKeyVirtuals;
-
-export type ApiKeyModel = Model<ApiKeyDocument>;
-
-export const ApiKey = model<ApiKeyDocument, ApiKeyModel>(
-  'ApiKey',
-  apiKeySchema
-);
-
-interface SanitisedApiKey
-  extends Pick<ApiKeyDocument, 'id' | 'label' | 'lastUsedAt' | 'createdAt'> {}
+export type ApiKeySchemaType = InferSchemaType<typeof apiKeySchema>;
 
 /**
  * When serialising an APIKey instance, the `hashedKey` field
