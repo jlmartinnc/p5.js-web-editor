@@ -1,34 +1,6 @@
-import mongoose, { Schema, Model, InferSchemaType } from 'mongoose';
+import { Schema, Model, InferSchemaType, model, Document } from 'mongoose';
 
-interface IApiKey {
-  label: string;
-  lastUsedAt: Date;
-  hashedKey: string;
-}
-
-interface ApiKeyVirtuals {
-  id: string;
-}
-
-type ApiKeyModelType = Model<IApiKey, {}, {}, ApiKeyVirtuals>;
-
-interface MongooseTimestamps {
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface SanitisedApiKey
-  extends Omit<IApiKey, 'hashedKey'>,
-    ApiKeyVirtuals,
-    Pick<MongooseTimestamps, 'createdAt'> {}
-
-export const apiKeySchema = new Schema<
-  IApiKey,
-  ApiKeyModelType,
-  {},
-  {},
-  ApiKeyVirtuals
->(
+export const apiKeySchema = new Schema(
   {
     label: { type: String, default: 'API Key' },
     lastUsedAt: { type: Date },
@@ -41,12 +13,30 @@ apiKeySchema.virtual('id').get(function getApiKeyId() {
   return this._id.toHexString();
 });
 
+interface ApiKeyVirtuals {
+  id: string;
+}
+
+type ApiKeySchemaType = InferSchemaType<typeof apiKeySchema>;
+
+export type ApiKeyDocument = Document & ApiKeySchemaType & ApiKeyVirtuals;
+
+export type ApiKeyModel = Model<ApiKeyDocument>;
+
+export const ApiKey = model<ApiKeyDocument, ApiKeyModel>(
+  'ApiKey',
+  apiKeySchema
+);
+
+interface SanitisedApiKey
+  extends Pick<ApiKeyDocument, 'id' | 'label' | 'lastUsedAt' | 'createdAt'> {}
+
 /**
  * When serialising an APIKey instance, the `hashedKey` field
  * should never be exposed to the client. So we only return
  * a safe list of fields when toObject and toJSON are called.
  */
-function apiKeyMetadata(doc, ret, options): SanitisedApiKey {
+function apiKeyMetadata(doc: any, _ret: any, _options: any): SanitisedApiKey {
   return {
     id: doc.id,
     label: doc.label,
@@ -63,9 +53,3 @@ apiKeySchema.set('toJSON', {
   virtuals: true,
   transform: apiKeyMetadata
 });
-
-// Derived type for schema fields (including timestamps)
-type ApiKeySchemaType = InferSchemaType<typeof apiKeySchema>;
-
-// The actual document type
-// export type ApiKeyDocument = Document & ApiKeySchemaFields & ApiKeyVirtuals;
