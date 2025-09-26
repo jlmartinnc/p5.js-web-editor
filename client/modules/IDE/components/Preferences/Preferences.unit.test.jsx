@@ -442,6 +442,7 @@ describe('<Preferences />', () => {
         );
       });
     });
+    // TODO: Consolidate "linewrap" (reference from backend/User model) and "word wrap" (currently used in UI) into consistent naming.
     describe('start linewrap at false', () => {
       it('linewrap toggle, starting at false', () => {
         // render the component with linewrap prop set to false
@@ -449,10 +450,10 @@ describe('<Preferences />', () => {
 
         // get ahold of the radio buttons for toggling linewrap
         const linewrapRadioFalse = screen.getByRole('radio', {
-          name: /linewrap off/i
+          name: /wordwrap off/i
         });
         const linewrapRadioTrue = screen.getByRole('radio', {
-          name: /linewrap on/i
+          name: /wordwrap on/i
         });
 
         testToggle(
@@ -470,10 +471,10 @@ describe('<Preferences />', () => {
 
         // get ahold of the radio buttons for toggling linewrap
         const linewrapRadioFalse = screen.getByRole('radio', {
-          name: /linewrap off/i
+          name: /wordwrap off/i
         });
         const linewrapRadioTrue = screen.getByRole('radio', {
-          name: /linewrap on/i
+          name: /wordwrap on/i
         });
 
         testToggle(
@@ -511,7 +512,7 @@ describe('<Preferences />', () => {
       });
 
       const generalElement1 = screen.getByRole('radio', {
-        name: /linewrap on/i
+        name: /wordwrap on/i
       });
       expect(generalElement1).toBeInTheDocument();
     });
