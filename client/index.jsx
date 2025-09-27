@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -20,6 +20,8 @@ require('./images/p5js-square-logo.png');
 const initialState = window.__INITIAL_STATE__;
 
 const store = configureStore(initialState);
+
+const DONATE_LOGO_IMAGE_URL = 'https://donorbox.org/images/white_logo.svg';
 
 if (
   window.location.href.indexOf('full') === -1 &&
@@ -56,10 +58,7 @@ if (
     'background: #f1678e; color: #fff; text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 0 0 5px 5px; line-height: 24px; position: fixed; top: 50%; transform-origin: center; z-index: 9999; overflow: hidden; padding: 8px 22px 8px 18px; right: 20px; left: auto; transform: translate(50%, -50%) rotate(90deg)'
   );
   buttonScript.setAttribute('data-button-cta', 'Donate');
-  buttonScript.setAttribute(
-    'data-img-src',
-    'https://donorbox.org/images/white_logo.svg'
-  );
+  buttonScript.setAttribute('data-img-src', DONATE_LOGO_IMAGE_URL);
 
   document.body.appendChild(buttonScript);
 }
@@ -67,19 +66,21 @@ if (
 const App = () => {
   const { t } = useTranslation();
 
-  setTimeout(() => {
-    const donateButton = document.getElementsByClassName(
-      'dbox-donation-button'
-    )[0];
+  useEffect(() => {
+    setTimeout(() => {
+      const donateButton = document.getElementsByClassName(
+        'dbox-donation-button'
+      )[0];
 
-    if (donateButton) {
-      const donateLogoImage = document.createElement('img');
-      donateLogoImage.src = 'https://donorbox.org/images/white_logo.svg';
+      if (donateButton) {
+        const donateLogoImage = document.createElement('img');
+        donateLogoImage.src = DONATE_LOGO_IMAGE_URL;
 
-      donateButton.text = t('About.Donate');
-      donateButton.prepend(donateLogoImage);
-    }
-  }, 0);
+        donateButton.text = t('About.Donate');
+        donateButton.prepend(donateLogoImage);
+      }
+    }, 500);
+  }, [t]);
 
   return (
     <div>
