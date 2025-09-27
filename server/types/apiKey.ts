@@ -1,6 +1,7 @@
 import { Model, Document, Types } from 'mongoose';
 import { VirtualId, MongooseTimestamps } from './mongoose';
 
+/** Full Api Key interface */
 export interface IApiKey extends VirtualId, MongooseTimestamps {
   label: string;
   lastUsedAt?: Date;
