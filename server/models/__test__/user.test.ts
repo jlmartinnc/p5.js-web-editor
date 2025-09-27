@@ -1,18 +1,24 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { User } from '../user';
 
+jest.setTimeout(30000); // give enough time for MongoMemoryServer
+
+let mongoServer: MongoMemoryServer;
+
 beforeAll(async () => {
-  const mongoUri = 'mongodb://127.0.0.1:27017/test_db_user';
-  await mongoose.connect(mongoUri, {
-    dbName: 'test_db_user', // optional
-    autoIndex: true
+  mongoServer = await MongoMemoryServer.create({
+    binary: { version: '7.0.0' } // or latest supported stable version
   });
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
 });
 
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
+  await mongoServer.stop();
 });
 
 beforeEach(async () => {
@@ -68,11 +74,7 @@ describe('User model', () => {
     expect(user.id).toBe(user._id.toHexString());
 
     const json = user.toJSON();
-
-    // check that virtual id is included in the serialized output
     expect(json).toHaveProperty('id', user._id.toHexString());
-
-    // check that regular fields are also present
     expect(json).toHaveProperty('username', 'testuser');
     expect(json).toHaveProperty('email', 'test@example.com');
   });
@@ -86,7 +88,7 @@ describe('User model', () => {
 
     const found = await User.findByEmail('dave@example.com');
     expect(found).not.toBeNull();
-    expect(found!.username).toBe('dave'); // found exists otherwise the previous expect would fail
+    expect(found!.username).toBe('dave');
   });
 
   it('should find user by username (case insensitive)', async () => {
@@ -98,7 +100,7 @@ describe('User model', () => {
 
     const found = await User.findByUsername('eve', { caseInsensitive: true });
     expect(found).not.toBeNull();
-    expect(found!.email).toBe('eve@example.com'); // found exists otherwise the previous expect would fail
+    expect(found!.email).toBe('eve@example.com');
   });
 
   it('should return null for wrong username/email', async () => {
@@ -110,14 +112,13 @@ describe('User model', () => {
     const user = new User({
       username: 'frank',
       email: 'frank@example.com',
-      apiKeys: [{ hashedKey: 'hashedApiKey' }] // gets hashed by bcrypt in pre-save
+      apiKeys: [{ hashedKey: 'hashedApiKey' }]
     });
     await user.save();
 
     const savedUser = await User.findOne({ email: 'frank@example.com' });
     expect(savedUser).not.toBeNull();
-    const keyObj = await savedUser!.findMatchingKey('hashedApiKey'); // savedUser exists otherwise the previous expect would fail
-
+    const keyObj = await savedUser!.findMatchingKey('hashedApiKey');
     expect(keyObj.isMatch).toBe(true);
     expect(keyObj.keyDocument).not.toBeNull();
   });
