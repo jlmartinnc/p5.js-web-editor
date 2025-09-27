@@ -306,7 +306,7 @@
     "CurrentPasswordARIA": "aktuelles passwort",
     "NewPassword": "Neues Passwort",
     "NewPasswordARIA": "neues passwort",
-    "SaveAccountDetails": "Kontodetails speichern"
+    "SaveAccountDetails": "Kontoeinstellungen speichern"
   },
   "AccountView": {
     "SocialLogin": "Social Login",
