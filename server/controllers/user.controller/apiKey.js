@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import User from '../../models/user';
+import { User } from '../../models/user';
 
 /**
  * Generates a unique token to be used as a Personal Access Token

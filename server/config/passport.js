@@ -8,7 +8,7 @@ import LocalStrategy from 'passport-local';
 import GoogleStrategy from 'passport-google-oauth20';
 import { BasicStrategy } from 'passport-http';
 
-import User from '../models/user';
+import { User } from '../models/user';
 
 const accountSuspensionMessage =
   'Account has been suspended. Please contact privacy@p5js.org if you believe this is an error.';
@@ -61,7 +61,8 @@ passport.use(
           await user.save();
 
           return done(null, user);
-        } else { // eslint-disable-line
+        } else {
+          // eslint-disable-line
           return done(null, false, { msg: 'Invalid email or password' });
         }
       } catch (err) {

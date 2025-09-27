@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import User from '../user';
+import { User } from '../user';
 
 beforeAll(async () => {
   const mongoUri = 'mongodb://127.0.0.1:27017/test_db_user';
