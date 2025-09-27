@@ -1,11 +1,11 @@
 import { Document, Model, Types } from 'mongoose';
+import { VirtualId, MongooseTimestamps } from './mongoose';
 import { UserPreferences, CookieConsentOptions } from './userPreferences';
 import { EmailConfirmationStates } from './email';
 import { ApiKeyDocument } from './apiKey';
 
 /** Full User interface */
-export interface IUser {
-  id: string;
+export interface IUser extends VirtualId, MongooseTimestamps {
   name: string;
   username: string;
   password: string;
@@ -52,7 +52,7 @@ export interface UserDocument
   comparePassword(candidatePassword: string): Promise<boolean>;
   findMatchingKey(
     candidateKey: string
-  ): Promise<{ isMatch: boolean; keyDocument: UserDocument | null }>;
+  ): Promise<{ isMatch: boolean; keyDocument: ApiKeyDocument | null }>;
 }
 
 /** Mongoose model for User */
