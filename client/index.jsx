@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { Router } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
@@ -65,6 +65,7 @@ if (
 
 const App = () => {
   const { t } = useTranslation();
+  const language = useSelector((state) => state.preferences.language);
 
   useEffect(() => {
     setTimeout(() => {
@@ -80,7 +81,7 @@ const App = () => {
         donateButton.prepend(donateLogoImage);
       }
     }, 500);
-  }, [t]);
+  }, [language]);
 
   return (
     <div>
