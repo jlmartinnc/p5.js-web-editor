@@ -1,9 +1,9 @@
 /** Possible email confirmation states */
-export enum EmailConfirmationStates {
-  Verified = 'verified',
-  Sent = 'sent',
-  Resent = 'resent'
-}
+export const EmailConfirmationStates = {
+  Verified: 'verified',
+  Sent: 'sent',
+  Resent: 'resent'
+} as const;
 
 /** Rendered mail data for the mailer service, without the 'from' property, which will be automatically added */
 export interface RenderedMailerData {

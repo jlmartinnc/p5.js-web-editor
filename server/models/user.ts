@@ -8,12 +8,6 @@ import {
 } from '../types';
 import { apiKeySchema } from './apiKey';
 
-// const EmailConfirmationStates = {
-//   Verified: 'verified',
-//   Sent: 'sent',
-//   Resent: 'resent'
-// };
-
 const userSchema = new Schema<UserDocument, UserModel>(
   {
     name: { type: String, default: '' },
@@ -340,10 +334,10 @@ userSchema.statics.findByEmailAndUsername = async function findByEmailAndUsernam
   return foundUser;
 };
 
-// userSchema.statics.EmailConfirmation = EmailConfirmationStates;
-
 userSchema.index({ username: 1 }, { collation: { locale: 'en', strength: 2 } });
 userSchema.index({ email: 1 }, { collation: { locale: 'en', strength: 2 } });
+
+userSchema.statics.EmailConfirmation = () => EmailConfirmationStates;
 
 export const User =
   (mongoose.models.User as UserModel) ||
