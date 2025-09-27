@@ -443,12 +443,22 @@ export function changeVisibility(projectId, projectName, visibility, t) {
               name: response.data.name
             });
 
+            let visibilityLabel;
+
+            switch (newVisibility) {
+              case 'Public':
+                visibilityLabel = t('Visibility.Public.Label');
+                break;
+              case 'Private':
+                visibilityLabel = t('Visibility.Private.Label');
+                break;
+              default:
+                visibilityLabel = newVisibility;
+            }
+
             const visibilityToastText = t('Visibility.Changed', {
               projectName,
-              newVisibility:
-                newVisibility === 'Public'
-                  ? t('Visibility.Public.Label').toLowerCase()
-                  : t('Visibility.Private.Label').toLowerCase()
+              newVisibility: visibilityLabel.toLowerCase()
             });
 
             dispatch(setToastText(visibilityToastText));
