@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { SanitisedApiKey, ApiKeyDocument, ApiKeyModel } from '../types/apiKey';
+import { SanitisedApiKey, ApiKeyDocument, ApiKeyModel } from '../types';
 
 export const apiKeySchema = new Schema<ApiKeyDocument, ApiKeyModel>(
   {

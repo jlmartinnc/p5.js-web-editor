@@ -86,7 +86,7 @@ describe('User model', () => {
 
     const found = await User.findByEmail('dave@example.com');
     expect(found).not.toBeNull();
-    expect(found.username).toBe('dave');
+    expect(found!.username).toBe('dave'); // found exists otherwise the previous expect would fail
   });
 
   it('should find user by username (case insensitive)', async () => {
@@ -98,7 +98,7 @@ describe('User model', () => {
 
     const found = await User.findByUsername('eve', { caseInsensitive: true });
     expect(found).not.toBeNull();
-    expect(found.email).toBe('eve@example.com');
+    expect(found!.email).toBe('eve@example.com'); // found exists otherwise the previous expect would fail
   });
 
   it('should return null for wrong username/email', async () => {
@@ -115,7 +115,8 @@ describe('User model', () => {
     await user.save();
 
     const savedUser = await User.findOne({ email: 'frank@example.com' });
-    const keyObj = await savedUser.findMatchingKey('hashedApiKey');
+    expect(savedUser).not.toBeNull();
+    const keyObj = await savedUser!.findMatchingKey('hashedApiKey'); // savedUser exists otherwise the previous expect would fail
 
     expect(keyObj.isMatch).toBe(true);
     expect(keyObj.keyDocument).not.toBeNull();

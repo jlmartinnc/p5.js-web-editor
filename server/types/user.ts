@@ -8,7 +8,7 @@ export interface IUser {
   id: string;
   name: string;
   username: string;
-  password?: string;
+  password: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
   verified?: string;

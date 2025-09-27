@@ -1,16 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import {
+  UserDocument,
+  UserModel,
+  CookieConsentOptions,
+  EmailConfirmationStates
+} from '../types';
 import { apiKeySchema } from './apiKey';
 
-const EmailConfirmationStates = {
-  Verified: 'verified',
-  Sent: 'sent',
-  Resent: 'resent'
-};
+// const EmailConfirmationStates = {
+//   Verified: 'verified',
+//   Sent: 'sent',
+//   Resent: 'resent'
+// };
 
-const { Schema } = mongoose;
-
-const userSchema = new Schema(
+const userSchema = new Schema<UserDocument, UserModel>(
   {
     name: { type: String, default: '' },
     username: { type: String, required: true, unique: true },
@@ -44,13 +48,13 @@ const userSchema = new Schema(
     totalSize: { type: Number, default: 0 },
     cookieConsent: {
       type: String,
-      enum: ['none', 'essential', 'all'],
-      default: 'none'
+      enum: Object.values(CookieConsentOptions),
+      default: CookieConsentOptions.NONE
     },
     banned: { type: Boolean, default: false },
     lastLoginTimestamp: { type: Date }
   },
-  { timestamps: true, usePushEach: true }
+  { timestamps: true }
 );
 
 /**
@@ -65,6 +69,10 @@ userSchema.pre('save', function checkPassword(next) {
   bcrypt.genSalt(10, (err, salt) => {
     if (err) {
       next(err);
+      return;
+    }
+    if (!user.password) {
+      next(new Error('Password is missing'));
       return;
     }
     bcrypt.hash(user.password, salt, (innerErr, hash) => {
@@ -92,7 +100,7 @@ userSchema.pre('save', function checkApiKey(next) {
   let pendingTasks = 0;
   let nextCalled = false;
 
-  const done = (err) => {
+  const done = (err?: mongoose.CallbackError) => {
     if (nextCalled) return;
     if (err) {
       nextCalled = true;
@@ -144,7 +152,7 @@ userSchema.set('toJSON', {
  * @return {Promise<boolean>}
  */
 userSchema.methods.comparePassword = async function comparePassword(
-  candidatePassword
+  candidatePassword: string
 ) {
   if (!this.password) {
     return false;
@@ -162,7 +170,7 @@ userSchema.methods.comparePassword = async function comparePassword(
  * Helper method for validating a user's api key
  */
 userSchema.methods.findMatchingKey = async function findMatchingKey(
-  candidateKey
+  candidateKey: string
 ) {
   let keyObj = { isMatch: false, keyDocument: null };
   /* eslint-disable no-restricted-syntax */
@@ -332,9 +340,11 @@ userSchema.statics.findByEmailAndUsername = async function findByEmailAndUsernam
   return foundUser;
 };
 
-userSchema.statics.EmailConfirmation = EmailConfirmationStates;
+// userSchema.statics.EmailConfirmation = EmailConfirmationStates;
 
 userSchema.index({ username: 1 }, { collation: { locale: 'en', strength: 2 } });
 userSchema.index({ email: 1 }, { collation: { locale: 'en', strength: 2 } });
 
-export const User = mongoose.models.User || mongoose.model('User', userSchema);
+export const User =
+  (mongoose.models.User as UserModel) ||
+  mongoose.model<UserDocument, UserModel>('User', userSchema);
