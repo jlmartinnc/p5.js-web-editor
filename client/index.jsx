@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
+import { useTranslation } from 'react-i18next';
 import browserHistory from './browserHistory';
 import configureStore from './store';
 import Routing from './routes';
@@ -63,14 +64,32 @@ if (
   document.body.appendChild(buttonScript);
 }
 
-const App = () => (
-  <div>
-    <Router history={browserHistory}>
-      <SkipLink targetId="play-sketch" text="PlaySketch" />
-      <Routing />
-    </Router>
-  </div>
-);
+const App = () => {
+  const { t } = useTranslation();
+
+  setTimeout(() => {
+    const donateButton = document.getElementsByClassName(
+      'dbox-donation-button'
+    )[0];
+
+    if (donateButton) {
+      const donateLogoImage = document.createElement('img');
+      donateLogoImage.src = 'https://donorbox.org/images/white_logo.svg';
+
+      donateButton.text = t('About.Donate');
+      donateButton.prepend(donateLogoImage);
+    }
+  }, 0);
+
+  return (
+    <div>
+      <Router history={browserHistory}>
+        <SkipLink targetId="play-sketch" text="PlaySketch" />
+        <Routing />
+      </Router>
+    </div>
+  );
+};
 
 render(
   <Provider store={store}>

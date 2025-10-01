@@ -4,7 +4,7 @@ import { sortBy } from 'lodash';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import MenubarSubmenu from '../../../../components/Menubar/MenubarSubmenu';
+import { MenubarSubmenu } from '../../../../components/Menubar/MenubarSubmenu';
 import { MenubarItem } from '../../../../components/Menubar/MenubarItem';
 import { availableLanguages, languageKeyToLabel } from '../../../../i18n';
 import { getConfig } from '../../../../utils/getConfig';
@@ -288,6 +288,24 @@ const ProjectMenu = () => {
         </MenubarItem>
         <MenubarItem id="help-about" href="/about">
           {t('Nav.Help.About')}
+        </MenubarItem>
+        <MenubarItem
+          id="help-report-bug"
+          href="https://github.com/processing/p5.js-web-editor/issues/new/choose"
+        >
+          {t('Nav.Help.ReportBug')}
+        </MenubarItem>
+        <MenubarItem
+          id="help-discord"
+          href="https://discord.com/invite/SHQ8dH25r9"
+        >
+          {t('Nav.Help.ChatOnDiscord')}
+        </MenubarItem>
+        <MenubarItem
+          id="help-forum"
+          href="https://discourse.processing.org/c/p5js/10"
+        >
+          {t('Nav.Help.PostOnTheForum')}
         </MenubarItem>
       </MenubarSubmenu>
       {getConfig('TRANSLATIONS_ENABLED') && <LanguageMenu />}
