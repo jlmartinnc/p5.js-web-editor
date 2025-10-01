@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 import User from '../models/user';
-import mail from '../utils/mail';
+import { mailerService } from '../utils/mail';
 import { renderEmailConfirmation, renderResetPassword } from '../views/mail';
 
 export * from './user.controller/apiKey';
@@ -83,7 +83,7 @@ export async function createUser(req, res) {
       });
 
       try {
-        await mail.send(mailOptions);
+        await mailerService.send(mailOptions);
         res.json(userResponse(user));
       } catch (mailErr) {
         console.error(mailErr);
@@ -155,7 +155,7 @@ export async function resetPasswordInitiate(req, res) {
       to: user.email
     });
 
-    await mail.send(mailOptions);
+    await mailerService.send(mailOptions);
     res.json({
       success: true,
       message:
@@ -203,7 +203,7 @@ export async function emailVerificationInitiate(req, res) {
       to: user.email
     });
     try {
-      await mail.send(mailOptions);
+      await mailerService.send(mailOptions);
     } catch (mailErr) {
       res.status(500).send({ error: 'Error sending mail' });
       return;
@@ -334,7 +334,7 @@ export async function updateSettings(req, res) {
         to: user.email
       });
 
-      await mail.send(mailOptions);
+      await mailerService.send(mailOptions);
     } else {
       await saveUser(res, user);
     }
