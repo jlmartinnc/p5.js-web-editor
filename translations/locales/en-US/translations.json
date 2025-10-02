@@ -29,8 +29,8 @@
       "Reference": "Reference",
       "About": "About",
       "ReportBug": "Report a Bug",
-      "ChatOnDiscord":"Chat On Discord",
-      "PostOnTheForum":"Post on the Forum"
+      "ChatOnDiscord": "Chat On Discord",
+      "PostOnTheForum": "Post on the Forum"
     },
     "Lang": "Language",
     "BackEditor": "Back to Editor",
@@ -252,7 +252,8 @@
       "FindPreviousTextMatch": "Find Previous Text Match",
       "CodeEditing": "Code Editing",
       "ColorPicker": "Show Inline Color Picker",
-      "CreateNewFile": "Create New File"
+      "CreateNewFile": "Create New File",
+      "RenameVariable": "Rename Variable"
     },
     "General": "General",
     "GeneralSelection": {
@@ -690,6 +691,7 @@
     "Private": {
       "Description": "Only you can see this sketch.",
       "Label": "Private"
-    }
+    },
+    "Changed": "'{{projectName}}' is now {{newVisibility}}..."
   }
 }
