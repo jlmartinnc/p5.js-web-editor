@@ -93,13 +93,19 @@ const App = () => {
   );
 };
 
-render(
-  <Provider store={store}>
-    <ThemeProvider>
-      <Suspense fallback={<Loader />}>
-        <App />
-      </Suspense>
-    </ThemeProvider>
-  </Provider>,
-  document.getElementById('root')
-);
+// This prevents crashes in test environments (like Jest) where document.getElementById('root') may return null.
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  render(
+    <Provider store={store}>
+      <ThemeProvider>
+        <Suspense fallback={<Loader />}>
+          <App />
+        </Suspense>
+      </ThemeProvider>
+    </Provider>,
+    rootEl
+  );
+}
+
+export default store;

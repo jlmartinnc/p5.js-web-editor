@@ -252,7 +252,8 @@
       "FindPreviousTextMatch": "Find Previous Text Match",
       "CodeEditing": "Code Editing",
       "ColorPicker": "Show Inline Color Picker",
-      "CreateNewFile": "Create New File"
+      "CreateNewFile": "Create New File",
+      "RenameVariable": "Rename Variable"
     },
     "General": "General",
     "GeneralSelection": {
