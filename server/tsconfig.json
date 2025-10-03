@@ -6,6 +6,7 @@
     "lib": ["ES2022"],
     "types": ["node", "jest"]
   },
+  "strictNullChecks": true,
   "include": ["./**/*"],
   "exclude": ["../node_modules", "../client"]
 }
