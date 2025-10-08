@@ -1,21 +1,26 @@
 import { last } from 'lodash';
-import { Request } from 'jest-express/lib/request';
-import { Response } from 'jest-express/lib/response';
+import { Request as MockRequest } from 'jest-express/lib/request';
+import { Response as MockResponse } from 'jest-express/lib/response';
+import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 
 import { User } from '../../../models/user';
 import { createApiKey, removeApiKey } from '../apiKey';
 import type { ApiKeyDocument } from '../../../types';
+import type { RemoveApiKeyRequestParams } from '../apiKey';
 
 jest.mock('../../../models/user');
 
 describe('user.controller', () => {
-  let request: Request & { user?: { id: string } };
-  let response: Response;
+  let request: MockRequest & { user?: { id: string } };
+  let response: MockResponse;
+  let next: MockNext;
 
   beforeEach(() => {
-    request = new Request();
-    response = new Response();
+    request = new MockRequest();
+    response = new MockResponse();
+    next = jest.fn();
   });
 
   afterEach(() => {
@@ -27,11 +32,14 @@ describe('user.controller', () => {
   describe('createApiKey', () => {
     it("returns an error if user doesn't exist", async () => {
       request.user = { id: '1234' };
-      response = new Response();
 
       User.findById = jest.fn().mockResolvedValue(null);
 
-      await createApiKey(request, response);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -46,7 +54,11 @@ describe('user.controller', () => {
       const user = new User();
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await createApiKey(request, response);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.json).toHaveBeenCalledWith({
@@ -64,7 +76,11 @@ describe('user.controller', () => {
       User.findById = jest.fn().mockResolvedValue(user);
       user.save = jest.fn();
 
-      await createApiKey(request, response);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       const lastKey = last(user.apiKeys);
 
@@ -83,11 +99,14 @@ describe('user.controller', () => {
   describe('removeApiKey', () => {
     it("returns an error if user doesn't exist", async () => {
       request.user = { id: '1234' };
-      response = new Response();
 
       User.findById = jest.fn().mockResolvedValue(null);
 
-      await removeApiKey(request, response);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -103,7 +122,11 @@ describe('user.controller', () => {
 
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await removeApiKey(request, response);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -132,7 +155,11 @@ describe('user.controller', () => {
 
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await removeApiKey(request, response);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        (next as unknown) as NextFunction
+      );
 
       expect(user.apiKeys.pull).toHaveBeenCalledWith({ _id: 'id1' });
       expect(user.save).toHaveBeenCalled();
