@@ -1,4 +1,11 @@
-export default function isAuthenticated(req, res, next) {
+import { Request, Response, NextFunction } from 'express';
+
+/** Middleware function to check if a request is authenticated prior to passing onto routes requiring user to be logged in */
+export function isAuthenticated(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   if (req.user) {
     next();
     return;

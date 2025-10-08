@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as ProjectController from '../controllers/project.controller';
-import isAuthenticated from '../utils/isAuthenticated';
+import { isAuthenticated } from '../utils/isAuthenticated';
 
 const router = Router();
 
