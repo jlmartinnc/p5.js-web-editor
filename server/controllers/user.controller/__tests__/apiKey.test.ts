@@ -1,16 +1,17 @@
-/* @jest-environment node */
-
 import { last } from 'lodash';
-import { Request, Response } from 'jest-express';
+import { Request } from 'jest-express/lib/request';
+import { Response } from 'jest-express/lib/response';
+import { Types } from 'mongoose';
 
 import { User } from '../../../models/user';
 import { createApiKey, removeApiKey } from '../apiKey';
+import type { ApiKeyDocument } from '../../../types';
 
 jest.mock('../../../models/user');
 
 describe('user.controller', () => {
-  let request;
-  let response;
+  let request: Request & { user?: { id: string } };
+  let response: Response;
 
   beforeEach(() => {
     request = new Request();
@@ -58,23 +59,23 @@ describe('user.controller', () => {
       request.user = { id: '1234' };
 
       const user = new User();
-      user.apiKeys = [];
+      user.apiKeys = ([] as unknown) as Types.DocumentArray<ApiKeyDocument>;
 
       User.findById = jest.fn().mockResolvedValue(user);
-      user.save = jest.fn().mockResolvedValue();
+      user.save = jest.fn();
 
       await createApiKey(request, response);
 
       const lastKey = last(user.apiKeys);
 
-      expect(lastKey.label).toBe('my key');
-      expect(typeof lastKey.hashedKey).toBe('string');
+      expect(lastKey?.label).toBe('my key');
+      expect(typeof lastKey?.hashedKey).toBe('string');
 
       const responseData = response.json.mock.calls[0][0];
       expect(responseData.apiKeys.length).toBe(1);
       expect(responseData.apiKeys[0]).toMatchObject({
         label: 'my key',
-        token: lastKey.hashedKey
+        token: lastKey?.hashedKey
       });
     });
   });
@@ -98,7 +99,7 @@ describe('user.controller', () => {
       request.user = { id: '1234' };
       request.params = { keyId: 'not-a-real-key' };
       const user = new User();
-      user.apiKeys = [];
+      user.apiKeys = ([] as unknown) as Types.DocumentArray<ApiKeyDocument>;
 
       User.findById = jest.fn().mockResolvedValue(user);
 
@@ -114,13 +115,16 @@ describe('user.controller', () => {
       const mockKey1 = { _id: 'id1', id: 'id1', label: 'first key' };
       const mockKey2 = { _id: 'id2', id: 'id2', label: 'second key' };
 
-      const apiKeys = [mockKey1, mockKey2];
+      const apiKeys = ([
+        mockKey1,
+        mockKey2
+      ] as unknown) as Types.DocumentArray<ApiKeyDocument>;
       apiKeys.find = Array.prototype.find;
       apiKeys.pull = jest.fn();
 
       const user = {
         apiKeys,
-        save: jest.fn().mockResolvedValue()
+        save: jest.fn()
       };
 
       request.user = { id: '1234' };

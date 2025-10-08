@@ -18,7 +18,7 @@ export interface IUser extends VirtualId, MongooseTimestamps {
   google?: string;
   email: string;
   tokens: { kind: string }[];
-  apiKeys: ApiKeyDocument[];
+  apiKeys: Types.DocumentArray<ApiKeyDocument>;
   preferences: UserPreferences;
   totalSize: number;
   cookieConsent: CookieConsentOptions;
