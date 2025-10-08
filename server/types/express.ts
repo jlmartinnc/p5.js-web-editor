@@ -1,8 +1,7 @@
 import { Request } from 'express';
 import { User } from './user';
 
-// workaround for express.d.ts not working as expected
-/** Express Request with an user property. Used for routes that require authentication. */
+/** Authenticated express request for routes that require auth. Has a user property */
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
