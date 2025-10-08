@@ -28,7 +28,7 @@ export function userResponse(
  * Note: can be done synchronously - https://nodejs.org/api/crypto.html#cryptorandombytessize-callback
  * @return Promise<string>
  */
-export async function generateToken() {
+export async function generateToken(): Promise<string> {
   return new Promise((resolve, reject) => {
     crypto.randomBytes(20, (err, buf) => {
       if (err) {

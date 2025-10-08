@@ -54,7 +54,7 @@ describe('user.controller', () => {
         password: 'password'
       });
 
-      await createUser(request, response);
+      await createUser(request, response, next);
 
       expect(User.findByEmailAndUsername).toHaveBeenCalledWith(
         'existing@example.com',
@@ -75,7 +75,7 @@ describe('user.controller', () => {
         password: 'password'
       });
 
-      await createUser(request, response);
+      await createUser(request, response, next);
 
       expect(User.findByEmailAndUsername).toHaveBeenCalledWith(
         'existing@example.com',
@@ -95,7 +95,7 @@ describe('user.controller', () => {
 
       request.query = { check_type: 'email', email: 'test@example.com' };
 
-      await duplicateUserCheck(request, response);
+      await duplicateUserCheck(request, response, next);
 
       expect(mockFind).toHaveBeenCalledWith('test@example.com', {
         caseInsensitive: true,
@@ -108,7 +108,7 @@ describe('user.controller', () => {
 
       request.query = { check_type: 'username', username: 'newuser' };
 
-      await duplicateUserCheck(request, response);
+      await duplicateUserCheck(request, response, next);
 
       expect(response.json).toHaveBeenCalledWith({
         exists: false,
@@ -123,7 +123,7 @@ describe('user.controller', () => {
 
       request.query = { check_type: 'username', username: 'existinguser' };
 
-      await duplicateUserCheck(request, response);
+      await duplicateUserCheck(request, response, next);
 
       expect(response.json).toHaveBeenCalledWith({
         exists: true,
@@ -139,7 +139,7 @@ describe('user.controller', () => {
 
       request.query = { check_type: 'email', email: 'existing@example.com' };
 
-      await duplicateUserCheck(request, response);
+      await duplicateUserCheck(request, response, next);
 
       expect(response.json).toHaveBeenCalledWith({
         exists: true,
@@ -157,7 +157,7 @@ describe('user.controller', () => {
 
       request.query = { t: 'invalidtoken' };
 
-      await verifyEmail(request, response);
+      await verifyEmail(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
         verifiedToken: 'invalidtoken',
@@ -189,7 +189,7 @@ describe('user.controller', () => {
 
       request.query = { t: 'validtoken' };
 
-      await verifyEmail(request, response);
+      await verifyEmail(request, response, next);
 
       expect(mockUser.verified).toBe('verified');
       expect(mockUser.verifiedToken).toBeNull();
@@ -208,7 +208,7 @@ describe('user.controller', () => {
       request.user = { id: 'nonexistentid' };
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response);
+      await emailVerificationInitiate(request, response, next);
 
       expect(User.findById).toHaveBeenCalledWith('nonexistentid');
       expect(response.status).toHaveBeenCalledWith(404);
@@ -230,7 +230,7 @@ describe('user.controller', () => {
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response);
+      await emailVerificationInitiate(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(409);
       expect(response.json).toHaveBeenCalledWith({
@@ -260,7 +260,7 @@ describe('user.controller', () => {
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response);
+      await emailVerificationInitiate(request, response, next);
 
       expect(User.findById).toHaveBeenCalledWith('user1');
       expect(mailerService.send).toHaveBeenCalledWith(
@@ -298,7 +298,7 @@ describe('user.controller', () => {
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response);
+      await emailVerificationInitiate(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.send).toHaveBeenCalledWith({
