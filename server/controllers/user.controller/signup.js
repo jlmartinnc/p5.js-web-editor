@@ -97,3 +97,41 @@ export async function verifyEmail(req, res) {
   await user.save();
   res.json({ success: true });
 }
+
+export async function emailVerificationInitiate(req, res) {
+  try {
+    const token = await generateToken();
+    const user = await User.findById(req.user.id).exec();
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    if (user.verified === User.EmailConfirmation().Verified) {
+      res.status(409).json({ error: 'Email already verified' });
+      return;
+    }
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const mailOptions = renderEmailConfirmation({
+      body: {
+        domain: `${protocol}://${req.headers.host}`,
+        link: `${protocol}://${req.headers.host}/verify?t=${token}`
+      },
+      to: user.email
+    });
+    try {
+      await mailerService.send(mailOptions);
+    } catch (mailErr) {
+      res.status(500).send({ error: 'Error sending mail' });
+      return;
+    }
+    const EMAIL_VERIFY_TOKEN_EXPIRY_TIME = Date.now() + 3600000 * 24; // 24 hours
+    user.verified = User.EmailConfirmation().Resent;
+    user.verifiedToken = token;
+    user.verifiedTokenExpires = EMAIL_VERIFY_TOKEN_EXPIRY_TIME; // 24 hours
+    await user.save();
+
+    res.json(userResponse(req.user));
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+}

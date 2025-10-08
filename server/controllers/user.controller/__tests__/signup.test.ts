@@ -5,7 +5,8 @@ import { User } from '../../../models/user';
 import {
   createUser,
   duplicateUserCheck,
-  verifyEmail
+  verifyEmail,
+  emailVerificationInitiate
 } from '../../user.controller';
 
 import { mailerService } from '../../../utils/mail';
@@ -195,6 +196,114 @@ describe('user.controller', () => {
       expect(mockUser.verifiedTokenExpires).toBeNull();
       expect(saveMock).toHaveBeenCalled();
       expect(response.json).toHaveBeenCalledWith({ success: true });
+    });
+  });
+
+  describe('emailVerificationInitiate', () => {
+    it('returns 404 if user is not found', async () => {
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) });
+
+      request.user = { id: 'nonexistentid' };
+      request.headers.host = 'localhost:3000';
+
+      await emailVerificationInitiate(request, response);
+
+      expect(User.findById).toHaveBeenCalledWith('nonexistentid');
+      expect(response.status).toHaveBeenCalledWith(404);
+      expect(response.json).toHaveBeenCalledWith({ error: 'User not found' });
+    });
+
+    it('returns 409 if user is already verified', async () => {
+      User.EmailConfirmation = jest.fn().mockReturnValue({
+        Verified: 'verified'
+      });
+
+      const mockUser = {
+        verified: 'verified'
+      };
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
+
+      request.user = { id: 'user1' };
+      request.headers.host = 'localhost:3000';
+
+      await emailVerificationInitiate(request, response);
+
+      expect(response.status).toHaveBeenCalledWith(409);
+      expect(response.json).toHaveBeenCalledWith({
+        error: 'Email already verified'
+      });
+    });
+
+    it('sends a new verification email and updates the user', async () => {
+      User.EmailConfirmation = jest.fn().mockReturnValue({
+        Resent: 'resent'
+      });
+
+      const saveMock = jest.fn().mockResolvedValue({});
+      const mockUser = {
+        verified: 'sent',
+        verifiedToken: null,
+        verifiedTokenExpires: null,
+        email: 'test@example.com',
+        save: saveMock
+      };
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
+      (mailerService.send as jest.Mock).mockResolvedValue(true);
+
+      request.user = { id: 'user1' };
+      request.headers.host = 'localhost:3000';
+
+      await emailVerificationInitiate(request, response);
+
+      expect(User.findById).toHaveBeenCalledWith('user1');
+      expect(mailerService.send).toHaveBeenCalledWith(
+        expect.objectContaining({ to: 'test@example.com' })
+      );
+      expect(mockUser.verified).toBe('resent');
+      expect(mockUser.verifiedToken).toBeDefined();
+      expect(mockUser.verifiedTokenExpires).toBeDefined();
+      expect(saveMock).toHaveBeenCalled();
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: request.user.email,
+          username: request.user.username
+        })
+      );
+    });
+
+    it('returns 500 if mailer fails', async () => {
+      const saveMock = jest.fn().mockResolvedValue({});
+      const mockUser = {
+        verified: 'sent',
+        verifiedToken: null,
+        verifiedTokenExpires: null,
+        email: 'test@example.com',
+        save: saveMock
+      };
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
+      (mailerService.send as jest.Mock).mockRejectedValue(
+        new Error('Mailer fail')
+      );
+
+      request.user = { id: 'user1' };
+      request.headers.host = 'localhost:3000';
+
+      await emailVerificationInitiate(request, response);
+
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledWith({
+        error: 'Error sending mail'
+      });
     });
   });
 });
