@@ -6,22 +6,7 @@ import { userResponse, generateToken } from './user.controller/helpers';
 
 export * from './user.controller/apiKey';
 export * from './user.controller/signup';
-
-export async function updatePreferences(req, res) {
-  try {
-    const user = await User.findById(req.user.id).exec();
-    if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
-    // Shallow merge the new preferences with the existing.
-    user.preferences = { ...user.preferences, ...req.body.preferences };
-    await user.save();
-    res.json(user.preferences);
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
-}
+export * from './user.controller/userPreferences';
 
 export async function resetPasswordInitiate(req, res) {
   try {

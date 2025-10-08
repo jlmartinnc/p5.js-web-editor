@@ -47,7 +47,7 @@ describe('user.controller > user preferences', () => {
       request.user = { id: 'user1' };
       request.body = { preferences: { theme: 'dark', notifications: true } };
 
-      await updatePreferences(request, response);
+      await updatePreferences(request, response, next);
 
       // Check that preferences were merged correctly
       expect(mockUser.preferences).toEqual({
@@ -64,7 +64,7 @@ describe('user.controller > user preferences', () => {
 
       request.user = { id: 'nonexistentid' };
 
-      await updatePreferences(request, response);
+      await updatePreferences(request, response, next);
 
       expect(User.findById).toHaveBeenCalledWith('nonexistentid');
       expect(response.status).toHaveBeenCalledWith(404);
@@ -83,7 +83,7 @@ describe('user.controller > user preferences', () => {
       request.user = { id: 'user1' };
       request.body = { preferences: { theme: 'dark' } };
 
-      await updatePreferences(request, response);
+      await updatePreferences(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledWith({ error: expect.any(Error) });
