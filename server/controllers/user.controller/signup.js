@@ -1,5 +1,5 @@
 import { User } from '../../models/user';
-import { generateToken, userResponse } from '../user.controller';
+import { generateToken, userResponse } from './helpers';
 import { renderEmailConfirmation } from '../../views/mail';
 import { mailerService } from '../../utils/mail';
 
