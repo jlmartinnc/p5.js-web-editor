@@ -1,13 +1,21 @@
 import crypto from 'crypto';
+import { PublicUser } from '../../types';
 
-export function userResponse(user) {
+/**
+ * Sanitise user objects to remove sensitive fields
+ * @param user
+ * @returns Sanitised user
+ */
+export function userResponse(
+  user: PublicUser & Record<string, any>
+): PublicUser {
   return {
     email: user.email,
     username: user.username,
     preferences: user.preferences,
     apiKeys: user.apiKeys,
     verified: user.verified,
-    id: user._id,
+    id: user.id,
     totalSize: user.totalSize,
     github: user.github,
     google: user.google,

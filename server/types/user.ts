@@ -30,7 +30,7 @@ export interface IUser extends VirtualId, MongooseTimestamps {
 export interface User extends IUser {}
 
 /** Sanitised version of the user document without sensitive info */
-export interface PublicUserDocument
+export interface PublicUser
   extends Pick<
     UserDocument,
     | 'email'
