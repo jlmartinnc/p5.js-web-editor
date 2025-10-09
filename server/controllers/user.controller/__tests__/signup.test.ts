@@ -7,10 +7,9 @@ import {
   duplicateUserCheck,
   verifyEmail,
   emailVerificationInitiate
-} from '../../user.controller';
+} from '../signup';
 
 import { mailerService } from '../../../utils/mail';
-import { renderEmailConfirmation } from '../../../views/mail';
 
 jest.mock('../../../models/user');
 jest.mock('../../../utils/mail', () => ({

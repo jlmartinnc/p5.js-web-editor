@@ -9,14 +9,10 @@ import {
   updateSettings,
   unlinkGithub,
   unlinkGoogle
-} from '../../user.controller';
+} from '../authManagement';
 import { saveUser, generateToken, userResponse } from '../helpers';
 
 import { mailerService } from '../../../utils/mail';
-import {
-  renderEmailConfirmation,
-  renderResetPassword
-} from '../../../views/mail';
 import { UserDocument } from '../../../types';
 
 jest.mock('../../../models/user');

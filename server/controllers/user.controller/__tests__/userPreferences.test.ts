@@ -3,9 +3,9 @@ import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
 import { Types } from 'mongoose';
 import { User } from '../../../models/user';
-import { updatePreferences, updateCookieConsent } from '../../user.controller';
+import { updatePreferences, updateCookieConsent } from '../userPreferences';
 import { ApiKeyDocument } from '../../../types';
-import { CookieConsentOptions, AppThemeOptions } from '../../../types';
+import { CookieConsentOptions } from '../../../types';
 
 jest.mock('../../../models/user');
 jest.mock('../../../utils/mail', () => ({
