@@ -71,6 +71,7 @@ describe('user.controller > helpers', () => {
       );
       expect(response.json).toHaveBeenCalledWith(sanitised);
     });
+
     it('returns a 500 Error if user.save fails', async () => {
       const userWithUnsuccessfulSave = {
         ...mockFullUser,
@@ -90,14 +91,12 @@ describe('user.controller > helpers', () => {
 
   describe('userExists', () => {
     it('returns true when User.findByUsername returns non-nullish', async () => {
-      User.findByEmailOrUsername = jest
-        .fn()
-        .mockResolvedValue({ id: 'something' });
+      User.findByUsername = jest.fn().mockResolvedValue({ id: 'something' });
       const exists = await userExists('someusername');
       expect(exists).toBe(true);
     });
     it('returns false when User.findByUsername returns nullish', async () => {
-      User.findByEmailOrUsername = jest.fn().mockResolvedValue(null);
+      User.findByUsername = jest.fn().mockResolvedValue(null);
       const exists = await userExists('someusername');
       expect(exists).toBe(false);
     });
