@@ -12,7 +12,7 @@ import type { RemoveApiKeyRequestParams } from '../apiKey';
 
 jest.mock('../../../models/user');
 
-describe('user.controller', () => {
+describe('user.controller > api key', () => {
   let request: MockRequest & { user?: { id: string } };
   let response: MockResponse;
   let next: MockNext;

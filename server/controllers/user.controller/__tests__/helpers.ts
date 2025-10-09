@@ -43,7 +43,7 @@ const mockFullUser = {
   banned: false
 };
 
-describe('user.helpers', () => {
+describe('user.controller > helpers', () => {
   describe('userResponse', () => {
     it('returns a sanitized PublicUser object', () => {
       const result = userResponse(mockFullUser);

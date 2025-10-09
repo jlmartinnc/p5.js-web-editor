@@ -24,7 +24,7 @@ jest.mock('../../../views/mail', () => ({
     .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' })
 }));
 
-describe('user.controller', () => {
+describe('user.controller > signup', () => {
   let request: any;
   let response: any;
   let next: MockNext;
