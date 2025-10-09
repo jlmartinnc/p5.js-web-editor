@@ -11,6 +11,7 @@ import {
 export * from './user.controller/apiKey';
 export * from './user.controller/signup';
 export * from './user.controller/userPreferences';
+export * from './user.controller/authManagement';
 
 export async function resetPasswordInitiate(req, res) {
   try {
@@ -150,34 +151,4 @@ export async function updateSettings(req, res) {
   } catch (err) {
     res.status(500).json({ error: err });
   }
-}
-
-export async function unlinkGithub(req, res) {
-  if (req.user) {
-    req.user.github = undefined;
-    req.user.tokens = req.user.tokens.filter(
-      (token) => token.kind !== 'github'
-    );
-    await saveUser(res, req.user);
-    return;
-  }
-  res.status(404).json({
-    success: false,
-    message: 'You must be logged in to complete this action.'
-  });
-}
-
-export async function unlinkGoogle(req, res) {
-  if (req.user) {
-    req.user.google = undefined;
-    req.user.tokens = req.user.tokens.filter(
-      (token) => token.kind !== 'google'
-    );
-    await saveUser(res, req.user);
-    return;
-  }
-  res.status(404).json({
-    success: false,
-    message: 'You must be logged in to complete this action.'
-  });
 }

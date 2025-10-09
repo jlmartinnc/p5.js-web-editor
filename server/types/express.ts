@@ -1,9 +1,9 @@
 import { Request } from 'express';
-import { User } from './user';
+import { UserDocument } from './user';
 
 /** Authenticated express request for routes that require auth. Has a user property */
 export interface AuthenticatedRequest extends Request {
-  user: User;
+  user: UserDocument;
 }
 
 /** Simple error object for express requests */

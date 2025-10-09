@@ -42,7 +42,7 @@ describe('user.controller > 3rd party auth management', () => {
 
   describe('unlinkGithub', () => {
     it('returns 404 if user is not logged in', async () => {
-      await unlinkGithub(request, response);
+      await unlinkGithub(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -61,7 +61,7 @@ describe('user.controller > 3rd party auth management', () => {
 
       request.user = user;
 
-      await unlinkGithub(request, response);
+      await unlinkGithub(request, response, next);
 
       expect(user.github).toBeUndefined();
       expect(user.tokens).toEqual([{ kind: 'google', accessToken: 'xyz' }]);
@@ -71,7 +71,7 @@ describe('user.controller > 3rd party auth management', () => {
 
   describe('unlinkGoogle', () => {
     it('returns 404 if user is not logged in', async () => {
-      await unlinkGoogle(request, response);
+      await unlinkGoogle(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -90,7 +90,7 @@ describe('user.controller > 3rd party auth management', () => {
 
       request.user = user;
 
-      await unlinkGoogle(request, response);
+      await unlinkGoogle(request, response, next);
 
       expect(user.google).toBeUndefined();
       expect(user.tokens).toEqual([{ kind: 'github', accessToken: 'abc' }]);
