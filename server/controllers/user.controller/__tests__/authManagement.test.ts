@@ -4,6 +4,7 @@ import { NextFunction as MockNext } from 'jest-express/lib/next';
 import { User } from '../../../models/user';
 import {
   resetPasswordInitiate,
+  validateResetPasswordToken,
   unlinkGithub,
   unlinkGoogle
 } from '../../user.controller';
@@ -161,6 +162,54 @@ describe('user.controller > 3rd party auth management', () => {
       expect(response.json).toHaveBeenCalledWith({
         success: false
       });
+    });
+  });
+
+  describe('validateResetPasswordToken', () => {
+    const fixedTime = 100000000;
+    beforeAll(() => jest.useFakeTimers().setSystemTime(fixedTime));
+    afterAll(() => jest.useRealTimers());
+
+    it('returns 401 if no user is found or token has expired', async () => {
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null)
+      });
+
+      request.params = { token: 'invalid-token' };
+
+      await validateResetPasswordToken(request, response);
+
+      expect(User.findOne).toHaveBeenCalledWith({
+        resetPasswordToken: 'invalid-token',
+        resetPasswordExpires: { $gt: fixedTime }
+      });
+      expect(response.status).toHaveBeenCalledWith(401);
+      expect(response.json).toHaveBeenCalledWith({
+        success: false,
+        message: 'Password reset token is invalid or has expired.'
+      });
+    });
+
+    it('returns success if a user with a valid token is found', async () => {
+      const fakeUser = {
+        email: 'test@example.com',
+        resetPasswordToken: 'valid-token',
+        resetPasswordExpires: fixedTime + 10000 // still valid
+      };
+
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(fakeUser)
+      });
+
+      request.params = { token: 'valid-token' };
+
+      await validateResetPasswordToken(request, response);
+
+      expect(User.findOne).toHaveBeenCalledWith({
+        resetPasswordToken: 'valid-token',
+        resetPasswordExpires: { $gt: fixedTime }
+      });
+      expect(response.json).toHaveBeenCalledWith({ success: true });
     });
   });
 
