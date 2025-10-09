@@ -11,6 +11,7 @@ import {
   unlinkGoogle
 } from '../authManagement';
 import { saveUser, generateToken, userResponse } from '../helpers';
+import { createMockUser } from '../__testUtils__';
 
 import { mailerService } from '../../../utils/mail';
 import { UserDocument } from '../../../types';
@@ -68,11 +69,11 @@ describe('user.controller > auth management', () => {
     describe('if the user is found', () => {
       beforeEach(() => {
         mockToken = 'mock-token';
-        saveMock = jest.fn().mockResolvedValue({});
-        mockUser = {
+        saveMock = jest.fn().mockResolvedValue(null);
+        mockUser = createMockUser({
           email: 'test@example.com',
           save: saveMock
-        };
+        });
 
         (generateToken as jest.Mock).mockResolvedValue(mockToken);
         User.findByEmail = jest.fn().mockResolvedValue(mockUser);
@@ -113,10 +114,10 @@ describe('user.controller > auth management', () => {
       beforeEach(() => {
         mockToken = 'mock-token';
         saveMock = jest.fn().mockResolvedValue({});
-        mockUser = {
+        mockUser = createMockUser({
           email: 'test@example.com',
           save: saveMock
-        };
+        });
 
         (generateToken as jest.Mock).mockResolvedValue(mockToken);
         User.findByEmail = jest.fn().mockResolvedValue(null);
@@ -142,10 +143,10 @@ describe('user.controller > auth management', () => {
     it('returns unsuccessful for all other errors', async () => {
       mockToken = 'mock-token';
       saveMock = jest.fn().mockResolvedValue({});
-      mockUser = {
+      mockUser = createMockUser({
         email: 'test@example.com',
         save: saveMock
-      };
+      });
 
       (generateToken as jest.Mock).mockRejectedValue(
         new Error('network error')
@@ -202,11 +203,12 @@ describe('user.controller > auth management', () => {
 
     describe('and when there is a user with valid token', () => {
       beforeEach(async () => {
-        const fakeUser = {
+        const fakeUser = createMockUser({
           email: 'test@example.com',
           resetPasswordToken: 'valid-token',
           resetPasswordExpires: fixedTime + 10000 // still valid
-        };
+        });
+
         User.findOne = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(fakeUser)
         });
@@ -257,13 +259,14 @@ describe('user.controller > auth management', () => {
     });
 
     describe('and when there is a user with valid token', () => {
-      const fakeUser = {
+      const fakeUser = createMockUser({
         email: 'test@example.com',
         password: 'oldpassword',
         resetPasswordToken: 'valid-token',
         resetPasswordExpires: fixedTime + 10000, // still valid
         save: jest.fn()
-      };
+      });
+
       beforeEach(async () => {
         User.findOne = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(fakeUser)
@@ -320,11 +323,11 @@ describe('user.controller > auth management', () => {
 
     // the below tests match the current logic, but logic can be improved
     describe('if the user is found', () => {
-      const startingUser = {
+      const startingUser = createMockUser({
         username: 'oldusername',
         email: 'old@email.com',
         id: 'valid-id'
-      };
+      });
 
       beforeEach(() => {
         User.findById = jest.fn().mockResolvedValue(startingUser);
@@ -399,13 +402,10 @@ describe('user.controller > auth management', () => {
       });
     });
     describe('and when there is a user in the request', () => {
-      const user = {
-        github: { id: '123', username: 'testuser' },
-        tokens: [
-          { kind: 'github', accessToken: 'abc' },
-          { kind: 'google', accessToken: 'xyz' }
-        ]
-      };
+      const user = createMockUser({
+        github: 'testuser',
+        tokens: [{ kind: 'github' }, { kind: 'google' }]
+      });
 
       beforeEach(async () => {
         request.user = user;
@@ -415,7 +415,7 @@ describe('user.controller > auth management', () => {
         expect(user.github).toBeUndefined();
       });
       it('filters out the github token', () => {
-        expect(user.tokens).toEqual([{ kind: 'google', accessToken: 'xyz' }]);
+        expect(user.tokens).toEqual([{ kind: 'google' }]);
       });
       it('does calls saveUser', () => {
         expect(saveUser).toHaveBeenCalledWith(response, user);
@@ -440,13 +440,10 @@ describe('user.controller > auth management', () => {
       });
     });
     describe('and when there is a user in the request', () => {
-      const user = {
-        google: { id: '123', username: 'testuser' },
-        tokens: [
-          { kind: 'github', accessToken: 'abc' },
-          { kind: 'google', accessToken: 'xyz' }
-        ]
-      };
+      const user = createMockUser({
+        google: 'testuser',
+        tokens: [{ kind: 'github' }, { kind: 'google' }]
+      });
 
       beforeEach(async () => {
         request.user = user;
@@ -456,7 +453,7 @@ describe('user.controller > auth management', () => {
         expect(user.google).toBeUndefined();
       });
       it('filters out the google token', () => {
-        expect(user.tokens).toEqual([{ kind: 'github', accessToken: 'abc' }]);
+        expect(user.tokens).toEqual([{ kind: 'github' }]);
       });
       it('does calls saveUser', () => {
         expect(saveUser).toHaveBeenCalledWith(response, user);

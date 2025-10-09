@@ -1,36 +1,14 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
-import { Types } from 'mongoose';
 import { User } from '../../../models/user';
 import { updatePreferences, updateCookieConsent } from '../userPreferences';
-import { ApiKeyDocument } from '../../../types';
-import { CookieConsentOptions } from '../../../types';
+import { createMockUser, mockUserPreferences } from '../__testUtils__';
+import { AppThemeOptions, CookieConsentOptions } from '../../../types';
 
 jest.mock('../../../models/user');
-jest.mock('../../../utils/mail', () => ({
-  mailerService: {
-    send: jest.fn()
-  }
-}));
-jest.mock('../../../views/mail', () => ({
-  renderEmailConfirmation: jest
-    .fn()
-    .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' })
-}));
 
-const mockBaseUser = {
-  email: 'test@example.com',
-  username: 'tester',
-  preferences: {},
-  apiKeys: ([] as unknown) as Types.DocumentArray<ApiKeyDocument>,
-  verified: 'verified',
-  id: 'abc123',
-  totalSize: 42,
-  cookieConsent: CookieConsentOptions.NONE,
-  google: 'user@gmail.com',
-  github: 'user123'
-};
+const mockBaseUser = createMockUser();
 
 describe('user.controller > user preferences', () => {
   let request: any;
@@ -52,23 +30,25 @@ describe('user.controller > user preferences', () => {
   describe('updatePreferences', () => {
     it('saves user preferences when user exists', async () => {
       const saveMock = jest.fn().mockResolvedValue({});
-      const mockUser = {
-        ...mockBaseUser,
-        preferences: { theme: 'light' },
+      const mockUser = createMockUser({
+        preferences: { ...mockUserPreferences, theme: AppThemeOptions.LIGHT },
         save: saveMock
-      };
+      });
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
       request.user = { id: 'user1' };
-      request.body = { preferences: { theme: 'dark', notifications: true } };
+      request.body = {
+        preferences: { theme: AppThemeOptions.DARK, notifications: true }
+      };
 
       await updatePreferences(request, response, next);
 
       // Check that preferences were merged correctly
       expect(mockUser.preferences).toEqual({
-        theme: 'dark',
+        ...mockUserPreferences,
+        theme: AppThemeOptions.DARK,
         notifications: true
       });
       expect(saveMock).toHaveBeenCalled();
@@ -89,11 +69,10 @@ describe('user.controller > user preferences', () => {
     });
     it('returns 500 if saving preferences fails', async () => {
       const saveMock = jest.fn().mockRejectedValue(new Error('DB error'));
-      const mockUser = {
-        ...mockBaseUser,
-        preferences: { theme: 'light' },
+      const mockUser = createMockUser({
+        preferences: { ...mockUserPreferences, theme: AppThemeOptions.LIGHT },
         save: saveMock
-      };
+      });
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
@@ -111,27 +90,25 @@ describe('user.controller > user preferences', () => {
   describe('updateCookieConsent', () => {
     it('updates cookieConsent when user exists', async () => {
       const saveMock = jest.fn().mockResolvedValue({});
-      const mockUser = {
-        ...mockBaseUser,
-        cookieConsent: false,
+      const mockUser = createMockUser({
+        cookieConsent: CookieConsentOptions.ALL,
         save: saveMock
-      };
-
+      });
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
       request.user = { id: 'user1' };
-      request.body = { cookieConsent: true };
+      request.body = { cookieConsent: CookieConsentOptions.ESSENTIAL };
 
       await updateCookieConsent(request, response, next);
 
       expect(User.findById).toHaveBeenCalledWith('user1');
-      expect(mockUser.cookieConsent).toBe(true);
+      expect(mockUser.cookieConsent).toBe(CookieConsentOptions.ESSENTIAL);
       expect(saveMock).toHaveBeenCalled();
       expect(response.json).toHaveBeenCalledWith({
         ...mockBaseUser,
-        cookieConsent: true
+        cookieConsent: CookieConsentOptions.ESSENTIAL
       });
     });
 
@@ -152,11 +129,10 @@ describe('user.controller > user preferences', () => {
 
     it('returns 500 if saving cookieConsent fails', async () => {
       const saveMock = jest.fn().mockRejectedValue(new Error('DB error'));
-      const mockUser = {
-        ...mockBaseUser,
-        cookieConsent: true,
+      const mockUser = createMockUser({
+        cookieConsent: CookieConsentOptions.ALL,
         save: saveMock
-      };
+      });
 
       User.findById = jest
         .fn()

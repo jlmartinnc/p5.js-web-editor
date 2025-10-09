@@ -1,47 +1,19 @@
 /* eslint-disable no-unused-vars */
 import crypto from 'crypto';
 
-import { Types } from 'mongoose';
 import { userResponse, generateToken } from '../helpers';
-import { CookieConsentOptions, AppThemeOptions } from '../../../types';
-import { ApiKeyDocument } from '../../../types';
+import { createMockUser } from '../__testUtils__';
 
 jest.mock('../../../models/user');
 
-const mockFullUser = {
-  email: 'test@example.com',
-  username: 'tester',
-  preferences: {
-    fontSize: 12,
-    lineNumbers: false,
-    indentationAmount: 10,
-    isTabIndent: false,
-    autosave: false,
-    linewrap: false,
-    lintWarning: false,
-    textOutput: false,
-    gridOutput: false,
-    theme: AppThemeOptions.CONTRAST,
-    autorefresh: false,
-    language: 'en-GB',
-    autocloseBracketsQuotes: false,
-    autocompleteHinter: false
-  },
-  apiKeys: ([] as unknown) as Types.DocumentArray<ApiKeyDocument>,
-  verified: 'verified',
-  id: 'abc123',
-  totalSize: 42,
-  cookieConsent: CookieConsentOptions.NONE,
-  google: 'user@gmail.com',
-  github: 'user123',
-
-  // to be removed:
-  name: 'test user',
+const mockFullUser = createMockUser({
+  // sensitive fields to be removed:
+  name: 'bob dylan',
   tokens: [],
-  password: 'abweorij',
-  resetPasswordToken: '1i14ij23',
-  banned: false
-};
+  password: 'password12314',
+  resetPasswordToken: 'wijroaijwoer',
+  banned: true
+});
 
 describe('user.controller > helpers', () => {
   describe('userResponse', () => {
