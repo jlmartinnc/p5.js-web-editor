@@ -49,6 +49,8 @@ describe('user.controller > helpers', () => {
       const result = userResponse(mockFullUser);
 
       const {
+        name,
+        tokens,
         password,
         resetPasswordToken,
         banned,
