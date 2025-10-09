@@ -1,5 +1,6 @@
 import crypto from 'crypto';
-import { PublicUser } from '../../types';
+import type { Response } from 'express';
+import { PublicUser, UserDocument } from '../../types';
 
 /**
  * Sanitise user objects to remove sensitive fields
@@ -39,4 +40,19 @@ export async function generateToken(): Promise<string> {
       }
     });
   });
+}
+
+/**
+ * Updates the user object and sets the response.
+ * Response is the sanitised user or a 500 error.
+ * @param res
+ * @param user
+ */
+export async function saveUser(res: Response, user: UserDocument) {
+  try {
+    await user.save();
+    res.json(userResponse(user));
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }

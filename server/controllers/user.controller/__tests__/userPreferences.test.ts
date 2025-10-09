@@ -1,8 +1,11 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Types } from 'mongoose';
 import { User } from '../../../models/user';
-import { updatePreferences } from '../../user.controller';
+import { updatePreferences, updateCookieConsent } from '../../user.controller';
+import { ApiKeyDocument } from '../../../types';
+import { CookieConsentOptions, AppThemeOptions } from '../../../types';
 
 jest.mock('../../../models/user');
 jest.mock('../../../utils/mail', () => ({
@@ -15,6 +18,19 @@ jest.mock('../../../views/mail', () => ({
     .fn()
     .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' })
 }));
+
+const mockBaseUser = {
+  email: 'test@example.com',
+  username: 'tester',
+  preferences: {},
+  apiKeys: ([] as unknown) as Types.DocumentArray<ApiKeyDocument>,
+  verified: 'verified',
+  id: 'abc123',
+  totalSize: 42,
+  cookieConsent: CookieConsentOptions.NONE,
+  google: 'user@gmail.com',
+  github: 'user123'
+};
 
 describe('user.controller > user preferences', () => {
   let request: any;
@@ -37,6 +53,7 @@ describe('user.controller > user preferences', () => {
     it('saves user preferences when user exists', async () => {
       const saveMock = jest.fn().mockResolvedValue({});
       const mockUser = {
+        ...mockBaseUser,
         preferences: { theme: 'light' },
         save: saveMock
       };
@@ -73,6 +90,7 @@ describe('user.controller > user preferences', () => {
     it('returns 500 if saving preferences fails', async () => {
       const saveMock = jest.fn().mockRejectedValue(new Error('DB error'));
       const mockUser = {
+        ...mockBaseUser,
         preferences: { theme: 'light' },
         save: saveMock
       };
@@ -84,6 +102,70 @@ describe('user.controller > user preferences', () => {
       request.body = { preferences: { theme: 'dark' } };
 
       await updatePreferences(request, response, next);
+
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledWith({ error: expect.any(Error) });
+    });
+  });
+
+  describe('updateCookieConsent', () => {
+    it('updates cookieConsent when user exists', async () => {
+      const saveMock = jest.fn().mockResolvedValue({});
+      const mockUser = {
+        ...mockBaseUser,
+        cookieConsent: false,
+        save: saveMock
+      };
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
+
+      request.user = { id: 'user1' };
+      request.body = { cookieConsent: true };
+
+      await updateCookieConsent(request, response, next);
+
+      expect(User.findById).toHaveBeenCalledWith('user1');
+      expect(mockUser.cookieConsent).toBe(true);
+      expect(saveMock).toHaveBeenCalled();
+      expect(response.json).toHaveBeenCalledWith({
+        ...mockBaseUser,
+        cookieConsent: true
+      });
+    });
+
+    it('returns 404 when no user is found', async () => {
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) });
+
+      request.user = { id: 'nonexistentid' };
+      request.body = { cookieConsent: true };
+
+      await updateCookieConsent(request, response, next);
+
+      expect(User.findById).toHaveBeenCalledWith('nonexistentid');
+      expect(response.status).toHaveBeenCalledWith(404);
+      expect(response.json).toHaveBeenCalledWith({ error: 'User not found' });
+    });
+
+    it('returns 500 if saving cookieConsent fails', async () => {
+      const saveMock = jest.fn().mockRejectedValue(new Error('DB error'));
+      const mockUser = {
+        ...mockBaseUser,
+        cookieConsent: true,
+        save: saveMock
+      };
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
+
+      request.user = { id: 'user1' };
+      request.body = { cookieConsent: true };
+
+      await updateCookieConsent(request, response, next);
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledWith({ error: expect.any(Error) });

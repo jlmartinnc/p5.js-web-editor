@@ -2,7 +2,11 @@ import { User } from '../models/user';
 import { mailerService } from '../utils/mail';
 import { renderEmailConfirmation, renderResetPassword } from '../views/mail';
 
-import { userResponse, generateToken } from './user.controller/helpers';
+import {
+  userResponse,
+  generateToken,
+  saveUser
+} from './user.controller/helpers';
 
 export * from './user.controller/apiKey';
 export * from './user.controller/signup';
@@ -91,21 +95,6 @@ export async function userExists(username) {
   return user != null;
 }
 
-/**
- * Updates the user object and sets the response.
- * Response is the user or a 500 error.
- * @param res
- * @param user
- */
-export async function saveUser(res, user) {
-  try {
-    await user.save();
-    res.json(userResponse(user));
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-}
-
 export async function updateSettings(req, res) {
   try {
     const user = await User.findById(req.user.id);
@@ -191,19 +180,4 @@ export async function unlinkGoogle(req, res) {
     success: false,
     message: 'You must be logged in to complete this action.'
   });
-}
-
-export async function updateCookieConsent(req, res) {
-  try {
-    const user = await User.findById(req.user.id).exec();
-    if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
-    const { cookieConsent } = req.body;
-    user.cookieConsent = cookieConsent;
-    await saveUser(res, user);
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
 }
