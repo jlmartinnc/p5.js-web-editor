@@ -47,7 +47,7 @@ describe('user.controller > auth management', () => {
   });
 
   describe('resetPasswordInitiate', () => {
-    const fixedTime = 100000000; // arbitrary fixed timestamp
+    const fixedTime = 100000000;
     let mockToken: string;
     let saveMock: jest.Mock;
     let mockUser: Partial<UserDocument>;
@@ -58,6 +58,14 @@ describe('user.controller > auth management', () => {
 
     afterAll(() => {
       jest.useRealTimers();
+    });
+
+    it('calls User.findByEmail with the correct email', async () => {
+      User.findByEmail = jest.fn().mockResolvedValue({});
+      request.body = { email: 'email@gmail.com' };
+      await resetPasswordInitiate(request, response, next);
+
+      expect(User.findByEmail).toHaveBeenCalledWith('email@gmail.com');
     });
 
     describe('if the user is found', () => {
@@ -163,46 +171,54 @@ describe('user.controller > auth management', () => {
     beforeAll(() => jest.useFakeTimers().setSystemTime(fixedTime));
     afterAll(() => jest.useRealTimers());
 
-    it('returns 401 if no user is found or token has expired', async () => {
+    it('calls User.findone with the correct token and expiry', async () => {
       User.findOne = jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null)
+        exec: jest.fn()
       });
-
-      request.params = { token: 'invalid-token' };
-
+      request.params = { token: 'some-token' };
       await validateResetPasswordToken(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
-        resetPasswordToken: 'invalid-token',
+        resetPasswordToken: 'some-token',
         resetPasswordExpires: { $gt: fixedTime }
-      });
-      expect(response.status).toHaveBeenCalledWith(401);
-      expect(response.json).toHaveBeenCalledWith({
-        success: false,
-        message: 'Password reset token is invalid or has expired.'
       });
     });
 
-    it('returns success if a user with a valid token is found', async () => {
-      const fakeUser = {
-        email: 'test@example.com',
-        resetPasswordToken: 'valid-token',
-        resetPasswordExpires: fixedTime + 10000 // still valid
-      };
-
-      User.findOne = jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(fakeUser)
+    describe('and when no user is found', () => {
+      beforeEach(async () => {
+        User.findOne = jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(null)
+        });
+        request.params = { token: 'invalid-token' };
+        await validateResetPasswordToken(request, response, next);
       });
-
-      request.params = { token: 'valid-token' };
-
-      await validateResetPasswordToken(request, response, next);
-
-      expect(User.findOne).toHaveBeenCalledWith({
-        resetPasswordToken: 'valid-token',
-        resetPasswordExpires: { $gt: fixedTime }
+      it('returns a 401', () => {
+        expect(response.status).toHaveBeenCalledWith(401);
       });
-      expect(response.json).toHaveBeenCalledWith({ success: true });
+      it('returns a "invalid or expired" token message', () => {
+        expect(response.json).toHaveBeenCalledWith({
+          success: false,
+          message: 'Password reset token is invalid or has expired.'
+        });
+      });
+    });
+
+    describe('and when there is a user with valid token', () => {
+      beforeEach(async () => {
+        const fakeUser = {
+          email: 'test@example.com',
+          resetPasswordToken: 'valid-token',
+          resetPasswordExpires: fixedTime + 10000 // still valid
+        };
+        User.findOne = jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(fakeUser)
+        });
+        request.params = { token: 'valid-token' };
+        await validateResetPasswordToken(request, response, next);
+      });
+      it('returns a success response', () => {
+        expect(response.json).toHaveBeenCalledWith({ success: true });
+      });
     });
   });
 
@@ -220,14 +236,13 @@ describe('user.controller > auth management', () => {
     });
 
     describe('if the user is not found', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         User.findById = jest.fn().mockResolvedValue(null);
         request.user = { id: 'nonexistent-id' };
+        await updateSettings(request, response);
       });
 
       it('returns 404 and a user-not-found error', async () => {
-        await updateSettings(request, response);
-
         expect(response.status).toHaveBeenCalledWith(404);
         expect(response.json).toHaveBeenCalledWith({
           error: 'User not found'
@@ -303,17 +318,22 @@ describe('user.controller > auth management', () => {
   });
 
   describe('unlinkGithub', () => {
-    it('returns 404 if user is not logged in', async () => {
-      await unlinkGithub(request, response, next);
-
-      expect(saveUser).not.toHaveBeenCalled();
-      expect(response.status).toHaveBeenCalledWith(404);
-      expect(response.json).toHaveBeenCalledWith({
-        success: false,
-        message: 'You must be logged in to complete this action.'
+    describe('and when there is no user in the request', () => {
+      beforeEach(async () => {
+        await unlinkGithub(request, response, next);
+      });
+      it('does not call saveUser', () => {
+        expect(saveUser).not.toHaveBeenCalled();
+      });
+      it('returns a 404 with the correct status and message', () => {
+        expect(response.status).toHaveBeenCalledWith(404);
+        expect(response.json).toHaveBeenCalledWith({
+          success: false,
+          message: 'You must be logged in to complete this action.'
+        });
       });
     });
-    it('removes the users github & filters out github tokens if user is logged in', async () => {
+    describe('and when there is a user in the request', () => {
       const user = {
         github: { id: '123', username: 'testuser' },
         tokens: [
@@ -322,28 +342,39 @@ describe('user.controller > auth management', () => {
         ]
       };
 
-      request.user = user;
-
-      await unlinkGithub(request, response, next);
-
-      expect(user.github).toBeUndefined();
-      expect(user.tokens).toEqual([{ kind: 'google', accessToken: 'xyz' }]);
-      expect(saveUser).toHaveBeenCalledWith(response, user);
+      beforeEach(async () => {
+        request.user = user;
+        await unlinkGithub(request, response, next);
+      });
+      it('removes the users github property', () => {
+        expect(user.github).toBeUndefined();
+      });
+      it('filters out the github token', () => {
+        expect(user.tokens).toEqual([{ kind: 'google', accessToken: 'xyz' }]);
+      });
+      it('does calls saveUser', () => {
+        expect(saveUser).toHaveBeenCalledWith(response, user);
+      });
     });
   });
 
   describe('unlinkGoogle', () => {
-    it('returns 404 if user is not logged in', async () => {
-      await unlinkGoogle(request, response, next);
-
-      expect(response.status).toHaveBeenCalledWith(404);
-      expect(response.json).toHaveBeenCalledWith({
-        success: false,
-        message: 'You must be logged in to complete this action.'
+    describe('and when there is no user in the request', () => {
+      beforeEach(async () => {
+        await unlinkGoogle(request, response, next);
       });
-      expect(saveUser).not.toHaveBeenCalled();
+      it('does not call saveUser', () => {
+        expect(saveUser).not.toHaveBeenCalled();
+      });
+      it('returns a 404 with the correct status and message', () => {
+        expect(response.status).toHaveBeenCalledWith(404);
+        expect(response.json).toHaveBeenCalledWith({
+          success: false,
+          message: 'You must be logged in to complete this action.'
+        });
+      });
     });
-    it('removes the users google & filters out google tokens if user is logged in', async () => {
+    describe('and when there is a user in the request', () => {
       const user = {
         google: { id: '123', username: 'testuser' },
         tokens: [
@@ -352,13 +383,19 @@ describe('user.controller > auth management', () => {
         ]
       };
 
-      request.user = user;
-
-      await unlinkGoogle(request, response, next);
-
-      expect(user.google).toBeUndefined();
-      expect(user.tokens).toEqual([{ kind: 'github', accessToken: 'abc' }]);
-      expect(saveUser).toHaveBeenCalledWith(response, user);
+      beforeEach(async () => {
+        request.user = user;
+        await unlinkGoogle(request, response, next);
+      });
+      it('removes the users google property', () => {
+        expect(user.google).toBeUndefined();
+      });
+      it('filters out the google token', () => {
+        expect(user.tokens).toEqual([{ kind: 'github', accessToken: 'abc' }]);
+      });
+      it('does calls saveUser', () => {
+        expect(saveUser).toHaveBeenCalledWith(response, user);
+      });
     });
   });
 });
