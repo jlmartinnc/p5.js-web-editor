@@ -7,8 +7,7 @@ import { Types } from 'mongoose';
 
 import { User } from '../../../models/user';
 import { createApiKey, removeApiKey } from '../apiKey';
-import type { ApiKeyDocument } from '../../../types';
-import type { RemoveApiKeyRequestParams } from '../apiKey';
+import type { ApiKeyDocument, RemoveApiKeyRequestParams } from '../../../types';
 
 jest.mock('../../../models/user');
 
