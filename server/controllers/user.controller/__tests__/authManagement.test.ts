@@ -82,14 +82,14 @@ describe('user.controller > 3rd party auth management', () => {
         request.headers.host = 'localhost:3000';
       });
       it('sets a resetPasswordToken with an expiry of 1h to the user', async () => {
-        await resetPasswordInitiate(request, response);
+        await resetPasswordInitiate(request, response, next);
 
         expect(mockUser.resetPasswordToken).toBe(mockToken);
         expect(mockUser.resetPasswordExpires).toBe(fixedTime + 3600000);
         expect(saveMock).toHaveBeenCalled();
       });
       it('sends the reset password email', async () => {
-        await resetPasswordInitiate(request, response);
+        await resetPasswordInitiate(request, response, next);
 
         expect(mailerService.send).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -101,7 +101,7 @@ describe('user.controller > 3rd party auth management', () => {
         );
       });
       it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
-        await resetPasswordInitiate(request, response);
+        await resetPasswordInitiate(request, response, next);
 
         expect(response.json).toHaveBeenCalledWith({
           success: true,
@@ -126,12 +126,12 @@ describe('user.controller > 3rd party auth management', () => {
         request.headers.host = 'localhost:3000';
       });
       it('does not send the reset password email', async () => {
-        await resetPasswordInitiate(request, response);
+        await resetPasswordInitiate(request, response, next);
 
         expect(mailerService.send).not.toHaveBeenCalledWith();
       });
       it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
-        await resetPasswordInitiate(request, response);
+        await resetPasswordInitiate(request, response, next);
 
         expect(response.json).toHaveBeenCalledWith({
           success: true,
@@ -156,7 +156,7 @@ describe('user.controller > 3rd party auth management', () => {
       request.body = { email: 'test@example.com' };
       request.headers.host = 'localhost:3000';
 
-      await resetPasswordInitiate(request, response);
+      await resetPasswordInitiate(request, response, next);
 
       expect(response.json).toHaveBeenCalledWith({
         success: false

@@ -13,43 +13,6 @@ export * from './user.controller/signup';
 export * from './user.controller/userPreferences';
 export * from './user.controller/authManagement';
 
-export async function resetPasswordInitiate(req, res) {
-  try {
-    const token = await generateToken();
-    const user = await User.findByEmail(req.body.email);
-    if (!user) {
-      res.json({
-        success: true,
-        message:
-          'If the email is registered with the editor, an email has been sent.'
-      });
-      return;
-    }
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-    await user.save();
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const mailOptions = renderResetPassword({
-      body: {
-        domain: `${protocol}://${req.headers.host}`,
-        link: `${protocol}://${req.headers.host}/reset-password/${token}`
-      },
-      to: user.email
-    });
-
-    await mailerService.send(mailOptions);
-    res.json({
-      success: true,
-      message:
-        'If the email is registered with the editor, an email has been sent.'
-    });
-  } catch (err) {
-    console.log(err);
-    res.json({ success: false });
-  }
-}
-
 export async function validateResetPasswordToken(req, res) {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
