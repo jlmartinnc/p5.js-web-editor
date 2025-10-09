@@ -3,26 +3,16 @@ import { User } from '../../models/user';
 import { generateToken, userResponse } from './helpers';
 import { renderEmailConfirmation } from '../../views/mail';
 import { mailerService } from '../../utils/mail';
-import { Error, PublicUser } from '../../types';
-
-export interface CreateUserRequestBody {
-  username: string;
-  email: string;
-  password: string;
-}
-export interface DuplicateUserCheckQuery {
-  // eslint-disable-next-line camelcase
-  check_type: 'email' | 'username';
-  email?: string;
-  username?: string;
-}
-export interface VerifyEmailQuery {
-  t: string;
-}
+import {
+  PublicUserOrError,
+  CreateUserRequestBody,
+  DuplicateUserCheckQuery,
+  VerifyEmailQuery
+} from '../../types';
 
 export const createUser: RequestHandler<
   {},
-  PublicUser | Error,
+  PublicUserOrError,
   CreateUserRequestBody
 > = async (req, res) => {
   try {
@@ -129,7 +119,7 @@ export const verifyEmail: RequestHandler<{}, {}, {}, VerifyEmailQuery> = async (
 
 export const emailVerificationInitiate: RequestHandler<
   {},
-  PublicUser | Error
+  PublicUserOrError
 > = async (req, res) => {
   try {
     const token = await generateToken();

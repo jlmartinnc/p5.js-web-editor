@@ -82,3 +82,19 @@ export interface UserModel extends Model<UserDocument> {
  * Contains either the Public (sanitised) User or an Error
  */
 export type PublicUserOrError = PublicUser | Error;
+
+// signup:
+export interface CreateUserRequestBody {
+  username: string;
+  email: string;
+  password: string;
+}
+export interface DuplicateUserCheckQuery {
+  // eslint-disable-next-line camelcase
+  check_type: 'email' | 'username';
+  email?: string;
+  username?: string;
+}
+export interface VerifyEmailQuery {
+  t: string;
+}
