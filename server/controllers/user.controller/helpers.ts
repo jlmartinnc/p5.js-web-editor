@@ -61,10 +61,8 @@ export async function saveUser(res: Response, user: UserDocument) {
 
 /**
  * Helper used in other controllers to check if user by username exists.
- * @param {string} username
- * @return {Promise<boolean>}
  */
-export async function userExists(username: string) {
+export async function userExists(username: string): Promise<boolean> {
   const user = await User.findByUsername(username);
   return user != null;
 }

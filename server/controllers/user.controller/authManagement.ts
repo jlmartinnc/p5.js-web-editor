@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
 import { saveUser, generateToken, userResponse } from './helpers';
 import {
