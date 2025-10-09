@@ -1,5 +1,7 @@
 import { Model, Document, Types } from 'mongoose';
+import * as core from 'express-serve-static-core';
 import { VirtualId, MongooseTimestamps } from './mongoose';
+import { Error } from './express';
 
 /** Full Api Key interface */
 export interface IApiKey extends VirtualId, MongooseTimestamps {
@@ -25,3 +27,21 @@ export interface SanitisedApiKey
 
 /** Mongoose model for API Key */
 export interface ApiKeyModel extends Model<ApiKeyDocument> {}
+
+// HTTP
+/**
+ * Response body for userController.createApiKey & userController.removeApiKey
+ *   - Either an ApiKeyResponse or Error
+ */
+export type ApiKeyResponseOrError = ApiKeyResponse | Error;
+
+export interface ApiKeyResponse {
+  apiKeys: ApiKeyDocument[];
+}
+
+export interface CreateApiKeyRequestBody {
+  label: string;
+}
+export interface RemoveApiKeyRequestParams extends core.ParamsDictionary {
+  keyId: string;
+}

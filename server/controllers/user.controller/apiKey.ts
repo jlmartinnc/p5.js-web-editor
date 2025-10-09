@@ -1,18 +1,11 @@
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
-import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
-import type { ApiKeyDocument, Error } from '../../types';
-
-export interface ApiKeyResponseBody {
-  apiKeys: ApiKeyDocument[];
-}
-export interface CreateApiKeyRequestBody {
-  label: string;
-}
-export interface RemoveApiKeyRequestParams extends core.ParamsDictionary {
-  keyId: string;
-}
+import type {
+  ApiKeyResponseOrError,
+  CreateApiKeyRequestBody,
+  RemoveApiKeyRequestParams
+} from '../../types';
 
 /**
  * Generates a unique token to be used as a Personal Access Token
@@ -33,7 +26,7 @@ function generateApiKey(): Promise<string> {
 /** POST /account/api-keys, UserController.createApiKey */
 export const createApiKey: RequestHandler<
   {},
-  ApiKeyResponseBody | Error,
+  ApiKeyResponseOrError,
   CreateApiKeyRequestBody
 > = async (req, res) => {
   function sendFailure(code: number, error: string) {
@@ -85,7 +78,7 @@ export const createApiKey: RequestHandler<
 /** DELETE /account/api-keys/:keyId, UserController.removeApiKey */
 export const removeApiKey: RequestHandler<
   RemoveApiKeyRequestParams,
-  ApiKeyResponseBody | Error
+  ApiKeyResponseOrError
 > = async (req, res) => {
   function sendFailure(code: number, error: string) {
     res.status(code).json({ error });
