@@ -129,25 +129,16 @@ export const updateSettings: RequestHandler<
         res.status(401).json({ error: 'Current password is not provided.' });
         return;
       }
-
+    }
+    if (req.body.currentPassword) {
       const isMatch = await user.comparePassword(req.body.currentPassword);
       if (!isMatch) {
         res.status(401).json({ error: 'Current password is invalid.' });
         return;
       }
-      user.password = req.body.newPassword;
+      user.password = req.body.newPassword!;
       await saveUser(res, user);
-    }
-    // if (req.body.currentPassword) {
-    //   const isMatch = await user.comparePassword(req.body.currentPassword);
-    //   if (!isMatch) {
-    //     res.status(401).json({ error: 'Current password is invalid.' });
-    //     return;
-    //   }
-    //   user.password = req.body.newPassword!;
-    //   await saveUser(res, user);
-    // }
-    else if (user.email !== req.body.email) {
+    } else if (user.email !== req.body.email) {
       const EMAIL_VERIFY_TOKEN_EXPIRY_TIME = Date.now() + 3600000 * 24; // 24 hours
       user.verified = User.EmailConfirmation().Sent;
 

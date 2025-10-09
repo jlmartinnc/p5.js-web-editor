@@ -9,7 +9,7 @@ import { Error, GenericResponseBody, RouteParam } from './express';
 export interface IUser extends VirtualId, MongooseTimestamps {
   name: string;
   username: string;
-  password: string;
+  password?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
   verified?: string;
@@ -92,6 +92,13 @@ export type PublicUserOrError = PublicUser | Error;
 export type PublicUserOrErrorOrGeneric =
   | PublicUserOrError
   | GenericResponseBody;
+
+export interface UpdateSettingsRequestBody {
+  username: string;
+  email: string;
+  newPassword?: string;
+  currentPassword?: string;
+}
 
 /**
  * Response body used for unlinkGithub and unlinkGoogle
