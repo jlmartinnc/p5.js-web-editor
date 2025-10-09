@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
-import { saveUser, generateToken } from './helpers';
+import { saveUser, generateToken, userResponse } from './helpers';
 import { PublicUser, GenericResponseBody } from '../../types';
 import { mailerService } from '../../utils/mail';
 import { renderResetPassword } from '../../views/mail';
@@ -9,9 +9,12 @@ import { renderResetPassword } from '../../views/mail';
 export interface ResetPasswordRequestBody {
   email: string;
 }
-export interface ValidateResetPasswordRequestParams
+export interface ResetOrUpdatePasswordRequestParams
   extends core.ParamsDictionary {
   token: string;
+}
+export interface UpdatePasswordRequestBody {
+  password: string;
 }
 
 export const resetPasswordInitiate: RequestHandler<
@@ -58,7 +61,7 @@ export const resetPasswordInitiate: RequestHandler<
   }
 };
 
-export const validateResetPasswordToken: RequestHandler<ValidateResetPasswordRequestParams> = async (
+export const validateResetPasswordToken: RequestHandler<ResetOrUpdatePasswordRequestParams> = async (
   req,
   res
 ) => {
@@ -74,6 +77,32 @@ export const validateResetPasswordToken: RequestHandler<ValidateResetPasswordReq
     return;
   }
   res.json({ success: true });
+};
+
+export const updatePassword: RequestHandler<
+  ResetOrUpdatePasswordRequestParams,
+  PublicUser | GenericResponseBody,
+  UpdatePasswordRequestBody
+> = async (req, res) => {
+  const user = await User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  }).exec();
+  if (!user) {
+    res.status(401).json({
+      success: false,
+      message: 'Password reset token is invalid or has expired.'
+    });
+    return;
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+  req.logIn(user, (loginErr) => res.json(userResponse(req.user!)));
+  // eventually send email that the password has been reset
 };
 
 export const unlinkGithub: RequestHandler<

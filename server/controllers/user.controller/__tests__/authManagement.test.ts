@@ -233,7 +233,7 @@ describe('user.controller > auth management', () => {
         exec: jest.fn()
       });
       request.params = { token: 'some-token' };
-      await updatePassword(request, response);
+      await updatePassword(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
         resetPasswordToken: 'some-token',
@@ -247,7 +247,7 @@ describe('user.controller > auth management', () => {
           exec: jest.fn().mockResolvedValue(null)
         });
         request.params = { token: 'invalid-token' };
-        await updatePassword(request, response);
+        await updatePassword(request, response, next);
       });
       it('returns a 401', () => {
         expect(response.status).toHaveBeenCalledWith(401);
@@ -277,7 +277,7 @@ describe('user.controller > auth management', () => {
           password: 'newpassword'
         });
         request.logIn = jest.fn();
-        await updatePassword(request, response);
+        await updatePassword(request, response, next);
       });
       it('calls user.save with the updated password and removes the reset password token', () => {
         expect(fakeUser.password).toBe('newpassword');

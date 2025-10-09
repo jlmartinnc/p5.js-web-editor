@@ -13,28 +13,6 @@ export * from './user.controller/signup';
 export * from './user.controller/userPreferences';
 export * from './user.controller/authManagement';
 
-export async function updatePassword(req, res) {
-  const user = await User.findOne({
-    resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() }
-  }).exec();
-  if (!user) {
-    res.status(401).json({
-      success: false,
-      message: 'Password reset token is invalid or has expired.'
-    });
-    return;
-  }
-
-  user.password = req.body.password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
-
-  await user.save();
-  req.logIn(user, (loginErr) => res.json(userResponse(req.user)));
-  // eventually send email that the password has been reset
-}
-
 /**
  * @param {string} username
  * @return {Promise<boolean>}
