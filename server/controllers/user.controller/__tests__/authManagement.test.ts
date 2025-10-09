@@ -5,6 +5,7 @@ import { User } from '../../../models/user';
 import {
   resetPasswordInitiate,
   validateResetPasswordToken,
+  updateSettings,
   unlinkGithub,
   unlinkGoogle
 } from '../../user.controller';
@@ -23,14 +24,6 @@ jest.mock('../../../utils/mail', () => ({
     send: jest.fn()
   }
 }));
-// jest.mock('../../../views/mail', () => ({
-//   renderEmailConfirmation: jest
-//     .fn()
-//     .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' }),
-//   renderResetPassword: jest
-//     .fn()
-//     .mockReturnValue({ to: 'test@example.com', subject: 'Reset password' })
-// }));
 jest.mock('../helpers', () => ({
   saveUser: jest.fn(),
   generateToken: jest.fn()
@@ -213,10 +206,107 @@ describe('user.controller > auth management', () => {
     });
   });
 
+  describe('updateSettings', () => {
+    const fixedTime = 100000000; // arbitrary fixed timestamp
+    let saveMock: jest.Mock;
+    let mockUser: Partial<UserDocument>;
+
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(fixedTime);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    describe('if the user is not found', () => {
+      beforeEach(() => {
+        User.findById = jest.fn().mockResolvedValue(null);
+        request.user = { id: 'nonexistent-id' };
+      });
+
+      it('returns 404 and a user-not-found error', async () => {
+        await updateSettings(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(404);
+        expect(response.json).toHaveBeenCalledWith({
+          error: 'User not found'
+        });
+      });
+      it('does not save the user', () => {
+        expect(saveUser).not.toHaveBeenCalled();
+      });
+    });
+
+    // the below tests match the current logic, but logic can be improved
+    describe('if the user is found', () => {
+      const startingUser = {
+        username: 'oldusername',
+        email: 'old@email.com',
+        id: 'valid-id'
+      };
+
+      beforeEach(() => {
+        User.findById = jest.fn().mockResolvedValue(startingUser);
+        request.user = { id: 'valid-id' };
+      });
+
+      describe('and when there is a username in the request', () => {
+        beforeEach(async () => {
+          request.setBody({
+            username: 'newusername'
+          });
+          await updateSettings(request, response);
+        });
+        it('calls saveUser with the new username', () => {
+          expect(saveUser).toHaveBeenCalledWith(response, {
+            ...startingUser,
+            username: 'newusername'
+          });
+        });
+      });
+
+      // describe('and when there is an email in the request', () => {
+      //   beforeEach(async () => {
+      //     request.setBody({
+      //       username: 'oldusername',
+      //       email: 'new@email.com'
+      //     });
+      //     await updateSettings(request, response);
+      //   });
+      //   it('calls saveUser with the new email', () => {
+      //     expect(saveUser).toHaveBeenCalledWith(response, {
+      //       ...startingUser,
+      //       email: 'new@email.com'
+      //     });
+      //   });
+      //   it('sends an email to confirm the email update', () => {});
+      // });
+
+      // currently frontend doesn't seem to call the below
+      describe('and when there is a newPassword in the request', () => {
+        describe('and the current password is not provided', () => {
+          it('returns 401 with a "current password not provided" message', () => {});
+          it('does not save the user with the new password', () => {});
+        });
+      });
+      describe('and when there is a currentPassword in the request', () => {
+        describe('and the current password does not match', () => {
+          it('returns 401 with a "current password invalid" message', () => {});
+          it('does not save the user with the new password', () => {});
+        });
+        describe('and when the current password does match', () => {
+          it('calls saveUser with the new password', () => {});
+        });
+      });
+    });
+  });
+
   describe('unlinkGithub', () => {
     it('returns 404 if user is not logged in', async () => {
       await unlinkGithub(request, response, next);
 
+      expect(saveUser).not.toHaveBeenCalled();
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
         success: false,
@@ -251,6 +341,7 @@ describe('user.controller > auth management', () => {
         success: false,
         message: 'You must be logged in to complete this action.'
       });
+      expect(saveUser).not.toHaveBeenCalled();
     });
     it('removes the users google & filters out google tokens if user is logged in', async () => {
       const user = {

@@ -50,7 +50,10 @@ export const resetPasswordInitiate: RequestHandler<
         'If the email is registered with the editor, an email has been sent.'
     });
   } catch (err) {
-    console.log(err);
+    if (process.env.NODE_ENV !== 'test') {
+      // don't log in test env
+      console.log(err);
+    }
     res.json({ success: false });
   }
 };
