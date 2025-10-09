@@ -8,6 +8,15 @@ import {
 } from '../../types';
 import { saveUser } from './helpers';
 
+/**
+ * - Method: `PUT`
+ * - Endpoint: `/preferences`
+ * - Authenticated: `true`
+ * - Controller: `UserController.updatePreferences`
+ *
+ * Description:
+ *   - Update user preferences, such as AppTheme
+ */
 export const updatePreferences: RequestHandler<
   {},
   UpdatePreferencesResponseBody,
@@ -28,6 +37,15 @@ export const updatePreferences: RequestHandler<
   }
 };
 
+/**
+ * - Method: `PUT`
+ * - Endpoint: `/cookie-consent`
+ * - Authenticated: `true`
+ * - Id: `UserController.updatePreferences`
+ *
+ * Description:
+ *   - Update user cookie consent
+ */
 export const updateCookieConsent: RequestHandler<
   {},
   PublicUserOrError,
