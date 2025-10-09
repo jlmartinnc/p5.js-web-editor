@@ -1,7 +1,6 @@
 import { Model, Document, Types } from 'mongoose';
-import * as core from 'express-serve-static-core';
 import { VirtualId, MongooseTimestamps } from './mongoose';
-import { Error } from './express';
+import { Error, RouteParam } from './express';
 
 /** Full Api Key interface */
 export interface IApiKey extends VirtualId, MongooseTimestamps {
@@ -42,6 +41,6 @@ export interface ApiKeyResponse {
 export interface CreateApiKeyRequestBody {
   label: string;
 }
-export interface RemoveApiKeyRequestParams extends core.ParamsDictionary {
+export interface RemoveApiKeyRequestParams extends RouteParam {
   keyId: string;
 }

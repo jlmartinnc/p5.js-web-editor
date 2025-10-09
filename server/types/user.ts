@@ -1,10 +1,9 @@
 import { Document, Model, Types } from 'mongoose';
-import * as core from 'express-serve-static-core';
 import { VirtualId, MongooseTimestamps } from './mongoose';
 import { UserPreferences, CookieConsentOptions } from './userPreferences';
 import { EmailConfirmationStates } from './email';
 import { ApiKeyDocument } from './apiKey';
-import { Error, GenericResponseBody } from './express';
+import { Error, GenericResponseBody, RouteParam } from './express';
 
 /** Full User interface */
 export interface IUser extends VirtualId, MongooseTimestamps {
@@ -108,8 +107,7 @@ export interface ResetPasswordInitiateRequestBody {
 /**
  * Request params used for validateResetPasswordToken & updatePassword
  */
-export interface ResetOrUpdatePasswordRequestParams
-  extends core.ParamsDictionary {
+export interface ResetOrUpdatePasswordRequestParams extends RouteParam {
   token: string;
 }
 export interface UpdatePasswordRequestBody {

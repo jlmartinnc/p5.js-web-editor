@@ -1,3 +1,4 @@
+import * as core from 'express-serve-static-core';
 import { Request } from 'express';
 import { UserDocument } from './user';
 
@@ -16,3 +17,6 @@ export interface GenericResponseBody {
   success: boolean;
   message?: string;
 }
+
+/** Wrapper around Express core.ParamsDictionary to prevent repeated importing when defining RequestHandler route params */
+export interface RouteParam extends core.ParamsDictionary {}
