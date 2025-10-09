@@ -5,11 +5,12 @@ import { User } from '../../../models/user';
 import {
   resetPasswordInitiate,
   validateResetPasswordToken,
+  updatePassword,
   updateSettings,
   unlinkGithub,
   unlinkGoogle
 } from '../../user.controller';
-import { saveUser, generateToken } from '../helpers';
+import { saveUser, generateToken, userResponse } from '../helpers';
 
 import { mailerService } from '../../../utils/mail';
 import {
@@ -219,6 +220,74 @@ describe('user.controller > auth management', () => {
       it('returns a success response', () => {
         expect(response.json).toHaveBeenCalledWith({ success: true });
       });
+    });
+  });
+
+  describe('updatePassword', () => {
+    const fixedTime = 100000000;
+    beforeAll(() => jest.useFakeTimers().setSystemTime(fixedTime));
+    afterAll(() => jest.useRealTimers());
+
+    it('calls User.findone with the correct token and expiry', async () => {
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn()
+      });
+      request.params = { token: 'some-token' };
+      await updatePassword(request, response);
+
+      expect(User.findOne).toHaveBeenCalledWith({
+        resetPasswordToken: 'some-token',
+        resetPasswordExpires: { $gt: fixedTime }
+      });
+    });
+
+    describe('and when no user is found', () => {
+      beforeEach(async () => {
+        User.findOne = jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(null)
+        });
+        request.params = { token: 'invalid-token' };
+        await updatePassword(request, response);
+      });
+      it('returns a 401', () => {
+        expect(response.status).toHaveBeenCalledWith(401);
+      });
+      it('returns a "invalid or expired" token message', () => {
+        expect(response.json).toHaveBeenCalledWith({
+          success: false,
+          message: 'Password reset token is invalid or has expired.'
+        });
+      });
+    });
+
+    describe('and when there is a user with valid token', () => {
+      const fakeUser = {
+        email: 'test@example.com',
+        password: 'oldpassword',
+        resetPasswordToken: 'valid-token',
+        resetPasswordExpires: fixedTime + 10000, // still valid
+        save: jest.fn()
+      };
+      beforeEach(async () => {
+        User.findOne = jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(fakeUser)
+        });
+        request.params = { token: 'valid-token' };
+        request.setBody({
+          password: 'newpassword'
+        });
+        request.logIn = jest.fn();
+        await updatePassword(request, response);
+      });
+      it('calls user.save with the updated password and removes the reset password token', () => {
+        expect(fakeUser.password).toBe('newpassword');
+        expect(fakeUser.resetPasswordToken).toBeUndefined();
+        expect(fakeUser.resetPasswordExpires).toBeUndefined();
+        expect(fakeUser.save).toHaveBeenCalled();
+      });
+      // it('returns a success response with the sanitised user', () => {
+      //   expect(response.json).toHaveBeenCalledWith({ success: true });
+      // });
     });
   });
 
