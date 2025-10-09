@@ -23,7 +23,15 @@ function generateApiKey(): Promise<string> {
   });
 }
 
-/** POST /account/api-keys, UserController.createApiKey */
+/**
+ * - Method: `POST`
+ * - Endpoint: `/account/api-keys`
+ * - Authenticated: `true`
+ * - Id: `UserController.createApiKey`
+ *
+ * Description:
+ *   - Create API key
+ */
 export const createApiKey: RequestHandler<
   {},
   ApiKeyResponseOrError,
@@ -75,7 +83,15 @@ export const createApiKey: RequestHandler<
   }
 };
 
-/** DELETE /account/api-keys/:keyId, UserController.removeApiKey */
+/**
+ * - Method: `DELETE`
+ * - Endpoint: `/account/api-keys/:keyId`
+ * - Authenticated: `true`
+ * - Id: `UserController.removeApiKey`
+ *
+ * Description:
+ *   - Remove API key
+ */
 export const removeApiKey: RequestHandler<
   RemoveApiKeyRequestParams,
   ApiKeyResponseOrError
