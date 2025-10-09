@@ -10,6 +10,15 @@ import {
   VerifyEmailQuery
 } from '../../types';
 
+/**
+ * - Method: `POST`
+ * - Endpoint: `/signup`
+ * - Authenticated: `false`
+ * - Id: `UserController.createUser`
+ *
+ * Description:
+ *   - Create a new user
+ */
 export const createUser: RequestHandler<
   {},
   PublicUserOrError,
@@ -71,6 +80,15 @@ export const createUser: RequestHandler<
   }
 };
 
+/**
+ * - Method: `GET`
+ * - Endpoint: `/signup/duplicate_check`
+ * - Authenticated: `false`
+ * - Id: `UserController.duplicateUserCheck`
+ *
+ * Description:
+ *   - Check if a user with the same email or username already exists
+ */
 export const duplicateUserCheck: RequestHandler<
   {},
   {},
@@ -94,29 +112,15 @@ export const duplicateUserCheck: RequestHandler<
   });
 };
 
-export const verifyEmail: RequestHandler<{}, {}, {}, VerifyEmailQuery> = async (
-  req,
-  res
-) => {
-  const token = req.query.t;
-  const user = await User.findOne({
-    verifiedToken: token,
-    verifiedTokenExpires: { $gt: new Date() }
-  }).exec();
-  if (!user) {
-    res.status(401).json({
-      success: false,
-      message: 'Token is invalid or has expired.'
-    });
-    return;
-  }
-  user.verified = User.EmailConfirmation().Verified;
-  user.verifiedToken = null;
-  user.verifiedTokenExpires = null;
-  await user.save();
-  res.json({ success: true });
-};
-
+/**
+ * - Method: `POST`
+ * - Endpoint: `/verify/send`
+ * - Authenticated: `false`
+ * - Id: `UserController.emailVerificationInitiate`
+ *
+ * Description:
+ *   - Send a Confirm Email email to verify that the user owns the specified email account
+ */
 export const emailVerificationInitiate: RequestHandler<
   {},
   PublicUserOrError
@@ -156,4 +160,36 @@ export const emailVerificationInitiate: RequestHandler<
   } catch (err) {
     res.status(500).json({ error: err });
   }
+};
+
+/**
+ * - Method: `GET`
+ * - Endpoint: `/verify`
+ * - Authenticated: `false`
+ * - Id: `UserController.verifyEmail`
+ *
+ * Description:
+ *   - Used in the Confirm Email's link to verify a user's email is attached to their account
+ */
+export const verifyEmail: RequestHandler<{}, {}, {}, VerifyEmailQuery> = async (
+  req,
+  res
+) => {
+  const token = req.query.t;
+  const user = await User.findOne({
+    verifiedToken: token,
+    verifiedTokenExpires: { $gt: new Date() }
+  }).exec();
+  if (!user) {
+    res.status(401).json({
+      success: false,
+      message: 'Token is invalid or has expired.'
+    });
+    return;
+  }
+  user.verified = User.EmailConfirmation().Verified;
+  user.verifiedToken = null;
+  user.verifiedTokenExpires = null;
+  await user.save();
+  res.json({ success: true });
 };

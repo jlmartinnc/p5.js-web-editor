@@ -13,10 +13,10 @@ const router = Router();
 router.post('/signup', UserController.createUser);
 // GET /signup/duplicate_check
 router.get('/signup/duplicate_check', UserController.duplicateUserCheck);
-// GET /verify
-router.get('/verify', UserController.verifyEmail);
 // POST /verify/send
 router.post('/verify/send', UserController.emailVerificationInitiate);
+// GET /verify
+router.get('/verify', UserController.verifyEmail);
 
 /**
  * ===============
