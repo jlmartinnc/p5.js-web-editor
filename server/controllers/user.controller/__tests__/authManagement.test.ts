@@ -284,9 +284,9 @@ describe('user.controller > auth management', () => {
         expect(fakeUser.resetPasswordExpires).toBeUndefined();
         expect(fakeUser.save).toHaveBeenCalled();
       });
-      // it('returns a success response with the sanitised user', () => {
-      //   expect(response.json).toHaveBeenCalledWith({ success: true });
-      // });
+      it('returns a success response with the sanitised user', () => {
+        expect(response.json).toHaveBeenCalledWith({ success: true });
+      });
     });
   });
 
@@ -349,22 +349,22 @@ describe('user.controller > auth management', () => {
         });
       });
 
-      // describe('and when there is an email in the request', () => {
-      //   beforeEach(async () => {
-      //     request.setBody({
-      //       username: 'oldusername',
-      //       email: 'new@email.com'
-      //     });
-      //     await updateSettings(request, response);
-      //   });
-      //   it('calls saveUser with the new email', () => {
-      //     expect(saveUser).toHaveBeenCalledWith(response, {
-      //       ...startingUser,
-      //       email: 'new@email.com'
-      //     });
-      //   });
-      //   it('sends an email to confirm the email update', () => {});
-      // });
+      describe('and when there is an email in the request', () => {
+        beforeEach(async () => {
+          request.setBody({
+            username: 'oldusername',
+            email: 'new@email.com'
+          });
+          await updateSettings(request, response, next);
+        });
+        it('calls saveUser with the new email', () => {
+          expect(saveUser).toHaveBeenCalledWith(response, {
+            ...startingUser,
+            email: 'new@email.com'
+          });
+        });
+        it('sends an email to confirm the email update', () => {});
+      });
 
       // currently frontend doesn't seem to call the below
       describe('and when there is a newPassword in the request', () => {
