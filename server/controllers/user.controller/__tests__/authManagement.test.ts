@@ -2,11 +2,19 @@ import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
 import { User } from '../../../models/user';
-import { unlinkGithub, unlinkGoogle } from '../../user.controller';
-import { saveUser } from '../helpers';
+import {
+  resetPasswordInitiate,
+  unlinkGithub,
+  unlinkGoogle
+} from '../../user.controller';
+import { saveUser, generateToken } from '../helpers';
 
 import { mailerService } from '../../../utils/mail';
-import { renderEmailConfirmation } from '../../../views/mail';
+import {
+  renderEmailConfirmation,
+  renderResetPassword
+} from '../../../views/mail';
+import { UserDocument } from '../../../types';
 
 jest.mock('../../../models/user');
 jest.mock('../../../utils/mail', () => ({
@@ -14,13 +22,17 @@ jest.mock('../../../utils/mail', () => ({
     send: jest.fn()
   }
 }));
-jest.mock('../../../views/mail', () => ({
-  renderEmailConfirmation: jest
-    .fn()
-    .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' })
-}));
+// jest.mock('../../../views/mail', () => ({
+//   renderEmailConfirmation: jest
+//     .fn()
+//     .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' }),
+//   renderResetPassword: jest
+//     .fn()
+//     .mockReturnValue({ to: 'test@example.com', subject: 'Reset password' })
+// }));
 jest.mock('../helpers', () => ({
-  saveUser: jest.fn()
+  saveUser: jest.fn(),
+  generateToken: jest.fn()
 }));
 
 describe('user.controller > 3rd party auth management', () => {
@@ -38,6 +50,118 @@ describe('user.controller > 3rd party auth management', () => {
     request.resetMocked();
     response.resetMocked();
     jest.clearAllMocks();
+  });
+
+  describe('resetPasswordInitiate', () => {
+    const fixedTime = 100000000; // arbitrary fixed timestamp
+    let mockToken: string;
+    let saveMock: jest.Mock;
+    let mockUser: Partial<UserDocument>;
+
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(fixedTime);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    describe('if the user is found', () => {
+      beforeEach(() => {
+        mockToken = 'mock-token';
+        saveMock = jest.fn().mockResolvedValue({});
+        mockUser = {
+          email: 'test@example.com',
+          save: saveMock
+        };
+
+        (generateToken as jest.Mock).mockResolvedValue(mockToken);
+        User.findByEmail = jest.fn().mockResolvedValue(mockUser);
+
+        request.body = { email: 'test@example.com' };
+        request.headers.host = 'localhost:3000';
+      });
+      it('sets a resetPasswordToken with an expiry of 1h to the user', async () => {
+        await resetPasswordInitiate(request, response);
+
+        expect(mockUser.resetPasswordToken).toBe(mockToken);
+        expect(mockUser.resetPasswordExpires).toBe(fixedTime + 3600000);
+        expect(saveMock).toHaveBeenCalled();
+      });
+      it('sends the reset password email', async () => {
+        await resetPasswordInitiate(request, response);
+
+        expect(mailerService.send).toHaveBeenCalledWith(
+          expect.objectContaining({
+            to: 'test@example.com',
+            body: expect.objectContaining({
+              link: expect.stringContaining(mockToken)
+            })
+          })
+        );
+      });
+      it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
+        await resetPasswordInitiate(request, response);
+
+        expect(response.json).toHaveBeenCalledWith({
+          success: true,
+          message:
+            'If the email is registered with the editor, an email has been sent.'
+        });
+      });
+    });
+    describe('if the user is not found', () => {
+      beforeEach(() => {
+        mockToken = 'mock-token';
+        saveMock = jest.fn().mockResolvedValue({});
+        mockUser = {
+          email: 'test@example.com',
+          save: saveMock
+        };
+
+        (generateToken as jest.Mock).mockResolvedValue(mockToken);
+        User.findByEmail = jest.fn().mockResolvedValue(null);
+
+        request.body = { email: 'test@example.com' };
+        request.headers.host = 'localhost:3000';
+      });
+      it('does not send the reset password email', async () => {
+        await resetPasswordInitiate(request, response);
+
+        expect(mailerService.send).not.toHaveBeenCalledWith();
+      });
+      it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
+        await resetPasswordInitiate(request, response);
+
+        expect(response.json).toHaveBeenCalledWith({
+          success: true,
+          message:
+            'If the email is registered with the editor, an email has been sent.'
+        });
+      });
+    });
+    it('returns unsuccessful for all other errors', async () => {
+      mockToken = 'mock-token';
+      saveMock = jest.fn().mockResolvedValue({});
+      mockUser = {
+        email: 'test@example.com',
+        save: saveMock
+      };
+
+      (generateToken as jest.Mock).mockRejectedValue(
+        new Error('network error')
+      );
+      User.findByEmail = jest.fn().mockResolvedValue(null);
+
+      request.body = { email: 'test@example.com' };
+      request.headers.host = 'localhost:3000';
+
+      await resetPasswordInitiate(request, response);
+
+      expect(response.json).toHaveBeenCalledWith({
+        success: false
+      });
+    });
   });
 
   describe('unlinkGithub', () => {
