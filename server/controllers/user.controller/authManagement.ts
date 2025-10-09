@@ -9,11 +9,21 @@ import {
   PublicUserOrError,
   ResetPasswordInitiateRequestBody,
   ResetOrUpdatePasswordRequestParams,
-  UpdatePasswordRequestBody
+  UpdatePasswordRequestBody,
+  UpdateSettingsRequestBody
 } from '../../types';
 import { mailerService } from '../../utils/mail';
 import { renderResetPassword, renderEmailConfirmation } from '../../views/mail';
 
+/**
+ * - Method: `POST`
+ * - Endpoint: `/reset-password`
+ * - Authenticated: `false`
+ * - Id: `UserController.resetPasswordInitiate`
+ *
+ * Description:
+ *   - Send an Reset Email email to the registered email account
+ */
 export const resetPasswordInitiate: RequestHandler<
   {},
   GenericResponseBody,
@@ -58,6 +68,17 @@ export const resetPasswordInitiate: RequestHandler<
   }
 };
 
+/**
+ * - Method: `GET`
+ * - Endpoint: `/reset-password/:token`
+ * - Authenticated: `false`
+ * - Id: `UserController.validateResetPasswordToken`
+ *
+ * Description:
+ *   - The link in the Reset Password email, which contains a reset token that is valid for 1h
+ *   - If valid, the user will see a form to reset their password
+ *   - Else they will see a message that their token has expired
+ */
 export const validateResetPasswordToken: RequestHandler<
   ResetOrUpdatePasswordRequestParams,
   GenericResponseBody
@@ -76,6 +97,18 @@ export const validateResetPasswordToken: RequestHandler<
   res.json({ success: true });
 };
 
+/**
+ * - Method: `POST`
+ * - Endpoint: `/reset-password/:token`
+ * - Authenticated: `false`
+ * - Id: `UserController.updatePassword`
+ *
+ * Description:
+ *   - Used by the new password form to update a user's password with the valid token
+ *   - Returns a Generic 401 - 'Password reset token is invalid or has expired.' if the token timed out
+ *   - Returns a PublicUser if successfully saved
+ *   - Returns an Error if network error on save attempt
+ */
 export const updatePassword: RequestHandler<
   ResetOrUpdatePasswordRequestParams,
   PublicUserOrErrorOrGeneric,
@@ -102,15 +135,19 @@ export const updatePassword: RequestHandler<
   // eventually send email that the password has been reset
 };
 
+/**
+ * - Method: `PUT`
+ * - Endpoint: `/account`
+ * - Authenticated: `true`
+ * - Id: `UserController.updateSettings`
+ *
+ * Description:
+ *   - Used to update the user's username, email, or password while authenticated
+ */
 export const updateSettings: RequestHandler<
   {},
   PublicUserOrError,
-  {
-    username: string;
-    email: string;
-    newPassword?: string;
-    currentPassword?: string;
-  }
+  UpdateSettingsRequestBody
 > = async (req, res) => {
   try {
     const user = await User.findById(req.user!.id);
@@ -168,6 +205,15 @@ export const updateSettings: RequestHandler<
   }
 };
 
+/**
+ * - Method: `DELETE`
+ * - Endpoint: `/auth/github`
+ * - Authenticated: `false` -- TODO: update to true?
+ * - Id: `UserController.unlinkGithub`
+ *
+ * Description:
+ *   - Unlink github account
+ */
 export const unlinkGithub: RequestHandler<
   {},
   UnlinkThirdPartyResponseBody
@@ -186,6 +232,15 @@ export const unlinkGithub: RequestHandler<
   });
 };
 
+/**
+ * - Method: `DELETE`
+ * - Endpoint: `/auth/google`
+ * - Authenticated: `false` -- TODO: update to true?
+ * - Id: `UserController.unlinkGoogle`
+ *
+ * Description:
+ *   - Unlink google account
+ */
 export const unlinkGoogle: RequestHandler<
   {},
   UnlinkThirdPartyResponseBody
