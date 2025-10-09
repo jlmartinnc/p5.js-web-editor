@@ -1,23 +1,16 @@
 import { RequestHandler } from 'express';
 import { User } from '../../models/user';
 import {
-  Error,
-  UserPreferences,
-  PublicUser,
-  CookieConsentOptions
+  UpdatePreferencesRequestBody,
+  UpdateCookieConsentRequestBody,
+  UpdatePreferencesResponseBody,
+  PublicUserOrError
 } from '../../types';
 import { saveUser } from './helpers';
 
-export interface UpdatePreferencesRequestBody {
-  preferences: UserPreferences;
-}
-export interface UpdateCookieConsentRequestBody {
-  cookieConsent: CookieConsentOptions;
-}
-
 export const updatePreferences: RequestHandler<
   {},
-  UserPreferences | Error,
+  UpdatePreferencesResponseBody,
   UpdatePreferencesRequestBody
 > = async (req, res) => {
   try {
@@ -37,7 +30,7 @@ export const updatePreferences: RequestHandler<
 
 export const updateCookieConsent: RequestHandler<
   {},
-  PublicUser | Error,
+  PublicUserOrError,
   UpdateCookieConsentRequestBody
 > = async (req, res) => {
   try {

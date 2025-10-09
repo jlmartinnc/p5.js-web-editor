@@ -3,6 +3,7 @@ import { VirtualId, MongooseTimestamps } from './mongoose';
 import { UserPreferences, CookieConsentOptions } from './userPreferences';
 import { EmailConfirmationStates } from './email';
 import { ApiKeyDocument } from './apiKey';
+import { Error } from './express';
 
 /** Full User interface */
 export interface IUser extends VirtualId, MongooseTimestamps {
@@ -74,3 +75,10 @@ export interface UserModel extends Model<UserDocument> {
 
   EmailConfirmation(): typeof EmailConfirmationStates;
 }
+
+// HTTP:
+/**
+ * Response body used for User related routes
+ * Contains either the Public (sanitised) User or an Error
+ */
+export type PublicUserOrError = PublicUser | Error;
