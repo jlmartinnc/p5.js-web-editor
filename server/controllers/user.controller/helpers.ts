@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import type { Response } from 'express';
+import { User } from '../../models/user';
 import { PublicUser, UserDocument } from '../../types';
 
 /**
@@ -55,4 +56,14 @@ export async function saveUser(res: Response, user: UserDocument) {
   } catch (error) {
     res.status(500).json({ error });
   }
+}
+
+/**
+ * Helper used in other controllers to check if user by username exists.
+ * @param {string} username
+ * @return {Promise<boolean>}
+ */
+export async function userExists(username: string) {
+  const user = await User.findByUsername(username);
+  return user != null;
 }
