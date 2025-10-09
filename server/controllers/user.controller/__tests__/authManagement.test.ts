@@ -23,6 +23,8 @@ jest.mock('../../../utils/mail', () => ({
   }
 }));
 jest.mock('../helpers', () => ({
+  // userResponse: jest.fn(),
+  ...jest.requireActual('../helpers'),
   saveUser: jest.fn(),
   generateToken: jest.fn()
 }));
@@ -259,13 +261,14 @@ describe('user.controller > auth management', () => {
     });
 
     describe('and when there is a user with valid token', () => {
-      const fakeUser = createMockUser({
-        email: 'test@example.com',
+      const fakeSanitisedUser = createMockUser({ email: 'test@example.com' });
+      const fakeUser = {
+        ...fakeSanitisedUser,
         password: 'oldpassword',
         resetPasswordToken: 'valid-token',
         resetPasswordExpires: fixedTime + 10000, // still valid
         save: jest.fn()
-      });
+      };
 
       beforeEach(async () => {
         User.findOne = jest.fn().mockReturnValue({
@@ -275,7 +278,11 @@ describe('user.controller > auth management', () => {
         request.setBody({
           password: 'newpassword'
         });
-        request.logIn = jest.fn();
+        // simulate logging in after resetting the password works
+        request.logIn = jest.fn((user, cb) => {
+          request.user = user;
+          cb(null);
+        });
         await updatePassword(request, response, next);
       });
       it('calls user.save with the updated password and removes the reset password token', () => {
@@ -285,7 +292,7 @@ describe('user.controller > auth management', () => {
         expect(fakeUser.save).toHaveBeenCalled();
       });
       it('returns a success response with the sanitised user', () => {
-        expect(response.json).toHaveBeenCalledWith({ success: true });
+        expect(response.json).toHaveBeenCalledWith(fakeSanitisedUser);
       });
     });
   });
