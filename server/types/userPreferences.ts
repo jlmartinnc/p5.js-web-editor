@@ -36,7 +36,7 @@ export type UpdatePreferencesResponseBody = UserPreferences | Error;
  * user.controller.updatePreferences
  */
 export interface UpdatePreferencesRequestBody {
-  preferences: UserPreferences;
+  preferences: Partial<UserPreferences>;
 }
 
 /**
