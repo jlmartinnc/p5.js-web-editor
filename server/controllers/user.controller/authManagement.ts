@@ -3,29 +3,21 @@ import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
 import { saveUser, generateToken, userResponse } from './helpers';
 import {
-  PublicUser,
   GenericResponseBody,
-  Error,
-  SanitisedApiKey
+  PublicUserOrErrorOrGeneric,
+  UnlinkThirdPartyResponseBody,
+  PublicUserOrError,
+  ResetPasswordInitiateRequestBody,
+  ResetOrUpdatePasswordRequestParams,
+  UpdatePasswordRequestBody
 } from '../../types';
 import { mailerService } from '../../utils/mail';
 import { renderResetPassword, renderEmailConfirmation } from '../../views/mail';
 
-export interface ResetPasswordRequestBody {
-  email: string;
-}
-export interface ResetOrUpdatePasswordRequestParams
-  extends core.ParamsDictionary {
-  token: string;
-}
-export interface UpdatePasswordRequestBody {
-  password: string;
-}
-
 export const resetPasswordInitiate: RequestHandler<
   {},
   GenericResponseBody,
-  ResetPasswordRequestBody
+  ResetPasswordInitiateRequestBody
 > = async (req, res) => {
   try {
     const token = await generateToken();
@@ -66,10 +58,10 @@ export const resetPasswordInitiate: RequestHandler<
   }
 };
 
-export const validateResetPasswordToken: RequestHandler<ResetOrUpdatePasswordRequestParams> = async (
-  req,
-  res
-) => {
+export const validateResetPasswordToken: RequestHandler<
+  ResetOrUpdatePasswordRequestParams,
+  GenericResponseBody
+> = async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordExpires: { $gt: Date.now() }
@@ -86,7 +78,7 @@ export const validateResetPasswordToken: RequestHandler<ResetOrUpdatePasswordReq
 
 export const updatePassword: RequestHandler<
   ResetOrUpdatePasswordRequestParams,
-  PublicUser | GenericResponseBody,
+  PublicUserOrErrorOrGeneric,
   UpdatePasswordRequestBody
 > = async (req, res) => {
   const user = await User.findOne({
@@ -112,7 +104,7 @@ export const updatePassword: RequestHandler<
 
 export const updateSettings: RequestHandler<
   {},
-  Error | SanitisedApiKey,
+  PublicUserOrError,
   {
     username: string;
     email: string;
@@ -178,7 +170,7 @@ export const updateSettings: RequestHandler<
 
 export const unlinkGithub: RequestHandler<
   {},
-  PublicUser | Error | GenericResponseBody
+  UnlinkThirdPartyResponseBody
 > = async (req, res) => {
   if (req.user) {
     req.user.github = undefined;
@@ -196,7 +188,7 @@ export const unlinkGithub: RequestHandler<
 
 export const unlinkGoogle: RequestHandler<
   {},
-  PublicUser | Error | GenericResponseBody
+  UnlinkThirdPartyResponseBody
 > = async (req, res) => {
   if (req.user) {
     req.user.google = undefined;

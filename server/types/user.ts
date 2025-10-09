@@ -1,9 +1,10 @@
 import { Document, Model, Types } from 'mongoose';
+import * as core from 'express-serve-static-core';
 import { VirtualId, MongooseTimestamps } from './mongoose';
 import { UserPreferences, CookieConsentOptions } from './userPreferences';
 import { EmailConfirmationStates } from './email';
 import { ApiKeyDocument } from './apiKey';
-import { Error } from './express';
+import { Error, GenericResponseBody } from './express';
 
 /** Full User interface */
 export interface IUser extends VirtualId, MongooseTimestamps {
@@ -82,6 +83,38 @@ export interface UserModel extends Model<UserDocument> {
  * Contains either the Public (sanitised) User or an Error
  */
 export type PublicUserOrError = PublicUser | Error;
+
+// authManagement:
+/**
+ * Note: This type should probably be updated to be removed in the future and use just PublicUserOrError
+ *   - Contains either a GenericResponseBody for when there is no user found or attached to a request
+ *   - Or a PublicUserOrError resulting from calling the `saveUser` helper.
+ */
+export type PublicUserOrErrorOrGeneric =
+  | PublicUserOrError
+  | GenericResponseBody;
+
+/**
+ * Response body used for unlinkGithub and unlinkGoogle
+ *   - If user is not logged in, a GenericResponseBody with 404 is returned
+ *   - If user is logged in, PublicUserOrError is returned
+ */
+export type UnlinkThirdPartyResponseBody = PublicUserOrErrorOrGeneric;
+
+export interface ResetPasswordInitiateRequestBody {
+  email: string;
+}
+
+/**
+ * Request params used for validateResetPasswordToken & updatePassword
+ */
+export interface ResetOrUpdatePasswordRequestParams
+  extends core.ParamsDictionary {
+  token: string;
+}
+export interface UpdatePasswordRequestBody {
+  password: string;
+}
 
 // signup:
 export interface CreateUserRequestBody {

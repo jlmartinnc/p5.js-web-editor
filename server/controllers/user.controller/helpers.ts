@@ -45,7 +45,8 @@ export async function generateToken(): Promise<string> {
 
 /**
  * Updates the user object and sets the response.
- * Response is the sanitised user or a 500 error.
+ * Response is of type PublicUserOrError
+ *   - The sanitised user or a 500 error.
  * @param res
  * @param user
  */
