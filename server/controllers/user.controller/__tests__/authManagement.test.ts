@@ -308,7 +308,7 @@ describe('user.controller > auth management', () => {
       beforeEach(async () => {
         User.findById = jest.fn().mockResolvedValue(null);
         request.user = { id: 'nonexistent-id' };
-        await updateSettings(request, response);
+        await updateSettings(request, response, next);
       });
 
       it('returns 404 and a user-not-found error', async () => {
@@ -340,7 +340,7 @@ describe('user.controller > auth management', () => {
           request.setBody({
             username: 'newusername'
           });
-          await updateSettings(request, response);
+          await updateSettings(request, response, next);
         });
         it('calls saveUser with the new username', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {

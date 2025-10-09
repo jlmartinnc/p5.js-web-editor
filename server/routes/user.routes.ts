@@ -43,7 +43,7 @@ router.post('/reset-password', UserController.resetPasswordInitiate);
 router.get('/reset-password/:token', UserController.validateResetPasswordToken);
 // POST /reset-password/:token
 router.post('/reset-password/:token', UserController.updatePassword);
-// PUT /account (updating password)
+// PUT /account (updating username, email or password while logged in)
 router.put('/account', isAuthenticated, UserController.updateSettings);
 // DELETE /auth/github
 router.delete('/auth/github', UserController.unlinkGithub);

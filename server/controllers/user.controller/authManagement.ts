@@ -2,9 +2,14 @@ import { RequestHandler } from 'express';
 import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
 import { saveUser, generateToken, userResponse } from './helpers';
-import { PublicUser, GenericResponseBody } from '../../types';
+import {
+  PublicUser,
+  GenericResponseBody,
+  Error,
+  SanitisedApiKey
+} from '../../types';
 import { mailerService } from '../../utils/mail';
-import { renderResetPassword } from '../../views/mail';
+import { renderResetPassword, renderEmailConfirmation } from '../../views/mail';
 
 export interface ResetPasswordRequestBody {
   email: string;
@@ -103,6 +108,72 @@ export const updatePassword: RequestHandler<
   await user.save();
   req.logIn(user, (loginErr) => res.json(userResponse(req.user!)));
   // eventually send email that the password has been reset
+};
+
+export const updateSettings: RequestHandler<
+  {},
+  Error | SanitisedApiKey,
+  {
+    username: string;
+    email: string;
+    newPassword?: string;
+    currentPassword?: string;
+  }
+> = async (req, res) => {
+  try {
+    const user = await User.findById(req.user!.id);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    user.username = req.body.username;
+
+    if (req.body.newPassword) {
+      if (user.password === undefined) {
+        user.password = req.body.newPassword;
+        saveUser(res, user);
+      }
+      if (!req.body.currentPassword) {
+        res.status(401).json({ error: 'Current password is not provided.' });
+        return;
+      }
+    }
+    if (req.body.currentPassword) {
+      const isMatch = await user.comparePassword(req.body.currentPassword);
+      if (!isMatch) {
+        res.status(401).json({ error: 'Current password is invalid.' });
+        return;
+      }
+      user.password = req.body.newPassword;
+      await saveUser(res, user);
+    } else if (user.email !== req.body.email) {
+      const EMAIL_VERIFY_TOKEN_EXPIRY_TIME = Date.now() + 3600000 * 24; // 24 hours
+      user.verified = User.EmailConfirmation().Sent;
+
+      user.email = req.body.email;
+
+      const token = await generateToken();
+      user.verifiedToken = token;
+      user.verifiedTokenExpires = EMAIL_VERIFY_TOKEN_EXPIRY_TIME;
+
+      await saveUser(res, user);
+
+      const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+      const mailOptions = renderEmailConfirmation({
+        body: {
+          domain: `${protocol}://${req.headers.host}`,
+          link: `${protocol}://${req.headers.host}/verify?t=${token}`
+        },
+        to: user.email
+      });
+
+      await mailerService.send(mailOptions);
+    } else {
+      await saveUser(res, user);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 };
 
 export const unlinkGithub: RequestHandler<
