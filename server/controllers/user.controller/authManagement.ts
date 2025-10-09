@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import * as core from 'express-serve-static-core';
 import { User } from '../../models/user';
 import { saveUser, generateToken } from './helpers';
 import { PublicUser, GenericResponseBody } from '../../types';
@@ -7,6 +8,10 @@ import { renderResetPassword } from '../../views/mail';
 
 export interface ResetPasswordRequestBody {
   email: string;
+}
+export interface ValidateResetPasswordRequestParams
+  extends core.ParamsDictionary {
+  token: string;
 }
 
 export const resetPasswordInitiate: RequestHandler<
@@ -48,6 +53,24 @@ export const resetPasswordInitiate: RequestHandler<
     console.log(err);
     res.json({ success: false });
   }
+};
+
+export const validateResetPasswordToken: RequestHandler<ValidateResetPasswordRequestParams> = async (
+  req,
+  res
+) => {
+  const user = await User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  }).exec();
+  if (!user) {
+    res.status(401).json({
+      success: false,
+      message: 'Password reset token is invalid or has expired.'
+    });
+    return;
+  }
+  res.json({ success: true });
 };
 
 export const unlinkGithub: RequestHandler<

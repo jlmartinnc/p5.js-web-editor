@@ -36,7 +36,7 @@ jest.mock('../helpers', () => ({
   generateToken: jest.fn()
 }));
 
-describe('user.controller > 3rd party auth management', () => {
+describe('user.controller > auth management', () => {
   let request: any;
   let response: any;
   let next: MockNext;
@@ -177,7 +177,7 @@ describe('user.controller > 3rd party auth management', () => {
 
       request.params = { token: 'invalid-token' };
 
-      await validateResetPasswordToken(request, response);
+      await validateResetPasswordToken(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
         resetPasswordToken: 'invalid-token',
@@ -203,7 +203,7 @@ describe('user.controller > 3rd party auth management', () => {
 
       request.params = { token: 'valid-token' };
 
-      await validateResetPasswordToken(request, response);
+      await validateResetPasswordToken(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
         resetPasswordToken: 'valid-token',

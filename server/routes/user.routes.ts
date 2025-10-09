@@ -34,7 +34,7 @@ router.delete(
 
 /**
  * ===============
- * PASSWORD MANAGEMENT
+ * AUTH MANAGEMENT
  * ===============
  */
 // POST /reset-password
@@ -45,12 +45,6 @@ router.get('/reset-password/:token', UserController.validateResetPasswordToken);
 router.post('/reset-password/:token', UserController.updatePassword);
 // PUT /account (updating password)
 router.put('/account', isAuthenticated, UserController.updateSettings);
-
-/**
- * ===============
- * 3RD PARTY AUTH MANAGEMENT
- * ===============
- */
 // DELETE /auth/github
 router.delete('/auth/github', UserController.unlinkGithub);
 // DELETE /auth/google
