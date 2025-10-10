@@ -1,7 +1,34 @@
+import {
+  UserPreferences as Preferences,
+  AppThemeOptions
+} from '../../../../common/types';
 import * as ActionTypes from '../../../constants';
 import i18n from '../../../i18n';
 
-export const initialState = {
+export interface PreferencesState
+  extends Omit<Preferences, 'indentationAmount' | 'isTabIndent'> {
+  tabIndex: number;
+}
+
+// prettier-ignore
+export type PreferencesAction =
+  | { type: typeof ActionTypes.OPEN_PREFERENCES }
+  | { type: typeof ActionTypes.SET_PREFERENCES_TAB; value: number }
+  | { type: typeof ActionTypes.SET_FONT_SIZE; value: Preferences['fontSize'] }
+  | { type: typeof ActionTypes.SET_AUTOSAVE; value: Preferences['autosave'] }
+  | { type: typeof ActionTypes.SET_LINEWRAP; value: Preferences['linewrap'] }
+  | { type: typeof ActionTypes.SET_LINT_WARNING; value: Preferences['lintWarning'] }
+  | { type: typeof ActionTypes.SET_TEXT_OUTPUT; value: Preferences['textOutput'] }
+  | { type: typeof ActionTypes.SET_GRID_OUTPUT; value: Preferences['gridOutput'] }
+  | { type: typeof ActionTypes.SET_PREFERENCES; preferences: PreferencesState }
+  | { type: typeof ActionTypes.SET_THEME; value: Preferences['theme'] }
+  | { type: typeof ActionTypes.SET_AUTOREFRESH; value: Preferences['autorefresh'] }
+  | { type: typeof ActionTypes.SET_LINE_NUMBERS; value: Preferences['lineNumbers'] }
+  | { type: typeof ActionTypes.SET_LANGUAGE; language: Preferences['language'] }
+  | { type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES; value: Preferences['autocloseBracketsQuotes'] }
+  | { type: typeof ActionTypes.SET_AUTOCOMPLETE_HINTER; value: Preferences['autocompleteHinter'] };
+
+export const initialState: PreferencesState = {
   tabIndex: 0,
   fontSize: 18,
   autosave: true,
@@ -10,14 +37,17 @@ export const initialState = {
   lintWarning: false,
   textOutput: false,
   gridOutput: false,
-  theme: 'light',
+  theme: AppThemeOptions.LIGHT,
   autorefresh: false,
   language: i18n.language,
   autocloseBracketsQuotes: true,
   autocompleteHinter: false
 };
 
-export const preferences = (state = initialState, action) => {
+export const preferences = (
+  state: PreferencesState = initialState,
+  action: PreferencesAction
+) => {
   switch (action.type) {
     case ActionTypes.OPEN_PREFERENCES:
       return Object.assign({}, state, { tabIndex: 0 });
