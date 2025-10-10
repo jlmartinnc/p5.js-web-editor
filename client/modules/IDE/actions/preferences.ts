@@ -247,7 +247,12 @@ export function setGridOutput(value: SetGridOutputValue) {
   };
 }
 
-export function setTheme(value) {
+export type SetThemeValue = PreferencesState['theme'];
+export type SetThemeAction = {
+  type: typeof ActionTypes.SET_THEME;
+  preferences: SetThemeValue;
+};
+export function setTheme(value: SetThemeValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_THEME,
