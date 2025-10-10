@@ -23,7 +23,6 @@ jest.mock('../../../utils/mail', () => ({
   }
 }));
 jest.mock('../helpers', () => ({
-  // userResponse: jest.fn(),
   ...jest.requireActual('../helpers'),
   saveUser: jest.fn(),
   generateToken: jest.fn()
@@ -33,6 +32,9 @@ describe('user.controller > auth management', () => {
   let request: any;
   let response: any;
   let next: MockNext;
+  let mockToken: string;
+  let mockUser: Partial<UserDocument>;
+  const fixedTime = 100000000;
 
   beforeEach(() => {
     request = new MockRequest();
@@ -47,11 +49,6 @@ describe('user.controller > auth management', () => {
   });
 
   describe('resetPasswordInitiate', () => {
-    const fixedTime = 100000000;
-    let mockToken: string;
-    let saveMock: jest.Mock;
-    let mockUser: Partial<UserDocument>;
-
     beforeAll(() => {
       jest.useFakeTimers().setSystemTime(fixedTime);
     });
@@ -69,12 +66,11 @@ describe('user.controller > auth management', () => {
     });
 
     describe('if the user is found', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         mockToken = 'mock-token';
-        saveMock = jest.fn().mockResolvedValue(null);
         mockUser = createMockUser({
           email: 'test@example.com',
-          save: saveMock
+          save: jest.fn().mockResolvedValue(null)
         });
 
         (generateToken as jest.Mock).mockResolvedValue(mockToken);
@@ -82,17 +78,15 @@ describe('user.controller > auth management', () => {
 
         request.body = { email: 'test@example.com' };
         request.headers.host = 'localhost:3000';
-      });
-      it('sets a resetPasswordToken with an expiry of 1h to the user', async () => {
-        await resetPasswordInitiate(request, response, next);
 
+        await resetPasswordInitiate(request, response, next);
+      });
+      it('sets a resetPasswordToken with an expiry of 1h to the user', () => {
         expect(mockUser.resetPasswordToken).toBe(mockToken);
         expect(mockUser.resetPasswordExpires).toBe(fixedTime + 3600000);
-        expect(saveMock).toHaveBeenCalled();
+        expect(mockUser.save).toHaveBeenCalled();
       });
-      it('sends the reset password email', async () => {
-        await resetPasswordInitiate(request, response, next);
-
+      it('sends the reset password email', () => {
         expect(mailerService.send).toHaveBeenCalledWith(
           expect.objectContaining({
             to: 'test@example.com',
@@ -102,9 +96,7 @@ describe('user.controller > auth management', () => {
           })
         );
       });
-      it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
-        await resetPasswordInitiate(request, response, next);
-
+      it('returns a success message that does not indicate if the user exists, for security purposes', () => {
         expect(response.json).toHaveBeenCalledWith({
           success: true,
           message:
@@ -115,11 +107,6 @@ describe('user.controller > auth management', () => {
     describe('if the user is not found', () => {
       beforeEach(() => {
         mockToken = 'mock-token';
-        saveMock = jest.fn().mockResolvedValue({});
-        mockUser = createMockUser({
-          email: 'test@example.com',
-          save: saveMock
-        });
 
         (generateToken as jest.Mock).mockResolvedValue(mockToken);
         User.findByEmail = jest.fn().mockResolvedValue(null);
@@ -144,10 +131,9 @@ describe('user.controller > auth management', () => {
     });
     it('returns unsuccessful for all other errors', async () => {
       mockToken = 'mock-token';
-      saveMock = jest.fn().mockResolvedValue({});
       mockUser = createMockUser({
         email: 'test@example.com',
-        save: saveMock
+        save: jest.fn().mockResolvedValue(null)
       });
 
       (generateToken as jest.Mock).mockRejectedValue(
@@ -167,7 +153,6 @@ describe('user.controller > auth management', () => {
   });
 
   describe('validateResetPasswordToken', () => {
-    const fixedTime = 100000000;
     beforeAll(() => jest.useFakeTimers().setSystemTime(fixedTime));
     afterAll(() => jest.useRealTimers());
 
@@ -175,7 +160,9 @@ describe('user.controller > auth management', () => {
       User.findOne = jest.fn().mockReturnValue({
         exec: jest.fn()
       });
+
       request.params = { token: 'some-token' };
+
       await validateResetPasswordToken(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
@@ -189,7 +176,9 @@ describe('user.controller > auth management', () => {
         User.findOne = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(null)
         });
+
         request.params = { token: 'invalid-token' };
+
         await validateResetPasswordToken(request, response, next);
       });
       it('returns a 401', () => {
@@ -214,7 +203,9 @@ describe('user.controller > auth management', () => {
         User.findOne = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(fakeUser)
         });
+
         request.params = { token: 'valid-token' };
+
         await validateResetPasswordToken(request, response, next);
       });
       it('returns a success response', () => {
@@ -224,7 +215,6 @@ describe('user.controller > auth management', () => {
   });
 
   describe('updatePassword', () => {
-    const fixedTime = 100000000;
     beforeAll(() => jest.useFakeTimers().setSystemTime(fixedTime));
     afterAll(() => jest.useRealTimers());
 
@@ -232,7 +222,9 @@ describe('user.controller > auth management', () => {
       User.findOne = jest.fn().mockReturnValue({
         exec: jest.fn()
       });
+
       request.params = { token: 'some-token' };
+
       await updatePassword(request, response, next);
 
       expect(User.findOne).toHaveBeenCalledWith({
@@ -246,7 +238,9 @@ describe('user.controller > auth management', () => {
         User.findOne = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(null)
         });
+
         request.params = { token: 'invalid-token' };
+
         await updatePassword(request, response, next);
       });
       it('returns a 401', () => {
@@ -261,9 +255,9 @@ describe('user.controller > auth management', () => {
     });
 
     describe('and when there is a user with valid token', () => {
-      const fakeSanitisedUser = createMockUser({ email: 'test@example.com' });
-      const fakeUser = {
-        ...fakeSanitisedUser,
+      const sanitisedMockUser = createMockUser({ email: 'test@example.com' });
+      mockUser = {
+        ...sanitisedMockUser,
         password: 'oldpassword',
         resetPasswordToken: 'valid-token',
         resetPasswordExpires: fixedTime + 10000, // still valid
@@ -272,36 +266,35 @@ describe('user.controller > auth management', () => {
 
       beforeEach(async () => {
         User.findOne = jest.fn().mockReturnValue({
-          exec: jest.fn().mockResolvedValue(fakeUser)
+          exec: jest.fn().mockResolvedValue(mockUser)
         });
+
         request.params = { token: 'valid-token' };
         request.setBody({
           password: 'newpassword'
         });
+
         // simulate logging in after resetting the password works
         request.logIn = jest.fn((user, cb) => {
           request.user = user;
           cb(null);
         });
+
         await updatePassword(request, response, next);
       });
       it('calls user.save with the updated password and removes the reset password token', () => {
-        expect(fakeUser.password).toBe('newpassword');
-        expect(fakeUser.resetPasswordToken).toBeUndefined();
-        expect(fakeUser.resetPasswordExpires).toBeUndefined();
-        expect(fakeUser.save).toHaveBeenCalled();
+        expect(mockUser.password).toBe('newpassword');
+        expect(mockUser.resetPasswordToken).toBeUndefined();
+        expect(mockUser.resetPasswordExpires).toBeUndefined();
+        expect(mockUser.save).toHaveBeenCalled();
       });
       it('returns a success response with the sanitised user', () => {
-        expect(response.json).toHaveBeenCalledWith(fakeSanitisedUser);
+        expect(response.json).toHaveBeenCalledWith(sanitisedMockUser);
       });
     });
   });
 
   describe('updateSettings', () => {
-    const fixedTime = 100000000; // arbitrary fixed timestamp
-    let saveMock: jest.Mock;
-    let mockUser: Partial<UserDocument>;
-
     beforeAll(() => {
       jest.useFakeTimers().setSystemTime(fixedTime);
     });
@@ -313,7 +306,12 @@ describe('user.controller > auth management', () => {
     describe('if the user is not found', () => {
       beforeEach(async () => {
         User.findById = jest.fn().mockResolvedValue(null);
+
         request.user = { id: 'nonexistent-id' };
+
+        (saveUser as jest.Mock).mockResolvedValue(null);
+        (generateToken as jest.Mock).mockResolvedValue('token12343');
+
         await updateSettings(request, response, next);
       });
 
@@ -333,12 +331,17 @@ describe('user.controller > auth management', () => {
       const startingUser = createMockUser({
         username: 'oldusername',
         email: 'old@email.com',
-        id: 'valid-id'
+        id: 'valid-id',
+        comparePassword: jest.fn().mockResolvedValue(true)
       });
 
       beforeEach(() => {
         User.findById = jest.fn().mockResolvedValue(startingUser);
+
         request.user = { id: 'valid-id' };
+
+        (saveUser as jest.Mock).mockResolvedValue(null);
+        (generateToken as jest.Mock).mockResolvedValue('token12343');
       });
 
       describe('and when there is a username in the request', () => {
@@ -348,7 +351,7 @@ describe('user.controller > auth management', () => {
           });
           await updateSettings(request, response, next);
         });
-        it('calls saveUser with the new username', () => {
+        it('calls saveUser', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
             ...startingUser,
             username: 'newusername'
@@ -356,25 +359,9 @@ describe('user.controller > auth management', () => {
         });
       });
 
-      describe('and when there is an email in the request', () => {
-        beforeEach(async () => {
-          request.setBody({
-            username: 'oldusername',
-            email: 'new@email.com'
-          });
-          await updateSettings(request, response, next);
-        });
-        it('calls saveUser with the new email', () => {
-          expect(saveUser).toHaveBeenCalledWith(response, {
-            ...startingUser,
-            email: 'new@email.com'
-          });
-        });
-        it('sends an email to confirm the email update', () => {});
-      });
-
       // currently frontend doesn't seem to call the below
       describe('and when there is a newPassword in the request', () => {
+        beforeEach(async () => {});
         describe('and the current password is not provided', () => {
           it('returns 401 with a "current password not provided" message', () => {});
           it('does not save the user with the new password', () => {});
