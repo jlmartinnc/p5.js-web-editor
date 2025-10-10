@@ -1,34 +1,30 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
-import { User } from '../../../models/user';
+import { User } from '../../../../models/user';
 import {
   resetPasswordInitiate,
   validateResetPasswordToken,
-  updatePassword,
-  updateSettings,
-  unlinkGithub,
-  unlinkGoogle
-} from '../authManagement';
-import { saveUser, generateToken, userResponse } from '../helpers';
-import { createMockUser } from '../__testUtils__';
+  updatePassword
+} from '../../authManagement';
+import { generateToken } from '../../helpers';
+import { createMockUser } from '../../__testUtils__';
 
-import { mailerService } from '../../../utils/mail';
-import { UserDocument } from '../../../types';
+import { mailerService } from '../../../../utils/mail';
+import { UserDocument } from '../../../../types';
 
-jest.mock('../../../models/user');
-jest.mock('../../../utils/mail', () => ({
+jest.mock('../../../../models/user');
+jest.mock('../../../../utils/mail', () => ({
   mailerService: {
     send: jest.fn()
   }
 }));
-jest.mock('../helpers', () => ({
-  ...jest.requireActual('../helpers'),
-  saveUser: jest.fn(),
+jest.mock('../../helpers', () => ({
+  ...jest.requireActual('../../helpers'),
   generateToken: jest.fn()
 }));
 
-describe('user.controller > auth management', () => {
+describe('user.controller > auth management > password management', () => {
   let request: any;
   let response: any;
   let next: MockNext;
@@ -290,167 +286,6 @@ describe('user.controller > auth management', () => {
       });
       it('returns a success response with the sanitised user', () => {
         expect(response.json).toHaveBeenCalledWith(sanitisedMockUser);
-      });
-    });
-  });
-
-  describe('updateSettings', () => {
-    beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(fixedTime);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
-    describe('if the user is not found', () => {
-      beforeEach(async () => {
-        User.findById = jest.fn().mockResolvedValue(null);
-
-        request.user = { id: 'nonexistent-id' };
-
-        (saveUser as jest.Mock).mockResolvedValue(null);
-        (generateToken as jest.Mock).mockResolvedValue('token12343');
-
-        await updateSettings(request, response, next);
-      });
-
-      it('returns 404 and a user-not-found error', async () => {
-        expect(response.status).toHaveBeenCalledWith(404);
-        expect(response.json).toHaveBeenCalledWith({
-          error: 'User not found'
-        });
-      });
-      it('does not save the user', () => {
-        expect(saveUser).not.toHaveBeenCalled();
-      });
-    });
-
-    // the below tests match the current logic, but logic can be improved
-    describe('if the user is found', () => {
-      const startingUser = createMockUser({
-        username: 'oldusername',
-        email: 'old@email.com',
-        id: 'valid-id',
-        comparePassword: jest.fn().mockResolvedValue(true)
-      });
-
-      beforeEach(() => {
-        User.findById = jest.fn().mockResolvedValue(startingUser);
-
-        request.user = { id: 'valid-id' };
-
-        (saveUser as jest.Mock).mockResolvedValue(null);
-        (generateToken as jest.Mock).mockResolvedValue('token12343');
-      });
-
-      describe('and when there is a username in the request', () => {
-        beforeEach(async () => {
-          request.setBody({
-            username: 'newusername'
-          });
-          await updateSettings(request, response, next);
-        });
-        it('calls saveUser', () => {
-          expect(saveUser).toHaveBeenCalledWith(response, {
-            ...startingUser,
-            username: 'newusername'
-          });
-        });
-      });
-
-      // currently frontend doesn't seem to call the below
-      describe('and when there is a newPassword in the request', () => {
-        beforeEach(async () => {});
-        describe('and the current password is not provided', () => {
-          it('returns 401 with a "current password not provided" message', () => {});
-          it('does not save the user with the new password', () => {});
-        });
-      });
-      describe('and when there is a currentPassword in the request', () => {
-        describe('and the current password does not match', () => {
-          it('returns 401 with a "current password invalid" message', () => {});
-          it('does not save the user with the new password', () => {});
-        });
-        describe('and when the current password does match', () => {
-          it('calls saveUser with the new password', () => {});
-        });
-      });
-    });
-  });
-
-  describe('unlinkGithub', () => {
-    describe('and when there is no user in the request', () => {
-      beforeEach(async () => {
-        await unlinkGithub(request, response, next);
-      });
-      it('does not call saveUser', () => {
-        expect(saveUser).not.toHaveBeenCalled();
-      });
-      it('returns a 404 with the correct status and message', () => {
-        expect(response.status).toHaveBeenCalledWith(404);
-        expect(response.json).toHaveBeenCalledWith({
-          success: false,
-          message: 'You must be logged in to complete this action.'
-        });
-      });
-    });
-    describe('and when there is a user in the request', () => {
-      const user = createMockUser({
-        github: 'testuser',
-        tokens: [{ kind: 'github' }, { kind: 'google' }]
-      });
-
-      beforeEach(async () => {
-        request.user = user;
-        await unlinkGithub(request, response, next);
-      });
-      it('removes the users github property', () => {
-        expect(user.github).toBeUndefined();
-      });
-      it('filters out the github token', () => {
-        expect(user.tokens).toEqual([{ kind: 'google' }]);
-      });
-      it('does calls saveUser', () => {
-        expect(saveUser).toHaveBeenCalledWith(response, user);
-      });
-    });
-  });
-
-  describe('unlinkGoogle', () => {
-    describe('and when there is no user in the request', () => {
-      beforeEach(async () => {
-        await unlinkGoogle(request, response, next);
-      });
-      it('does not call saveUser', () => {
-        expect(saveUser).not.toHaveBeenCalled();
-      });
-      it('returns a 404 with the correct status and message', () => {
-        expect(response.status).toHaveBeenCalledWith(404);
-        expect(response.json).toHaveBeenCalledWith({
-          success: false,
-          message: 'You must be logged in to complete this action.'
-        });
-      });
-    });
-    describe('and when there is a user in the request', () => {
-      const user = createMockUser({
-        google: 'testuser',
-        tokens: [{ kind: 'github' }, { kind: 'google' }]
-      });
-
-      beforeEach(async () => {
-        request.user = user;
-        await unlinkGoogle(request, response, next);
-      });
-      it('removes the users google property', () => {
-        expect(user.google).toBeUndefined();
-      });
-      it('filters out the google token', () => {
-        expect(user.tokens).toEqual([{ kind: 'github' }]);
-      });
-      it('does calls saveUser', () => {
-        expect(saveUser).toHaveBeenCalledWith(response, user);
       });
     });
   });
