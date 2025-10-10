@@ -5,6 +5,10 @@
     "module": "ESNext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react",
+    "paths": {
+      "server/*": ["../server/*"],
+      "common/*": ["../common/*"]
+    }
   },
   "include": ["./**/*"],
   "exclude": ["../node_modules", "../server"]
