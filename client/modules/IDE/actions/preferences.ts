@@ -1,13 +1,9 @@
 import i18next from 'i18next';
-import {
-  UserPreferences as Preferences,
-  AppThemeOptions,
-  UpdatePreferencesRequestBody
-} from '../../../../common/types';
+import { UpdatePreferencesRequestBody } from '../../../../common/types';
 import { apiClient } from '../../../utils/apiClient';
 import * as ActionTypes from '../../../constants';
-import { PreferencesState } from '../reducers/preferences';
-import { RootState } from '../../../reducers';
+import type { PreferencesState } from '../reducers/preferences';
+import type { RootState } from '../../../reducers';
 
 export type UpdatePreferencesDispatch = (action: unknown) => void;
 export type GetRootState = () => RootState;
@@ -27,14 +23,24 @@ function updatePreferences(
     });
 }
 
-export function setPreferencesTab(value: PreferencesState['tabIndex']) {
+type SetPreferencesTabValue = PreferencesState['tabIndex'];
+export type SetPreferencesTabAction = {
+  type: typeof ActionTypes.SET_PREFERENCES_TAB;
+  value: SetPreferencesTabValue;
+};
+export function setPreferencesTab(value: SetPreferencesTabValue) {
   return {
     type: ActionTypes.SET_PREFERENCES_TAB,
     value
   };
 }
 
-export function setFontSize(value: PreferencesState['fontSize']) {
+type SetFontSizeValue = PreferencesState['fontSize'];
+export type SetFontSizeAction = {
+  type: typeof ActionTypes.SET_FONT_SIZE;
+  value: SetFontSizeAction;
+};
+export function setFontSize(value: SetFontSizeValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     // eslint-disable-line
     dispatch({
@@ -53,7 +59,12 @@ export function setFontSize(value: PreferencesState['fontSize']) {
   };
 }
 
-export function setLineNumbers(value) {
+type SetLineNumbersValue = PreferencesState['lineNumbers'];
+export type SetLineNumbersAction = {
+  type: typeof ActionTypes.SET_LINE_NUMBERS;
+  value: SetLineNumbersValue;
+};
+export function setLineNumbers(value: SetLineNumbersValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_LINE_NUMBERS,
@@ -71,7 +82,14 @@ export function setLineNumbers(value) {
   };
 }
 
-export function setAutocloseBracketsQuotes(value) {
+type SetAutocloseBracketsQuotesValue = PreferencesState['autocloseBracketsQuotes'];
+export type SetAutocloseBracketsQuotesAction = {
+  type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES;
+  value: SetAutocloseBracketsQuotesValue;
+};
+export function setAutocloseBracketsQuotes(
+  value: SetAutocloseBracketsQuotesValue
+) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES,
@@ -89,7 +107,12 @@ export function setAutocloseBracketsQuotes(value) {
   };
 }
 
-export function setAutocompleteHinter(value) {
+type SetAutocompleteHinterValue = PreferencesState['autocompleteHinter'];
+export type SetAutocompleteHinterValueAction = {
+  type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES;
+  value: SetAutocompleteHinterValue;
+};
+export function setAutocompleteHinter(value: SetAutocompleteHinterValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_AUTOCOMPLETE_HINTER,
