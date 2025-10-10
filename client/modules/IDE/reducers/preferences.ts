@@ -13,7 +13,7 @@ export interface PreferencesState
 // prettier-ignore
 export type PreferencesAction =
   | { type: typeof ActionTypes.OPEN_PREFERENCES }
-  | { type: typeof ActionTypes.SET_PREFERENCES_TAB; value: number }
+  | { type: typeof ActionTypes.SET_PREFERENCES_TAB; value: PreferencesState['tabIndex'] }
   | { type: typeof ActionTypes.SET_FONT_SIZE; value: Preferences['fontSize'] }
   | { type: typeof ActionTypes.SET_AUTOSAVE; value: Preferences['autosave'] }
   | { type: typeof ActionTypes.SET_LINEWRAP; value: Preferences['linewrap'] }
