@@ -17,7 +17,7 @@ export const initialState = {
   autocompleteHinter: false
 };
 
-const preferences = (state = initialState, action) => {
+export const preferences = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.OPEN_PREFERENCES:
       return Object.assign({}, state, { tabIndex: 0 });
@@ -57,5 +57,3 @@ const preferences = (state = initialState, action) => {
       return state;
   }
 };
-
-export default preferences;
