@@ -2,7 +2,7 @@
 // Types should be defined in their own portions of the codebase and exported here.
 
 // SERVER SHARED TYPES:
-export {
+export type {
   SanitisedApiKey,
   IApiKey as ApiKey,
   ApiKeyResponseOrError,
@@ -13,9 +13,9 @@ export {
 
 export * from '../../server/types/email';
 
-export { Error, GenericResponseBody } from '../../server/types/express';
+export type { Error, GenericResponseBody } from '../../server/types/express';
 
-export {
+export type {
   User,
   PublicUser,
   PublicUserOrError,
