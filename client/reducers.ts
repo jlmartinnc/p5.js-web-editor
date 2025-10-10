@@ -31,4 +31,8 @@ const rootReducer = combineReducers({
   collections
 });
 
+// Type for entire redux state
+export type RootState = ReturnType<typeof rootReducer>;
+
+// eslint-disable-next-line import/no-default-export
 export default rootReducer;
