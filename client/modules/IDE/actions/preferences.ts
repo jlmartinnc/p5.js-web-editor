@@ -270,7 +270,12 @@ export function setTheme(value: SetThemeValue) {
   };
 }
 
-export function setAutorefresh(value) {
+export type SetAutorefreshValue = PreferencesState['autorefresh'];
+export type SetAutorefreshAction = {
+  type: typeof ActionTypes.SET_AUTOREFRESH;
+  value: SetAutorefreshValue;
+};
+export function setAutorefresh(value: SetAutorefreshValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_AUTOREFRESH,
@@ -288,14 +293,25 @@ export function setAutorefresh(value) {
   };
 }
 
-export function setAllAccessibleOutput(value) {
+export type SetAllAccessibleOutputValue =
+  | SetTextOutputValue
+  | SetGridOutputValue;
+export function setAllAccessibleOutput(value: SetAllAccessibleOutputValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch(setTextOutput(value));
     dispatch(setGridOutput(value));
   };
 }
 
-export function setLanguage(value, { persistPreference = true } = {}) {
+export type SetLanguageValue = PreferencesState['language'];
+export type SetLanguageAction = {
+  type: typeof ActionTypes.SET_AUTOREFRESH;
+  value: SetLanguageValue;
+};
+export function setLanguage(
+  value: SetLanguageValue,
+  { persistPreference = true } = {}
+) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     i18next.changeLanguage(value);
     dispatch({
