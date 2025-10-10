@@ -4,7 +4,7 @@ import {
 } from '../../../../common/types';
 import * as ActionTypes from '../../../constants';
 import i18n from '../../../i18n';
-import type { PreferencesAction } from '../actions/preferences';
+import type { PreferencesAction } from '../actions/preferences.types';
 
 export interface PreferencesState
   extends Omit<Preferences, 'indentationAmount' | 'isTabIndent'> {
