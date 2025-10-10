@@ -248,7 +248,6 @@ describe('user.controller > signup', () => {
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
-      mailerService.send = jest.fn().mockResolvedValue(true);
 
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';
