@@ -12,7 +12,7 @@ import { saveUser } from './helpers';
  * - Method: `PUT`
  * - Endpoint: `/preferences`
  * - Authenticated: `true`
- * - Controller: `UserController.updatePreferences`
+ * - Id: `UserController.updatePreferences`
  *
  * Description:
  *   - Update user preferences, such as AppTheme
