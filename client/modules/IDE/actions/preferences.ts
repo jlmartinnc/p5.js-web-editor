@@ -23,7 +23,7 @@ function updatePreferences(
     });
 }
 
-type SetPreferencesTabValue = PreferencesState['tabIndex'];
+export type SetPreferencesTabValue = PreferencesState['tabIndex'];
 export type SetPreferencesTabAction = {
   type: typeof ActionTypes.SET_PREFERENCES_TAB;
   value: SetPreferencesTabValue;
@@ -35,7 +35,7 @@ export function setPreferencesTab(value: SetPreferencesTabValue) {
   };
 }
 
-type SetFontSizeValue = PreferencesState['fontSize'];
+export type SetFontSizeValue = PreferencesState['fontSize'];
 export type SetFontSizeAction = {
   type: typeof ActionTypes.SET_FONT_SIZE;
   value: SetFontSizeAction;
@@ -59,7 +59,7 @@ export function setFontSize(value: SetFontSizeValue) {
   };
 }
 
-type SetLineNumbersValue = PreferencesState['lineNumbers'];
+export type SetLineNumbersValue = PreferencesState['lineNumbers'];
 export type SetLineNumbersAction = {
   type: typeof ActionTypes.SET_LINE_NUMBERS;
   value: SetLineNumbersValue;
@@ -82,7 +82,7 @@ export function setLineNumbers(value: SetLineNumbersValue) {
   };
 }
 
-type SetAutocloseBracketsQuotesValue = PreferencesState['autocloseBracketsQuotes'];
+export type SetAutocloseBracketsQuotesValue = PreferencesState['autocloseBracketsQuotes'];
 export type SetAutocloseBracketsQuotesAction = {
   type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES;
   value: SetAutocloseBracketsQuotesValue;
@@ -107,7 +107,7 @@ export function setAutocloseBracketsQuotes(
   };
 }
 
-type SetAutocompleteHinterValue = PreferencesState['autocompleteHinter'];
+export type SetAutocompleteHinterValue = PreferencesState['autocompleteHinter'];
 export type SetAutocompleteHinterValueAction = {
   type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES;
   value: SetAutocompleteHinterValue;
@@ -130,7 +130,12 @@ export function setAutocompleteHinter(value: SetAutocompleteHinterValue) {
   };
 }
 
-export function setAutosave(value) {
+export type SetAutosaveValue = PreferencesState['autosave'];
+export type SetAutosaveAction = {
+  type: typeof ActionTypes.SET_AUTOSAVE;
+  value: SetAutosaveValue;
+};
+export function setAutosave(value: SetAutosaveValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_AUTOSAVE,
@@ -148,7 +153,12 @@ export function setAutosave(value) {
   };
 }
 
-export function setLinewrap(value) {
+export type SetLinewrapValue = PreferencesState['linewrap'];
+export type SetLinewrapAction = {
+  type: typeof ActionTypes.SET_LINEWRAP;
+  value: SetLinewrapValue;
+};
+export function setLinewrap(value: SetLinewrapValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_LINEWRAP,
@@ -166,7 +176,12 @@ export function setLinewrap(value) {
   };
 }
 
-export function setLintWarning(value) {
+export type SetLintWarningValue = PreferencesState['lintWarning'];
+export type SetLintWarningAction = {
+  type: typeof ActionTypes.SET_LINT_WARNING;
+  value: SetLintWarningValue;
+};
+export function setLintWarning(value: SetLintWarningValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_LINT_WARNING,
