@@ -16,7 +16,7 @@ export function showReduxDevTools() {
   );
 }
 
-export default function setupStore(initialState: RootState) {
+export function setupStore(initialState: RootState) {
   const savedState = loadState();
   clearState();
 
