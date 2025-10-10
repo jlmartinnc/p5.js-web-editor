@@ -4,29 +4,12 @@ import {
 } from '../../../../common/types';
 import * as ActionTypes from '../../../constants';
 import i18n from '../../../i18n';
+import type { PreferencesAction } from '../actions/preferences';
 
 export interface PreferencesState
   extends Omit<Preferences, 'indentationAmount' | 'isTabIndent'> {
   tabIndex: number;
 }
-
-// prettier-ignore
-export type PreferencesAction =
-  | { type: typeof ActionTypes.OPEN_PREFERENCES }
-  | { type: typeof ActionTypes.SET_PREFERENCES_TAB; value: PreferencesState['tabIndex'] }
-  | { type: typeof ActionTypes.SET_FONT_SIZE; value: PreferencesState['fontSize'] }
-  | { type: typeof ActionTypes.SET_AUTOSAVE; value: PreferencesState['autosave'] }
-  | { type: typeof ActionTypes.SET_LINEWRAP; value: PreferencesState['linewrap'] }
-  | { type: typeof ActionTypes.SET_LINT_WARNING; value: PreferencesState['lintWarning'] }
-  | { type: typeof ActionTypes.SET_TEXT_OUTPUT; value: PreferencesState['textOutput'] }
-  | { type: typeof ActionTypes.SET_GRID_OUTPUT; value: PreferencesState['gridOutput'] }
-  | { type: typeof ActionTypes.SET_PREFERENCES; preferences: PreferencesState }
-  | { type: typeof ActionTypes.SET_THEME; value: PreferencesState['theme'] }
-  | { type: typeof ActionTypes.SET_AUTOREFRESH; value: PreferencesState['autorefresh'] }
-  | { type: typeof ActionTypes.SET_LINE_NUMBERS; value: PreferencesState['lineNumbers'] }
-  | { type: typeof ActionTypes.SET_LANGUAGE; language: PreferencesState['language'] }
-  | { type: typeof ActionTypes.SET_AUTOCLOSE_BRACKETS_QUOTES; value: PreferencesState['autocloseBracketsQuotes'] }
-  | { type: typeof ActionTypes.SET_AUTOCOMPLETE_HINTER; value: PreferencesState['autocompleteHinter'] };
 
 export const initialState: PreferencesState = {
   tabIndex: 0,
