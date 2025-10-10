@@ -2,7 +2,6 @@ import { last } from 'lodash';
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
-import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 
 import { User } from '../../../models/user';
