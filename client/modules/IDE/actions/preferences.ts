@@ -5,6 +5,8 @@ import * as ActionTypes from '../../../constants';
 import type { PreferencesState } from '../reducers/preferences';
 import type { RootState } from '../../../reducers';
 
+// Action definitions:
+
 export type UpdatePreferencesDispatch = (action: unknown) => void;
 export type GetRootState = () => RootState;
 
@@ -199,7 +201,12 @@ export function setLintWarning(value: SetLintWarningValue) {
   };
 }
 
-export function setTextOutput(value) {
+export type SetTextOutputValue = PreferencesState['textOutput'];
+export type SetTextOutputAction = {
+  type: typeof ActionTypes.SET_TEXT_OUTPUT;
+  value: SetTextOutputValue;
+};
+export function setTextOutput(value: SetTextOutputValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_TEXT_OUTPUT,
@@ -217,7 +224,12 @@ export function setTextOutput(value) {
   };
 }
 
-export function setGridOutput(value) {
+export type SetGridOutputValue = PreferencesState['gridOutput'];
+export type SetGridOutputAction = {
+  type: typeof ActionTypes.SET_GRID_OUTPUT;
+  value: SetGridOutputValue;
+};
+export function setGridOutput(value: SetGridOutputValue) {
   return (dispatch: UpdatePreferencesDispatch, getState: GetRootState) => {
     dispatch({
       type: ActionTypes.SET_GRID_OUTPUT,
