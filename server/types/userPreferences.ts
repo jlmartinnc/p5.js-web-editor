@@ -29,19 +29,16 @@ export enum CookieConsentOptions {
   ALL = 'all'
 }
 
-// HTTP:
-
-export type UpdatePreferencesResponseBody = UserPreferences | Error;
-/**
- * user.controller.updatePreferences
- */
+// -------- API --------
+/** user.controller.updatePreferences - Request */
 export interface UpdatePreferencesRequestBody {
   preferences: Partial<UserPreferences>;
 }
 
-/**
- * user.controller.updateCookieConsent
- */
+/** userController.updatePreferences - Response */
+export type UpdatePreferencesResponseBody = UserPreferences | Error;
+
+/** user.controller.updateCookieConsent - Request */
 export interface UpdateCookieConsentRequestBody {
   cookieConsent: CookieConsentOptions;
 }

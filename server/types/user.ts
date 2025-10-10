@@ -5,6 +5,7 @@ import { EmailConfirmationStates } from './email';
 import { ApiKeyDocument } from './apiKey';
 import { Error, GenericResponseBody, RouteParam } from './express';
 
+// -------- MONGOOSE --------
 /** Full User interface */
 export interface IUser extends VirtualId, MongooseTimestamps {
   name: string;
@@ -76,14 +77,13 @@ export interface UserModel extends Model<UserDocument> {
   EmailConfirmation(): typeof EmailConfirmationStates;
 }
 
-// HTTP:
+// -------- API --------
 /**
  * Response body used for User related routes
  * Contains either the Public (sanitised) User or an Error
  */
 export type PublicUserOrError = PublicUser | Error;
 
-// authManagement:
 /**
  * Note: This type should probably be updated to be removed in the future and use just PublicUserOrError
  *   - Contains either a GenericResponseBody for when there is no user found or attached to a request
@@ -93,6 +93,7 @@ export type PublicUserOrErrorOrGeneric =
   | PublicUserOrError
   | GenericResponseBody;
 
+/** userController.updateSettings - Request */
 export interface UpdateSettingsRequestBody {
   username: string;
   email: string;
@@ -101,38 +102,39 @@ export interface UpdateSettingsRequestBody {
 }
 
 /**
- * Response body used for unlinkGithub and unlinkGoogle
+ * userContoller.unlinkGithub & userContoller.unlinkGoogle - Response
  *   - If user is not logged in, a GenericResponseBody with 404 is returned
  *   - If user is logged in, PublicUserOrError is returned
  */
 export type UnlinkThirdPartyResponseBody = PublicUserOrErrorOrGeneric;
 
+/** userController.resetPasswordInitiate - Request */
 export interface ResetPasswordInitiateRequestBody {
   email: string;
 }
 
-/**
- * Request params used for validateResetPasswordToken & updatePassword
- */
+/** userContoller.validateResetPasswordToken & userController.updatePassword - Request */
 export interface ResetOrUpdatePasswordRequestParams extends RouteParam {
   token: string;
 }
+/** userController.updatePassword - Request */
 export interface UpdatePasswordRequestBody {
   password: string;
 }
-
-// signup:
+/** userController.createUser - Request */
 export interface CreateUserRequestBody {
   username: string;
   email: string;
   password: string;
 }
+/** userController.duplicateUserCheck - Query */
 export interface DuplicateUserCheckQuery {
   // eslint-disable-next-line camelcase
   check_type: 'email' | 'username';
   email?: string;
   username?: string;
 }
+/** userController.verifyEmail - Query */
 export interface VerifyEmailQuery {
   t: string;
 }
