@@ -10,11 +10,7 @@ import { mailerService } from '../../../../utils/mail';
 import { UserDocument } from '../../../../types';
 
 jest.mock('../../../../models/user');
-jest.mock('../../../../utils/mail', () => ({
-  mailerService: {
-    send: jest.fn()
-  }
-}));
+jest.mock('../../../../utils/mail');
 jest.mock('../../helpers', () => ({
   ...jest.requireActual('../../helpers'),
   saveUser: jest.fn(),
@@ -114,10 +110,12 @@ describe('user.controller > auth management', () => {
       });
       describe('and when there is a currentPassword in the request', () => {
         describe('and the current password does not match', () => {
+          beforeEach(async () => {});
           it('returns 401 with a "current password invalid" message', () => {});
           it('does not save the user with the new password', () => {});
         });
         describe('and when the current password does match', () => {
+          beforeEach(async () => {});
           it('calls saveUser with the new password', () => {});
         });
       });

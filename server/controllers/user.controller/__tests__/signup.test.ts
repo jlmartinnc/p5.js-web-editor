@@ -12,16 +12,8 @@ import {
 import { mailerService } from '../../../utils/mail';
 
 jest.mock('../../../models/user');
-jest.mock('../../../utils/mail', () => ({
-  mailerService: {
-    send: jest.fn()
-  }
-}));
-jest.mock('../../../views/mail', () => ({
-  renderEmailConfirmation: jest
-    .fn()
-    .mockReturnValue({ to: 'test@example.com', subject: 'Confirm' })
-}));
+jest.mock('../../../utils/mail');
+jest.mock('../../../views/mail');
 
 describe('user.controller > signup', () => {
   let request: any;
@@ -89,17 +81,19 @@ describe('user.controller > signup', () => {
 
   describe('duplicateUserCheck', () => {
     it('calls findByEmailOrUsername with the correct params', async () => {
-      const mockFind = jest.fn().mockResolvedValue(null);
-      User.findByEmailOrUsername = mockFind;
+      User.findByEmailOrUsername = jest.fn().mockResolvedValue(null);
 
       request.query = { check_type: 'email', email: 'test@example.com' };
 
       await duplicateUserCheck(request, response, next);
 
-      expect(mockFind).toHaveBeenCalledWith('test@example.com', {
-        caseInsensitive: true,
-        valueType: 'email'
-      });
+      expect(User.findByEmailOrUsername).toHaveBeenCalledWith(
+        'test@example.com',
+        {
+          caseInsensitive: true,
+          valueType: 'email'
+        }
+      );
     });
 
     it('returns the correct response body when no matching user is found', async () => {
@@ -254,7 +248,7 @@ describe('user.controller > signup', () => {
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
-      (mailerService.send as jest.Mock).mockResolvedValue(true);
+      mailerService.send = jest.fn().mockResolvedValue(true);
 
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';
@@ -263,7 +257,7 @@ describe('user.controller > signup', () => {
 
       expect(User.findById).toHaveBeenCalledWith('user1');
       expect(mailerService.send).toHaveBeenCalledWith(
-        expect.objectContaining({ to: 'test@example.com' })
+        expect.objectContaining({ subject: 'Mock confirm your email' }) // see views/__mocks__/mail.ts
       );
       expect(mockUser.verified).toBe('resent');
       expect(mockUser.verifiedToken).toBeDefined();
@@ -290,9 +284,9 @@ describe('user.controller > signup', () => {
       User.findById = jest
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
-      (mailerService.send as jest.Mock).mockRejectedValue(
-        new Error('Mailer fail')
-      );
+      mailerService.send = jest
+        .fn()
+        .mockRejectedValue(new Error('Mailer fail'));
 
       request.user = { id: 'user1' };
       request.headers.host = 'localhost:3000';

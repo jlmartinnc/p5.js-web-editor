@@ -14,11 +14,7 @@ import { mailerService } from '../../../../utils/mail';
 import { UserDocument } from '../../../../types';
 
 jest.mock('../../../../models/user');
-jest.mock('../../../../utils/mail', () => ({
-  mailerService: {
-    send: jest.fn()
-  }
-}));
+jest.mock('../../../../utils/mail');
 jest.mock('../../helpers', () => ({
   ...jest.requireActual('../../helpers'),
   generateToken: jest.fn()

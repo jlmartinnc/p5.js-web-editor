@@ -9,11 +9,7 @@ jest.mock('../../helpers', () => ({
   ...jest.requireActual('../../helpers'),
   saveUser: jest.fn()
 }));
-jest.mock('../../../../utils/mail', () => ({
-  mailerService: {
-    send: jest.fn()
-  }
-}));
+jest.mock('../../../../utils/mail');
 
 describe('user.controller > auth management > 3rd party auth', () => {
   let request: any;
