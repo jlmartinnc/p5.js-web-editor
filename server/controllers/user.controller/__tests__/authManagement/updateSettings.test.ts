@@ -261,7 +261,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
           });
           expect(saveUser).toHaveBeenCalledTimes(1);
         });
-        it('does not send a confirmation email to the user', () => {
+        it('sends a confirmation email to the user', () => {
           expect(mailerService.send).toHaveBeenCalledWith(
             expect.objectContaining({
               subject: 'Mock confirm your email'
@@ -293,7 +293,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
           });
           expect(saveUser).toHaveBeenCalledTimes(1);
         });
-        it('does not send a confirmation email to the user', () => {
+        it('sends a confirmation email to the user', () => {
           expect(mailerService.send).toHaveBeenCalledWith(
             expect.objectContaining({
               subject: 'Mock confirm your email'
@@ -304,6 +304,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
     });
 
     describe('unhappy paths', () => {
+      // Client-side checks to require username
       describe.skip('when missing username', () => {
         beforeEach(async () => {
           request.setBody({ email: OLD_EMAIL });
@@ -325,6 +326,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
         });
       });
 
+      // Client-side checks to require email
       describe.skip('when missing email', () => {
         beforeEach(async () => {
           request.setBody({ username: OLD_USERNAME });
@@ -332,7 +334,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
         });
 
         it('returns 401 with an "Missing email" message', () => {
-          expect(response.status).toHaveBeenCalledWith(400);
+          expect(response.status).toHaveBeenCalledWith(401);
           expect(response.json).toHaveBeenCalledWith({
             error: 'Email is required.'
           });
@@ -346,6 +348,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
         });
       });
 
+      // Client-side checks to require new password if current password is provided
       describe.skip('when given old username, old email, and matching current password and no new password', () => {
         beforeEach(async () => {
           requestBody = {
@@ -357,9 +360,37 @@ describe('user.controller > auth management > updateSettings (email, username, p
         });
 
         it('returns 401 with an "New password is required" message', () => {
-          expect(response.status).toHaveBeenCalledWith(400);
+          expect(response.status).toHaveBeenCalledWith(401);
           expect(response.json).toHaveBeenCalledWith({
             error: 'New password is required.'
+          });
+        });
+
+        it('does not save the user with the new password', () => {
+          expect(saveUser).not.toHaveBeenCalled();
+        });
+        it('does not send a confirmation email to the user', () => {
+          expect(mailerService.send).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when given old username, old email, and non-matching current password and no new password', () => {
+        beforeEach(async () => {
+          testUser.comparePassword = jest.fn().mockResolvedValue(false);
+
+          requestBody = {
+            ...minimumValidRequest,
+            currentPassword: 'not the same password',
+            newPassword: NEW_PASSWORD
+          };
+          request.setBody(requestBody);
+          await updateSettings(request, response, next);
+        });
+
+        it('returns 401 with an "Current password is invalid" message', () => {
+          expect(response.status).toHaveBeenCalledWith(401);
+          expect(response.json).toHaveBeenCalledWith({
+            error: 'Current password is invalid.'
           });
         });
 
