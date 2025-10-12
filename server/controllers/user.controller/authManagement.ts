@@ -21,7 +21,7 @@ import { renderResetPassword, renderEmailConfirmation } from '../../views/mail';
  * - Id: `UserController.resetPasswordInitiate`
  *
  * Description:
- *   - Send an Reset Email email to the registered email account
+ *   - Send an Reset-Password email to the registered email account
  */
 export const resetPasswordInitiate: RequestHandler<
   {},
