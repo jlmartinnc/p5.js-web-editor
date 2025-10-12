@@ -1,6 +1,7 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { User } from '../../../models/user';
 import {
   createUser,
@@ -10,14 +11,16 @@ import {
 } from '../signup';
 
 import { mailerService } from '../../../utils/mail';
+import { DuplicateUserCheckQuery, VerifyEmailQuery } from '../../../types';
+import { createMockUser } from '../__testUtils__';
 
 jest.mock('../../../models/user');
 jest.mock('../../../utils/mail');
 jest.mock('../../../views/mail');
 
 describe('user.controller > signup', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
 
   beforeEach(() => {
@@ -45,7 +48,11 @@ describe('user.controller > signup', () => {
         password: 'password'
       });
 
-      await createUser(request, response, next);
+      await createUser(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findByEmailAndUsername).toHaveBeenCalledWith(
         'existing@example.com',
@@ -66,7 +73,11 @@ describe('user.controller > signup', () => {
         password: 'password'
       });
 
-      await createUser(request, response, next);
+      await createUser(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findByEmailAndUsername).toHaveBeenCalledWith(
         'existing@example.com',
@@ -85,7 +96,11 @@ describe('user.controller > signup', () => {
 
       request.query = { check_type: 'email', email: 'test@example.com' };
 
-      await duplicateUserCheck(request, response, next);
+      await duplicateUserCheck(
+        (request as unknown) as Request<{}, {}, {}, DuplicateUserCheckQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findByEmailOrUsername).toHaveBeenCalledWith(
         'test@example.com',
@@ -101,7 +116,11 @@ describe('user.controller > signup', () => {
 
       request.query = { check_type: 'username', username: 'newuser' };
 
-      await duplicateUserCheck(request, response, next);
+      await duplicateUserCheck(
+        (request as unknown) as Request<{}, {}, {}, DuplicateUserCheckQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.json).toHaveBeenCalledWith({
         exists: false,
@@ -116,7 +135,11 @@ describe('user.controller > signup', () => {
 
       request.query = { check_type: 'username', username: 'existinguser' };
 
-      await duplicateUserCheck(request, response, next);
+      await duplicateUserCheck(
+        (request as unknown) as Request<{}, {}, {}, DuplicateUserCheckQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.json).toHaveBeenCalledWith({
         exists: true,
@@ -132,7 +155,11 @@ describe('user.controller > signup', () => {
 
       request.query = { check_type: 'email', email: 'existing@example.com' };
 
-      await duplicateUserCheck(request, response, next);
+      await duplicateUserCheck(
+        (request as unknown) as Request<{}, {}, {}, DuplicateUserCheckQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.json).toHaveBeenCalledWith({
         exists: true,
@@ -150,7 +177,11 @@ describe('user.controller > signup', () => {
 
       request.query = { t: 'invalidtoken' };
 
-      await verifyEmail(request, response, next);
+      await verifyEmail(
+        (request as unknown) as Request<{}, {}, {}, VerifyEmailQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findOne).toHaveBeenCalledWith({
         verifiedToken: 'invalidtoken',
@@ -182,7 +213,11 @@ describe('user.controller > signup', () => {
 
       request.query = { t: 'validtoken' };
 
-      await verifyEmail(request, response, next);
+      await verifyEmail(
+        (request as unknown) as Request<{}, {}, {}, VerifyEmailQuery>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(mockUser.verified).toBe('verified');
       expect(mockUser.verifiedToken).toBeNull();
@@ -198,10 +233,14 @@ describe('user.controller > signup', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) });
 
-      request.user = { id: 'nonexistentid' };
+      request.user = createMockUser({ id: 'nonexistentid' });
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response, next);
+      await emailVerificationInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findById).toHaveBeenCalledWith('nonexistentid');
       expect(response.status).toHaveBeenCalledWith(404);
@@ -220,10 +259,14 @@ describe('user.controller > signup', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response, next);
+      await emailVerificationInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(409);
       expect(response.json).toHaveBeenCalledWith({
@@ -249,10 +292,14 @@ describe('user.controller > signup', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response, next);
+      await emailVerificationInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findById).toHaveBeenCalledWith('user1');
       expect(mailerService.send).toHaveBeenCalledWith(
@@ -287,10 +334,14 @@ describe('user.controller > signup', () => {
         .fn()
         .mockRejectedValue(new Error('Mailer fail'));
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.headers.host = 'localhost:3000';
 
-      await emailVerificationInitiate(request, response, next);
+      await emailVerificationInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.send).toHaveBeenCalledWith({

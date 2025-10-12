@@ -1,6 +1,7 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { User } from '../../../../models/user';
 import { updateSettings } from '../../authManagement';
 import { saveUser, generateToken } from '../../helpers';
@@ -19,8 +20,8 @@ jest.mock('../../helpers', () => ({
 }));
 
 describe('user.controller > auth management > updateSettings (email, username, password)', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
   let requestBody: UpdateSettingsRequestBody;
   let startingUser: Partial<UserDocument>; // copy of found user that won't be mutated in test
@@ -75,7 +76,7 @@ describe('user.controller > auth management > updateSettings (email, username, p
     (generateToken as jest.Mock).mockResolvedValue(GENERATED_TOKEN);
     (mailerService.send as jest.Mock).mockResolvedValue(true);
 
-    request.user = { id: 'valid-id' };
+    request.user = createMockUser({ id: 'valid-id' });
     request.headers.host = 'localhost:3000';
   });
 
@@ -89,9 +90,13 @@ describe('user.controller > auth management > updateSettings (email, username, p
   describe('if the user is not found', () => {
     beforeEach(async () => {
       (User.findById as jest.Mock).mockResolvedValue(null);
-      request.user = { id: 'nonexistent-id' };
+      request.user = createMockUser({ id: 'nonexistent-id' });
 
-      await updateSettings(request, response, next);
+      await updateSettings(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
     });
 
     it('returns 404 and a user-not-found error', async () => {
@@ -112,7 +117,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
         beforeEach(async () => {
           requestBody = { ...minimumValidRequest };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details exactly once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, { ...startingUser });
@@ -128,7 +137,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
         beforeEach(async () => {
           requestBody = { ...minimumValidRequest, username: NEW_USERNAME };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details exactly once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -146,7 +159,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
         beforeEach(async () => {
           requestBody = { ...minimumValidRequest, email: NEW_EMAIL };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details & verification token once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -171,7 +188,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
         beforeEach(async () => {
           requestBody = { username: NEW_USERNAME, email: NEW_EMAIL };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -201,7 +222,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -224,7 +249,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -248,7 +277,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -279,7 +312,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
         it('saves the user with the correct details once', () => {
           expect(saveUser).toHaveBeenCalledWith(response, {
@@ -308,7 +345,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
       describe.skip('when missing username', () => {
         beforeEach(async () => {
           request.setBody({ email: OLD_EMAIL });
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an "Missing username" message', () => {
@@ -330,7 +371,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
       describe.skip('when missing email', () => {
         beforeEach(async () => {
           request.setBody({ username: OLD_USERNAME });
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an "Missing email" message', () => {
@@ -356,7 +401,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             currentPassword: OLD_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an "New password is required" message', () => {
@@ -384,7 +433,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an "Current password is invalid" message', () => {
@@ -412,7 +465,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an error message', () => {
@@ -437,7 +494,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
             newPassword: NEW_PASSWORD
           };
           request.setBody(requestBody);
-          await updateSettings(request, response, next);
+          await updateSettings(
+            (request as unknown) as Request,
+            (response as unknown) as Response,
+            next
+          );
         });
 
         it('returns 401 with an error message', () => {
@@ -462,7 +523,11 @@ describe('user.controller > auth management > updateSettings (email, username, p
       User.findById = jest.fn().mockRejectedValue('db error');
       requestBody = minimumValidRequest;
       request.setBody(requestBody);
-      await updateSettings(request, response, next);
+      await updateSettings(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
     });
     it('returns a 500 error', () => {
       expect(response.status).toHaveBeenCalledWith(500);

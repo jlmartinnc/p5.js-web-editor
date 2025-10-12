@@ -1,6 +1,7 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { User } from '../../../../models/user';
 import {
   resetPasswordInitiate,
@@ -11,7 +12,10 @@ import { generateToken } from '../../helpers';
 import { createMockUser } from '../../__testUtils__';
 
 import { mailerService } from '../../../../utils/mail';
-import { UserDocument } from '../../../../types';
+import {
+  ResetOrUpdatePasswordRequestParams,
+  UserDocument
+} from '../../../../types';
 
 jest.mock('../../../../models/user');
 jest.mock('../../../../utils/mail');
@@ -21,8 +25,8 @@ jest.mock('../../helpers', () => ({
 }));
 
 describe('user.controller > auth management > password management', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
   let mockToken: string;
   let mockUser: Partial<UserDocument>;
@@ -52,7 +56,11 @@ describe('user.controller > auth management > password management', () => {
     it('calls User.findByEmail with the correct email', async () => {
       User.findByEmail = jest.fn().mockResolvedValue({});
       request.body = { email: 'email@gmail.com' };
-      await resetPasswordInitiate(request, response, next);
+      await resetPasswordInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findByEmail).toHaveBeenCalledWith('email@gmail.com');
     });
@@ -71,7 +79,11 @@ describe('user.controller > auth management > password management', () => {
         request.body = { email: 'test@example.com' };
         request.headers.host = 'localhost:3000';
 
-        await resetPasswordInitiate(request, response, next);
+        await resetPasswordInitiate(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('sets a resetPasswordToken with an expiry of 1h to the user', () => {
         expect(mockUser.resetPasswordToken).toBe(mockToken);
@@ -107,12 +119,20 @@ describe('user.controller > auth management > password management', () => {
         request.headers.host = 'localhost:3000';
       });
       it('does not send the reset password email', async () => {
-        await resetPasswordInitiate(request, response, next);
+        await resetPasswordInitiate(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
 
         expect(mailerService.send).not.toHaveBeenCalledWith();
       });
       it('returns a success message that does not indicate if the user exists, for security purposes', async () => {
-        await resetPasswordInitiate(request, response, next);
+        await resetPasswordInitiate(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
 
         expect(response.json).toHaveBeenCalledWith({
           success: true,
@@ -136,7 +156,11 @@ describe('user.controller > auth management > password management', () => {
       request.body = { email: 'test@example.com' };
       request.headers.host = 'localhost:3000';
 
-      await resetPasswordInitiate(request, response, next);
+      await resetPasswordInitiate(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.json).toHaveBeenCalledWith({
         success: false
@@ -155,7 +179,11 @@ describe('user.controller > auth management > password management', () => {
 
       request.params = { token: 'some-token' };
 
-      await validateResetPasswordToken(request, response, next);
+      await validateResetPasswordToken(
+        (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findOne).toHaveBeenCalledWith({
         resetPasswordToken: 'some-token',
@@ -171,7 +199,11 @@ describe('user.controller > auth management > password management', () => {
 
         request.params = { token: 'invalid-token' };
 
-        await validateResetPasswordToken(request, response, next);
+        await validateResetPasswordToken(
+          (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('returns a 401', () => {
         expect(response.status).toHaveBeenCalledWith(401);
@@ -198,7 +230,11 @@ describe('user.controller > auth management > password management', () => {
 
         request.params = { token: 'valid-token' };
 
-        await validateResetPasswordToken(request, response, next);
+        await validateResetPasswordToken(
+          (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('returns a success response', () => {
         expect(response.json).toHaveBeenCalledWith({ success: true });
@@ -217,7 +253,11 @@ describe('user.controller > auth management > password management', () => {
 
       request.params = { token: 'some-token' };
 
-      await updatePassword(request, response, next);
+      await updatePassword(
+        (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findOne).toHaveBeenCalledWith({
         resetPasswordToken: 'some-token',
@@ -233,7 +273,11 @@ describe('user.controller > auth management > password management', () => {
 
         request.params = { token: 'invalid-token' };
 
-        await updatePassword(request, response, next);
+        await updatePassword(
+          (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('returns a 401', () => {
         expect(response.status).toHaveBeenCalledWith(401);
@@ -272,7 +316,11 @@ describe('user.controller > auth management > password management', () => {
           cb(null);
         });
 
-        await updatePassword(request, response, next);
+        await updatePassword(
+          (request as unknown) as Request<ResetOrUpdatePasswordRequestParams>,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('calls user.save with the updated password and removes the reset password token', () => {
         expect(mockUser.password).toBe('newpassword');
