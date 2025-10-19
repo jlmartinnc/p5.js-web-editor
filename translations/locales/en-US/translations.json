@@ -27,7 +27,6 @@
       "Title": "Help",
       "KeyboardShortcuts": "Keyboard Shortcuts",
       "Reference": "Reference",
-      "About": "About",
       "ReportBug": "Report a Bug",
       "ChatOnDiscord": "Chat On Discord",
       "PostOnTheForum": "Post on the Forum"
@@ -135,7 +134,8 @@
       "Report": "Report broken or incorrect behavior with the p5.js Editor.",
       "Forum": "Ask questions, share sketches, and get help from the p5.js community.",
       "Discord": "Chat with the p5.js community and get quick help."
-    }
+    },
+    "Contact": "Contact Us"
   },
   "Toast": {
     "OpenedNewSketch": "Opened new sketch.",
