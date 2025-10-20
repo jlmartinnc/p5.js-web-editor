@@ -2,18 +2,19 @@ import { last } from 'lodash';
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 
 import { User } from '../../../models/user';
 import { createApiKey, removeApiKey } from '../apiKey';
-import type { ApiKeyDocument } from '../../../types';
+import type { ApiKeyDocument, RemoveApiKeyRequestParams } from '../../../types';
 import { createMockUser } from '../__testUtils__';
 
 jest.mock('../../../models/user');
 
 describe('user.controller > api key', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
 
   beforeEach(() => {
@@ -34,7 +35,11 @@ describe('user.controller > api key', () => {
 
       User.findById = jest.fn().mockResolvedValue(null);
 
-      await createApiKey(request, response, next);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -49,7 +54,11 @@ describe('user.controller > api key', () => {
       const user = new User();
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await createApiKey(request, response, next);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.json).toHaveBeenCalledWith({
@@ -67,7 +76,11 @@ describe('user.controller > api key', () => {
       User.findById = jest.fn().mockResolvedValue(user);
       user.save = jest.fn();
 
-      await createApiKey(request, response, next);
+      await createApiKey(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       const lastKey = last(user.apiKeys);
 
@@ -89,7 +102,11 @@ describe('user.controller > api key', () => {
 
       User.findById = jest.fn().mockResolvedValue(null);
 
-      await removeApiKey(request, response, next);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -105,7 +122,11 @@ describe('user.controller > api key', () => {
 
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await removeApiKey(request, response, next);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.json).toHaveBeenCalledWith({
@@ -135,7 +156,11 @@ describe('user.controller > api key', () => {
 
       User.findById = jest.fn().mockResolvedValue(user);
 
-      await removeApiKey(request, response, next);
+      await removeApiKey(
+        (request as unknown) as Request<RemoveApiKeyRequestParams>,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(user.apiKeys.pull).toHaveBeenCalledWith({ _id: 'id1' });
       expect(user.save).toHaveBeenCalled();

@@ -1,6 +1,7 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { unlinkGithub, unlinkGoogle } from '../../authManagement';
 import { saveUser } from '../../helpers';
 import { createMockUser } from '../../__testUtils__';
@@ -12,8 +13,8 @@ jest.mock('../../helpers', () => ({
 jest.mock('../../../../utils/mail');
 
 describe('user.controller > auth management > 3rd party auth', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
 
   beforeEach(() => {
@@ -31,7 +32,11 @@ describe('user.controller > auth management > 3rd party auth', () => {
   describe('unlinkGithub', () => {
     describe('and when there is no user in the request', () => {
       beforeEach(async () => {
-        await unlinkGithub(request, response, next);
+        await unlinkGithub(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('does not call saveUser', () => {
         expect(saveUser).not.toHaveBeenCalled();
@@ -52,7 +57,11 @@ describe('user.controller > auth management > 3rd party auth', () => {
 
       beforeEach(async () => {
         request.user = user;
-        await unlinkGithub(request, response, next);
+        await unlinkGithub(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('removes the users github property', () => {
         expect(user.github).toBeUndefined();
@@ -69,7 +78,11 @@ describe('user.controller > auth management > 3rd party auth', () => {
   describe('unlinkGoogle', () => {
     describe('and when there is no user in the request', () => {
       beforeEach(async () => {
-        await unlinkGoogle(request, response, next);
+        await unlinkGoogle(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('does not call saveUser', () => {
         expect(saveUser).not.toHaveBeenCalled();
@@ -90,7 +103,11 @@ describe('user.controller > auth management > 3rd party auth', () => {
 
       beforeEach(async () => {
         request.user = user;
-        await unlinkGoogle(request, response, next);
+        await unlinkGoogle(
+          (request as unknown) as Request,
+          (response as unknown) as Response,
+          next
+        );
       });
       it('removes the users google property', () => {
         expect(user.google).toBeUndefined();

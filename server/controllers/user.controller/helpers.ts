@@ -8,9 +8,7 @@ import { PublicUser, UserDocument } from '../../types';
  * @param user
  * @returns Sanitised user
  */
-export function userResponse(
-  user: PublicUser & Record<string, any>
-): PublicUser {
+export function userResponse(user: PublicUser | UserDocument): PublicUser {
   return {
     email: user.email,
     username: user.username,

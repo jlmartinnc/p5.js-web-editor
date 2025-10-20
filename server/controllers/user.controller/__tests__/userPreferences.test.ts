@@ -1,6 +1,7 @@
 import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { NextFunction as MockNext } from 'jest-express/lib/next';
+import { Request, Response } from 'express';
 import { User } from '../../../models/user';
 import { updatePreferences, updateCookieConsent } from '../userPreferences';
 import { createMockUser, mockUserPreferences } from '../__testUtils__';
@@ -15,8 +16,8 @@ jest.mock('../../../models/user');
 const mockBaseUser = createMockUser();
 
 describe('user.controller > user preferences', () => {
-  let request: any;
-  let response: any;
+  let request: MockRequest;
+  let response: MockResponse;
   let next: MockNext;
   let mockUser: PublicUser & Record<string, any>;
 
@@ -43,12 +44,16 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.body = {
         preferences: { theme: AppThemeOptions.DARK, notifications: true }
       };
 
-      await updatePreferences(request, response, next);
+      await updatePreferences(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       // Check that preferences were merged correctly
       expect(mockUser.preferences).toEqual({
@@ -64,9 +69,13 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) });
 
-      request.user = { id: 'nonexistentid' };
+      request.user = createMockUser({ id: 'nonexistentid' });
 
-      await updatePreferences(request, response, next);
+      await updatePreferences(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findById).toHaveBeenCalledWith('nonexistentid');
       expect(response.status).toHaveBeenCalledWith(404);
@@ -82,10 +91,14 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.body = { preferences: { theme: 'dark' } };
 
-      await updatePreferences(request, response, next);
+      await updatePreferences(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledWith({ error: expect.any(Error) });
@@ -102,10 +115,14 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.body = { cookieConsent: CookieConsentOptions.ESSENTIAL };
 
-      await updateCookieConsent(request, response, next);
+      await updateCookieConsent(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findById).toHaveBeenCalledWith('user1');
       expect(mockUser.cookieConsent).toBe(CookieConsentOptions.ESSENTIAL);
@@ -121,10 +138,14 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) });
 
-      request.user = { id: 'nonexistentid' };
+      request.user = createMockUser({ id: 'nonexistentid' });
       request.body = { cookieConsent: true };
 
-      await updateCookieConsent(request, response, next);
+      await updateCookieConsent(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(User.findById).toHaveBeenCalledWith('nonexistentid');
       expect(response.status).toHaveBeenCalledWith(404);
@@ -141,10 +162,14 @@ describe('user.controller > user preferences', () => {
         .fn()
         .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockUser) });
 
-      request.user = { id: 'user1' };
+      request.user = createMockUser({ id: 'user1' });
       request.body = { cookieConsent: true };
 
-      await updateCookieConsent(request, response, next);
+      await updateCookieConsent(
+        (request as unknown) as Request,
+        (response as unknown) as Response,
+        next
+      );
 
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledWith({ error: expect.any(Error) });

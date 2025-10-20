@@ -21,7 +21,7 @@ import { renderResetPassword, renderEmailConfirmation } from '../../views/mail';
  * - Id: `UserController.resetPasswordInitiate`
  *
  * Description:
- *   - Send an Reset Email email to the registered email account
+ *   - Send an Reset-Password email to the registered email account
  */
 export const resetPasswordInitiate: RequestHandler<
   {},
@@ -141,7 +141,8 @@ export const updatePassword: RequestHandler<
  * - Id: `UserController.updateSettings`
  *
  * Description:
- *   - Used to update the user's username, email, or password while authenticated
+ *   - Used to update the user's username, email, or password on the `/account` page while authenticated
+ *   - Currently the client only shows the `currentPassword` and `newPassword` fields if no social logins (github & google) are enabled
  */
 export const updateSettings: RequestHandler<
   {},
