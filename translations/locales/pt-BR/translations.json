@@ -219,7 +219,7 @@
     "PreloadAddon": "Biblioteca adicional de Compatibilidade p5.js 1.x — Pré-carregamento",
     "ShapesAddon": "Biblioteca adicional de Compatibilidade p5.js 1.x — Formas",
     "DataAddon": "Biblioteca adicional de Compatibilidade p5.js 1.x — Estruturas de Dados",
-    "SoundReference": "Ver a referência para p5.sound compatível com p5.js $VERSION",
+    "SoundReference": "Ver a referência para p5.sound compatível com p5.js {{version}}",
     "CopyToClipboardSuccess": "Copiado para a área de transferência!",
     "CopyToClipboardFailure": "Não conseguimos copiar o texto, tente selecioná-lo e copiá-lo manualmente."
   },
