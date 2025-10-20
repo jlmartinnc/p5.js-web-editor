@@ -231,7 +231,7 @@
     "DataAddon": "p5.js 1.x Compatibility Add-on Library — Data & Events",
     "AddonOnARIA": "on",
     "AddonOffARIA": "off",
-    "SoundReference": "View the reference for p5.sound compatible with p5.js $VERSION",
+    "SoundReference": "View the reference for p5.sound compatible with p5.js {{version}}",
     "CopyToClipboardSuccess": "Copied to clipboard!",
     "CopyToClipboardFailure": "We weren't able to copy the text, try selecting it and copying it manually."
   },
