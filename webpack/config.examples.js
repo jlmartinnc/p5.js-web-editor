@@ -52,7 +52,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.[jt]s$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
           options: {
@@ -82,7 +82,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.[jt]s$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
           options: {
