@@ -59,9 +59,15 @@ export const mockBaseUserFull: Omit<User, 'createdAt'> = {
 export function createMockUser(
   overrides: Partial<UserDocument> = {},
   unSanitised: boolean = false
-): (PublicUser | UserDocument) & Record<string, any> {
+): PublicUser | UserDocument {
+  if (unSanitised) {
+    return {
+      ...mockBaseUserFull,
+      ...overrides
+    } as UserDocument;
+  }
   return {
-    ...(unSanitised ? mockBaseUserFull : mockBaseUserSanitised),
+    ...mockBaseUserSanitised,
     ...overrides
-  };
+  } as PublicUser;
 }
