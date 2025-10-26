@@ -9,7 +9,7 @@ import FullView from './modules/IDE/pages/FullView';
 import { About } from './modules/About/pages/About';
 import { CodeOfConduct } from './modules/Legal/pages/CodeOfConduct';
 import { PrivacyPolicy } from './modules/Legal/pages/PrivacyPolicy';
-import TermsOfUse from './modules/Legal/pages/TermsOfUse';
+import { TermsOfUse } from './modules/Legal/pages/TermsOfUse';
 import LoginView from './modules/User/pages/LoginView';
 import SignupView from './modules/User/pages/SignupView';
 import ResetPasswordView from './modules/User/pages/ResetPasswordView';
