@@ -1,6 +1,14 @@
+import type { CookieConsentOptions, PublicUser } from '../../../common/types';
 import * as ActionTypes from '../../constants';
 
-const user = (state = { authenticated: false }, action) => {
+// User Action:
+export type UserAction = {
+  user?: PublicUser;
+  cookieConsent?: CookieConsentOptions;
+  type: any;
+};
+
+export const user = (state = { authenticated: false }, action: UserAction) => {
   switch (action.type) {
     case ActionTypes.AUTH_USER:
       return {
@@ -47,5 +55,3 @@ const user = (state = { authenticated: false }, action) => {
       return state;
   }
 };
-
-export default user;
