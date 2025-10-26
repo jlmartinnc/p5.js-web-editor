@@ -12,11 +12,11 @@ export interface FormLike {
  * @param language
  */
 export const useSyncFormTranslations = (
-  formRef: MutableRefObject<FormLike>,
+  formRef: MutableRefObject<FormLike | null>,
   language: string
 ) => {
   useEffect(() => {
-    const form = formRef.current;
+    const form = formRef?.current;
     if (!form) return;
 
     const { values } = form.getState();
