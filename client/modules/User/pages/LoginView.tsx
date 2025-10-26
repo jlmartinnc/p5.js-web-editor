@@ -7,7 +7,7 @@ import SocialAuthButton from '../components/SocialAuthButton';
 import Nav from '../../IDE/components/Header/Nav';
 import { RootPage } from '../../../components/RootPage';
 
-function LoginView() {
+export function LoginView() {
   const { t } = useTranslation();
   return (
     <RootPage>
@@ -42,5 +42,3 @@ function LoginView() {
     </RootPage>
   );
 }
-
-export default LoginView;
