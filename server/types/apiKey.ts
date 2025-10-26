@@ -8,6 +8,7 @@ export interface IApiKey extends VirtualId, MongooseTimestamps {
   label: string;
   lastUsedAt?: Date;
   hashedKey: string;
+  token?: string;
 }
 
 /** Mongoose document object for API Key */
@@ -23,7 +24,10 @@ export interface ApiKeyDocument
  * and can be exposed to the client
  */
 export interface SanitisedApiKey
-  extends Pick<ApiKeyDocument, 'id' | 'label' | 'lastUsedAt' | 'createdAt'> {}
+  extends Pick<
+    ApiKeyDocument,
+    'id' | 'label' | 'lastUsedAt' | 'createdAt' | 'token'
+  > {}
 
 /** Mongoose model for API Key */
 export interface ApiKeyModel extends Model<ApiKeyDocument> {}
