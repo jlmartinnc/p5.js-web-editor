@@ -11,6 +11,12 @@ export type UserAction = {
 export const user = (
   state: Partial<PublicUser> & {
     authenticated: boolean;
+    // TODO: use state of user from server as single source of truth:
+    // Currently using redux state below, but server also has similar info.
+    resetPasswordInitiate?: boolean;
+    resetPasswordInvalid?: boolean;
+    emailVerificationInitiate?: boolean;
+    emailVerificationTokenState?: boolean;
   } = {
     authenticated: false
   },
