@@ -9,7 +9,7 @@ import { RootPage } from '../../../components/RootPage';
 import { remSize } from '../../../theme';
 import Loader from '../../App/components/loader';
 import Nav from '../../IDE/components/Header/Nav';
-import PolicyContainer from '../components/PolicyContainer';
+import { PolicyContainer } from '../components/PolicyContainer';
 
 const StyledTabList = styled.nav`
   display: flex;
