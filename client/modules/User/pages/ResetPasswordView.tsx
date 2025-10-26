@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import ResetPasswordForm from '../components/ResetPasswordForm';
+import { ResetPasswordForm } from '../components/ResetPasswordForm';
 import { RootPage } from '../../../components/RootPage';
 import Nav from '../../IDE/components/Header/Nav';
 import { RootState } from '../../../reducers';
