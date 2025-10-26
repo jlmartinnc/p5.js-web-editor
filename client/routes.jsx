@@ -7,7 +7,7 @@ import App from './modules/App/App';
 import IDEView from './modules/IDE/pages/IDEView';
 import FullView from './modules/IDE/pages/FullView';
 import { About } from './modules/About/pages/About';
-import CodeOfConduct from './modules/Legal/pages/CodeOfConduct';
+import { CodeOfConduct } from './modules/Legal/pages/CodeOfConduct';
 import PrivacyPolicy from './modules/Legal/pages/PrivacyPolicy';
 import TermsOfUse from './modules/Legal/pages/TermsOfUse';
 import LoginView from './modules/User/pages/LoginView';
