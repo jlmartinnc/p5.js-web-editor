@@ -6,7 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { parse } from 'query-string';
 import AccountForm from '../components/AccountForm';
-import { SocialAuthButton } from '../components/SocialAuthButton';
+import {
+  SocialAuthButton,
+  SocialAuthServices
+} from '../components/SocialAuthButton';
 import APIKeyForm from '../components/APIKeyForm';
 import Nav from '../../IDE/components/Header/Nav';
 import ErrorModal from '../../IDE/components/ErrorModal';
@@ -28,12 +31,12 @@ function SocialLoginPanel() {
       </p>
       <div className="account__social-stack">
         <SocialAuthButton
-          service={SocialAuthButton.services.github}
+          service={SocialAuthServices.github}
           linkStyle
           isConnected={isGithub}
         />
         <SocialAuthButton
-          service={SocialAuthButton.services.google}
+          service={SocialAuthServices.google}
           linkStyle
           isConnected={isGoogle}
         />
