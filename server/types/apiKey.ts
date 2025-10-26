@@ -15,8 +15,8 @@ export interface IApiKey extends VirtualId, MongooseTimestamps {
 export interface ApiKeyDocument
   extends IApiKey,
     Omit<Document<Types.ObjectId>, 'id'> {
-  toJSON(options?: any): SanitisedApiKey;
-  toObject(options?: any): SanitisedApiKey;
+  toJSON(options?: any): IApiKey;
+  toObject(options?: any): IApiKey;
 }
 
 /**
