@@ -8,13 +8,15 @@ import NewPasswordForm from '../components/NewPasswordForm';
 import { validateResetPasswordToken } from '../actions';
 import Nav from '../../IDE/components/Header/Nav';
 import { RootPage } from '../../../components/RootPage';
+import { RootState } from '../../../reducers';
 
-function NewPasswordView() {
+export function NewPasswordView() {
   const { t } = useTranslation();
-  const params = useParams();
+  // eslint-disable-next-line camelcase
+  const params = useParams<{ reset_password_token: string }>();
   const resetPasswordToken = params.reset_password_token;
   const resetPasswordInvalid = useSelector(
-    (state) => state.user.resetPasswordInvalid
+    (state: RootState) => state.user.resetPasswordInvalid
   );
   const dispatch = useDispatch();
 
@@ -48,5 +50,3 @@ function NewPasswordView() {
     </RootPage>
   );
 }
-
-export default NewPasswordView;
