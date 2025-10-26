@@ -1,4 +1,8 @@
-export const ContactSectionLinks = [
+export interface ContactSectionLink {
+  label: string;
+  href: string;
+}
+export const ContactSectionLinks: ContactSectionLink[] = [
   {
     label: 'About.Github',
     href: 'https://github.com/processing/p5.js-web-editor'
@@ -22,6 +26,15 @@ export const ContactSectionLinks = [
   }
 ];
 
+export interface AboutSectionInfoItem {
+  url: string;
+  title: string;
+  description: string;
+}
+export interface AboutSectionInfoSections {
+  header: string;
+  items: AboutSectionInfoItem[];
+}
 export const AboutSectionInfo = [
   {
     header: 'About.NewP5',
