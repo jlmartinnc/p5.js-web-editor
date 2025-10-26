@@ -1,18 +1,19 @@
 import { useEffect, MutableRefObject } from 'react';
+import type { FormApi } from 'final-form';
 
-export interface FormLike {
-  getState(): { values: Record<string, unknown> };
-  reset(): void;
-  change(field: string, value: unknown): void;
-}
+// Generic FormLike that mirrors FormApi for any form value type
+export type FormLike<FormValues = Record<string, unknown>> = Pick<
+  FormApi<FormValues>,
+  'getState' | 'reset' | 'change'
+>;
 
 /**
  * This hook ensures that form values are preserved when the language changes.
  * @param formRef
  * @param language
  */
-export const useSyncFormTranslations = (
-  formRef: MutableRefObject<FormLike | null>,
+export const useSyncFormTranslations = <FormValues extends Record<string, any>>(
+  formRef: MutableRefObject<FormLike<FormValues> | null>,
   language: string
 ) => {
   useEffect(() => {
@@ -22,9 +23,10 @@ export const useSyncFormTranslations = (
     const { values } = form.getState();
     form.reset();
 
-    Object.keys(values).forEach((field) => {
-      if (values[field]) {
-        form.change(field, values[field]);
+    (Object.keys(values) as (keyof FormValues)[]).forEach((field) => {
+      const value = values[field];
+      if (value !== undefined && value !== null && value !== '') {
+        form.change(field, value);
       }
     });
   }, [language]);

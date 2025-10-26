@@ -20,7 +20,7 @@ export function LoginForm() {
     return dispatch(validateAndLoginUser(formProps));
   }
   const [showPassword, setShowPassword] = useState(false);
-  const formRef = useRef<FormLike | null>(null);
+  const formRef = useRef<FormLike<LoginFormType> | null>(null);
 
   const handleVisibility = () => {
     setShowPassword(!showPassword);
