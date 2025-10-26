@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components/LoginForm';
 import {
   SocialAuthButton,
   SocialAuthServices

@@ -8,7 +8,7 @@ import { validateLogin } from '../../../utils/reduxFormUtils';
 import { validateAndLoginUser } from '../actions';
 import { useSyncFormTranslations } from '../../../common/useSyncFormTranslations';
 
-function LoginForm() {
+export function LoginForm() {
   const { t, i18n } = useTranslation();
 
   const dispatch = useDispatch();
@@ -114,5 +114,3 @@ function LoginForm() {
     </Form>
   );
 }
-
-export default LoginForm;
