@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import type { TFunction } from 'react-i18next';
 import {
   AboutPageContent,
   Intro,
@@ -27,8 +28,16 @@ import packageData from '../../../../package.json';
 import HeartIcon from '../../../images/heart.svg';
 import AsteriskIcon from '../../../images/p5-asterisk.svg';
 import LogoIcon from '../../../images/p5js-square-logo.svg';
+import type { AboutSectionInfoSection } from '../statics/aboutData';
+import { RootState } from '../../../reducers';
 
-const AboutSection = ({ section, t }) => (
+const AboutSection = ({
+  section,
+  t
+}: {
+  section: AboutSectionInfoSection;
+  t: TFunction<'translation'>;
+}) => (
   <Section>
     <h2>{t(section.header)}</h2>
     <SectionContainer>
@@ -47,11 +56,15 @@ const AboutSection = ({ section, t }) => (
   </Section>
 );
 
-const About = () => {
+export const About = () => {
   const { t } = useTranslation();
 
-  const p5version = useSelector((state) => {
-    const index = state.files.find((file) => file.name === 'index.html');
+  const p5version = useSelector((state: RootState) => {
+    const index = state.files.find(
+      (file: {
+        name: string /** TODO: update once files types are defined in server */;
+      }) => file.name === 'index.html'
+    );
     return index?.content.match(/\/p5@([\d.]+)\//)?.[1];
   });
 
@@ -91,7 +104,11 @@ const About = () => {
         </Intro>
 
         {AboutSectionInfo.map((section) => (
-          <AboutSection key={t(section.header)} section={section} t={t} />
+          <AboutSection
+            key={t(section.header) as string}
+            section={section}
+            t={t}
+          />
         ))}
 
         <Contact>
@@ -166,5 +183,3 @@ AboutSection.propTypes = {
   }).isRequired,
   t: PropTypes.func.isRequired
 };
-
-export default About;

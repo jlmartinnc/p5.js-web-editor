@@ -31,11 +31,11 @@ export interface AboutSectionInfoItem {
   title: string;
   description: string;
 }
-export interface AboutSectionInfoSections {
+export interface AboutSectionInfoSection {
   header: string;
   items: AboutSectionInfoItem[];
 }
-export const AboutSectionInfo = [
+export const AboutSectionInfo: AboutSectionInfoSection[] = [
   {
     header: 'About.NewP5',
     items: [
