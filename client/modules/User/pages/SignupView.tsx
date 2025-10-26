@@ -10,7 +10,7 @@ import {
 import Nav from '../../IDE/components/Header/Nav';
 import { RootPage } from '../../../components/RootPage';
 
-function SignupView() {
+export function SignupView() {
   const { t } = useTranslation();
   return (
     <RootPage>
@@ -49,5 +49,3 @@ function SignupView() {
     </RootPage>
   );
 }
-
-export default SignupView;
