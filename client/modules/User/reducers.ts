@@ -8,7 +8,14 @@ export type UserAction = {
   type: any;
 };
 
-export const user = (state = { authenticated: false }, action: UserAction) => {
+export const user = (
+  state: Partial<PublicUser> & {
+    authenticated: boolean;
+  } = {
+    authenticated: false
+  },
+  action: UserAction
+) => {
   switch (action.type) {
     case ActionTypes.AUTH_USER:
       return {
