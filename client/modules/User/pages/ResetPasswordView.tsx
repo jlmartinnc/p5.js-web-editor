@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next';
 import ResetPasswordForm from '../components/ResetPasswordForm';
 import { RootPage } from '../../../components/RootPage';
 import Nav from '../../IDE/components/Header/Nav';
+import { RootState } from '../../../reducers';
 
-function ResetPasswordView() {
+export function ResetPasswordView() {
   const { t } = useTranslation();
   const resetPasswordInitiate = useSelector(
-    (state) => state.user.resetPasswordInitiate
+    (state: RootState) => state.user.resetPasswordInitiate
   );
   const resetPasswordClass = classNames({
     'reset-password': true,
@@ -48,5 +49,3 @@ function ResetPasswordView() {
     </RootPage>
   );
 }
-
-export default ResetPasswordView;
