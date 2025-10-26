@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Legal from './Legal';
+import { Legal } from './Legal';
 
 function PrivacyPolicy() {
   const { t } = useTranslation();

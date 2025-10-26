@@ -21,8 +21,13 @@ const StyledTabList = styled.nav`
     gap: ${remSize(19)};
   }
 `;
-
-function Legal({ policyFile, title }) {
+export interface LegalProps {
+  /** File name of policy */
+  policyFile: string;
+  /** Title of policy */
+  title: string;
+}
+export function Legal({ policyFile, title }: LegalProps) {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [policy, setPolicy] = useState('');
@@ -67,5 +72,3 @@ Legal.propTypes = {
    */
   policyFile: PropTypes.string.isRequired
 };
-
-export default Legal;
