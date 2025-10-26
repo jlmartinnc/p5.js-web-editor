@@ -13,7 +13,7 @@ import TermsOfUse from './modules/Legal/pages/TermsOfUse';
 import LoginView from './modules/User/pages/LoginView';
 import SignupView from './modules/User/pages/SignupView';
 import ResetPasswordView from './modules/User/pages/ResetPasswordView';
-import EmailVerificationView from './modules/User/pages/EmailVerificationView';
+import { EmailVerificationView } from './modules/User/pages/EmailVerificationView';
 import NewPasswordView from './modules/User/pages/NewPasswordView';
 import AccountView from './modules/User/pages/AccountView';
 import CollectionView from './modules/User/pages/CollectionView';
