@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SocialAuthButton from './SocialAuthButton';
+import { SocialAuthButton } from './SocialAuthButton';
 
 export default {
   title: 'User/components/SocialAuthButton',

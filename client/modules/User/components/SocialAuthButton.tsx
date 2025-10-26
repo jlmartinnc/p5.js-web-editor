@@ -34,7 +34,7 @@ const StyledButton = styled(Button)`
   width: ${remSize(300)};
 `;
 
-function SocialAuthButton({ service, linkStyle, isConnected }) {
+export function SocialAuthButton({ service, linkStyle, isConnected }) {
   const { t } = useTranslation();
 
   const ServiceIcon = icons[service];
@@ -94,5 +94,3 @@ SocialAuthButton.defaultProps = {
   linkStyle: false,
   isConnected: false
 };
-
-export default SocialAuthButton;

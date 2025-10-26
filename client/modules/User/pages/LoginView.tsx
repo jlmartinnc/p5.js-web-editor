@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import LoginForm from '../components/LoginForm';
-import SocialAuthButton from '../components/SocialAuthButton';
+import { SocialAuthButton } from '../components/SocialAuthButton';
 import Nav from '../../IDE/components/Header/Nav';
 import { RootPage } from '../../../components/RootPage';
 
