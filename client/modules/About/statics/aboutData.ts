@@ -1,7 +1,8 @@
-export interface ContactSectionLink {
-  label: string;
-  href: string;
-}
+import type {
+  ContactSectionLink,
+  AboutSectionInfoSection
+} from '../pages/About';
+
 export const ContactSectionLinks: ContactSectionLink[] = [
   {
     label: 'About.Github',
@@ -26,15 +27,6 @@ export const ContactSectionLinks: ContactSectionLink[] = [
   }
 ];
 
-export interface AboutSectionInfoItem {
-  url: string;
-  title: string;
-  description: string;
-}
-export interface AboutSectionInfoSection {
-  header: string;
-  items: AboutSectionInfoItem[];
-}
 export const AboutSectionInfo: AboutSectionInfoSection[] = [
   {
     header: 'About.NewP5',

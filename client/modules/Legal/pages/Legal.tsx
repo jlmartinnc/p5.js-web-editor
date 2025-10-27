@@ -1,5 +1,4 @@
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +21,14 @@ const StyledTabList = styled.nav`
   }
 `;
 export interface LegalProps {
-  /** File name of policy */
+  /**
+   * Path of the markdown '.md' file, relative to the /public directory.
+   */
   policyFile: string;
-  /** Title of policy */
+  /**
+   * Used in the HTML <title> tag.
+   * TODO: pass this to the Nav to use as the mobile title.
+   */
   title: string;
 }
 export function Legal({ policyFile, title }: LegalProps) {
@@ -60,15 +64,3 @@ export function Legal({ policyFile, title }: LegalProps) {
     </RootPage>
   );
 }
-
-Legal.propTypes = {
-  /**
-   * Used in the HTML <title> tag.
-   * TODO: pass this to the Nav to use as the mobile title.
-   */
-  title: PropTypes.string.isRequired,
-  /**
-   * Path of the markdown '.md' file, relative to the /public directory.
-   */
-  policyFile: PropTypes.string.isRequired
-};
