@@ -22,7 +22,7 @@ export interface IUser extends VirtualId, MongooseTimestamps {
   tokens: { kind: string }[];
   apiKeys: Types.DocumentArray<ApiKeyDocument>;
   preferences: UserPreferences;
-  totalSize?: number;
+  totalSize: number;
   cookieConsent: CookieConsentOptions;
   banned: boolean;
   lastLoginTimestamp?: Date;
