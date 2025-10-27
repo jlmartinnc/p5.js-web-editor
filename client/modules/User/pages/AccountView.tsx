@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { parse } from 'query-string';
-import AccountForm from '../components/AccountForm';
+import { AccountForm } from '../components/AccountForm';
 import {
   SocialAuthButton,
   SocialAuthServices
