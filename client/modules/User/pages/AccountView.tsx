@@ -10,7 +10,7 @@ import {
   SocialAuthButton,
   SocialAuthServices
 } from '../components/SocialAuthButton';
-import APIKeyForm from '../components/APIKeyForm';
+import { APIKeyForm } from '../components/APIKeyForm';
 import Nav from '../../IDE/components/Header/Nav';
 import ErrorModal from '../../IDE/components/ErrorModal';
 import { hideErrorModal } from '../../IDE/actions/ide';

@@ -8,6 +8,8 @@ import CopyableInput from '../../IDE/components/CopyableInput';
 import { createApiKey, removeApiKey } from '../actions';
 
 import APIKeyList from './APIKeyList';
+import { RootState } from '../../../reducers';
+import { SanitisedApiKey } from '../../../../common/types';
 
 export const APIKeyPropType = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -17,20 +19,20 @@ export const APIKeyPropType = PropTypes.shape({
   lastUsedAt: PropTypes.string
 });
 
-const APIKeyForm = () => {
+export const APIKeyForm = () => {
   const { t } = useTranslation();
-  const apiKeys = useSelector((state) => state.user.apiKeys);
+  const apiKeys = useSelector((state: RootState) => state.user.apiKeys) ?? [];
   const dispatch = useDispatch();
 
   const [keyLabel, setKeyLabel] = useState('');
 
-  const addKey = (event) => {
+  const addKey = (event: React.FormEvent) => {
     event.preventDefault();
     dispatch(createApiKey(keyLabel));
     setKeyLabel('');
   };
 
-  const removeKey = (key) => {
+  const removeKey = (key: SanitisedApiKey) => {
     const message = t('APIKeyForm.ConfirmDelete', {
       key_label: key.label
     });
@@ -94,7 +96,7 @@ const APIKeyForm = () => {
             </p>
             <CopyableInput
               label={keyWithToken.label}
-              value={keyWithToken.token}
+              value={keyWithToken.token ?? ''}
             />
           </div>
         )}
@@ -109,5 +111,3 @@ const APIKeyForm = () => {
     </div>
   );
 };
-
-export default APIKeyForm;
