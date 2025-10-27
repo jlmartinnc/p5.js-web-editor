@@ -7,11 +7,11 @@ import { DropdownArrowIcon } from '../../../common/icons';
 import { useModalClose } from '../../../common/useModalClose';
 import CopyableInput from '../../IDE/components/CopyableInput';
 
-const ShareURL = ({ value }) => {
+export const ShareURL = ({ value }: { value: string }) => {
   const [showURL, setShowURL] = useState(false);
   const { t } = useTranslation();
   const close = useCallback(() => setShowURL(false), [setShowURL]);
-  const ref = useModalClose(close);
+  const ref = useModalClose<HTMLDivElement>(close);
 
   return (
     <div className="collection-share" ref={ref}>
@@ -29,9 +29,3 @@ const ShareURL = ({ value }) => {
     </div>
   );
 };
-
-ShareURL.propTypes = {
-  value: PropTypes.string.isRequired
-};
-
-export default ShareURL;
