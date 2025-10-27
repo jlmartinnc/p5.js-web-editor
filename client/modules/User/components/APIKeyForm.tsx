@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,18 +5,9 @@ import { Button, ButtonTypes } from '../../../common/Button';
 import { PlusIcon } from '../../../common/icons';
 import CopyableInput from '../../IDE/components/CopyableInput';
 import { createApiKey, removeApiKey } from '../actions';
-
-import APIKeyList from './APIKeyList';
+import { APIKeyList } from './APIKeyList';
 import { RootState } from '../../../reducers';
 import { SanitisedApiKey } from '../../../../common/types';
-
-export const APIKeyPropType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  token: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  createdAt: PropTypes.string.isRequired,
-  lastUsedAt: PropTypes.string
-});
 
 export const APIKeyForm = () => {
   const { t } = useTranslation();
