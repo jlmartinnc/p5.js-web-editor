@@ -16,7 +16,7 @@ export const user = (
     resetPasswordInitiate?: boolean;
     resetPasswordInvalid?: boolean;
     emailVerificationInitiate?: boolean;
-    emailVerificationTokenState?: boolean;
+    emailVerificationTokenState?: 'checking' | 'verified' | 'invalid';
   } = {
     authenticated: false
   },
