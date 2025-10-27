@@ -23,7 +23,7 @@ import type {
   UserPreferences,
   VerifyEmailQuery
 } from '../../../common/types';
-import { RootState } from '../../reducers';
+import type { GetRootState, RootState } from '../../reducers';
 
 export function authError(error: Error) {
   return {
@@ -76,7 +76,7 @@ export function validateAndLoginUser(formProps: {
 }) {
   return (
     dispatch: ThunkDispatch<RootState, unknown, AnyAction>,
-    getState: () => RootState
+    getState: GetRootState
   ) => {
     const state = getState();
     const { previousPath } = state.ide;
@@ -115,7 +115,7 @@ export function validateAndLoginUser(formProps: {
  *   - Create a new user
  */
 export function validateAndSignUpUser(formValues: CreateUserRequestBody) {
-  return (dispatch: Dispatch, getState: () => RootState) => {
+  return (dispatch: Dispatch, getState: GetRootState) => {
     const state = getState();
     const { previousPath } = state.ide;
     return new Promise<void | PublicUserOrError>((resolve) => {
@@ -161,7 +161,7 @@ export function getUser() {
 }
 
 export function validateSession() {
-  return async (dispatch: Dispatch, getState: () => RootState) => {
+  return async (dispatch: Dispatch, getState: GetRootState) => {
     try {
       const response = await apiClient.get('/session');
       const state = getState();
