@@ -503,12 +503,43 @@ export const updatePreferences: RequestHandler<
 
 ## Next Step Issues:
 
-- Migration for the rest of the repo
+<details>
+  <summary>Migrate the rest of the repo to Typescript</summary>
 
-  - Prioritise `/server` if possible
-  - Testing is mandatory for `/server` migration
-  - For `/client` files, if the component does not hit the `/server` api, it is ready for migration.
-  - If it does it is recommended to wait for the relevant `/server` system to be migrated first (eg. Projects, Collections)
+- [Issue Link - TODO]()
 
-- E2e test to cover core user flows
-- Open API
+- Prioritise `/server` if possible
+- Testing is mandatory for `/server` migration
+- For `/client` files, if the component does not hit the `/server` api, it is ready for migration.
+- If it does it is recommended to wait for the relevant `/server` system to be migrated first (eg. Projects, Collections)
+
+</details>
+
+<details>
+  <summary>Add end-to-end tests to cover the core user flows</summary>
+
+- [Issue Link - TODO]()
+
+- Writing a suite of e2e tests to cover core user flows would enable security against regression with fewer test files necessary
+- This can be done with Playwrite or Cypress & can be integrated into CICD pipelines.
+- Examples of core user flows include:
+  - `User can log in`
+  - `User can save a sketch & see it in their sketches`
+- To be discussed further with the contributor community.
+
+</details>
+
+<details>
+  <summary>Create a [OpenAPI/Swagger](https://swagger.io/tools/swagger-ui/) documentation microsite for the server APIs</summary>
+
+<img src='./images/swagger-microsite.png' alt='proof of concept of a swagger documentation microsite'>
+
+- [Issue Link - TODO]()
+
+- This would enable new contributors to have a centralised location to look for APIs
+- Also aligns with current API documentation standards as of 2025
+- Current API documentation lives [here](https://github.com/processing/p5.js-web-editor/blob/develop/contributor_docs/public_api.md) and does not contain all the APIs
+- [Proof of concept PR here](https://github.com/processing/p5.js-web-editor/pull/3706)
+  - I have written out the User related APIs by hand, but ideally we would have automation to check that this document is accurate, or to autogenerate the document, or autogenerate types & routes from the document.
+
+</details>
