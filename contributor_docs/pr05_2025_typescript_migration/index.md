@@ -10,8 +10,6 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 ## Table of Contents
 
-<details open>
-
 - [Project Outline](#project-outline)
   - [Context](#project-context)
   - [Proposed Approach](#proposed-approach)
@@ -23,7 +21,6 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 - [Index of Migration Examples](#examples-index)
 - [Next Step Issues](#next-step-issues)
 - [Additional Reading](#additional-reading)
-</details>
 
 ## Project Outline:
 
@@ -277,6 +274,27 @@ console.log(multiply(2, 2));
   Prefer `interface` over `type`
   </summary>
 
+```tsx
+// ✅ interface
+interface ButtonProps {
+  label: string
+  disabled?: boolean
+  onClick: () => void
+}
+const Button = ({ label, disabled, onClick }: ButtonProps) => (...)
+
+// ❌ type
+type ButtonProps = {
+  label: string
+  disabled?: boolean
+  onClick: () => void
+}
+
+// ✅ keep type for primitives
+type UserId = string;
+```
+
+- Clearer semantic meaning when describing structured objects vs. primitives
 - This is not strictly enforced in linting rules, but aims to align with [Google Typescript styling](https://google.github.io/styleguide/tsguide.html#prefer-interfaces). Please see attached link for details.
 
 </details>
@@ -375,14 +393,113 @@ export const updatePreferences: RequestHandler<
 
 <summary>
   <details>
-    Text Guide
+    <summary>
+      Text Guide
+    </summary>
+    TO DO
   </details>
-
-- TODO
-
 </summary>
 
 ## Examples Index:
+
+### Client Files:
+
+<details>
+  <summary>React component</summary>
+
+- [IconButton](https://github.com/processing/p5.js-web-editor/blob/develop/client/common/IconButton.tsx)
+- [IconButton test](https://github.com/processing/p5.js-web-editor/blob/develop/client/common/IconButton.test.tsx)
+
+</details>
+
+<details>
+  <summary>Normal TS file</summary>
+
+- [formatDate](https://github.com/processing/p5.js-web-editor/blob/develop/client/utils/formatDate.ts)
+- [formateDate test](https://github.com/processing/p5.js-web-editor/blob/develop/client/utils/formatDate.test.ts)
+
+</details>
+
+<details>
+  <summary>Hook</summary>
+
+- [usePrevious](https://github.com/processing/p5.js-web-editor/blob/develop/client/common/usePrevious.ts)
+- [usePrevious test](https://github.com/processing/p5.js-web-editor/blob/develop/client/common/usePrevious.test.ts)
+
+</details>
+
+<details>
+  <summary>Redux</summary>
+
+- To be updated pending open PR
+
+</details>
+
+<details>
+  <summary>Custom type declaration file</summary>
+
+- [custom.d.ts](https://github.com/processing/p5.js-web-editor/blob/develop/client/custom.d.ts)
+  - Use this to extend any client namespaced types (eg. Window) or file extensions (.svg, .mp3)
+
+</details>
+
+### Server Files:
+
+<details>
+  <summary>Types are extracted into /server/types in a barrel structure</summary>
+  
+  - [types/userPreferences](https://github.com/processing/p5.js-web-editor/blob/develop/server/types/userPreferences.ts)
+  - [types/index](https://github.com/processing/p5.js-web-editor/blob/develop/server/types/index.ts)
+    - All server types are exported here
+
+</details>
+
+<details>
+  <summary>Routes</summary>
+
+- [routes/user.routes.ts](https://github.com/processing/p5.js-web-editor/blob/develop/server/routes/user.routes.ts)
+  - Format the routes by 'subdomain' if the file is particularly large
+  - Add the method & path in code comments for easier global search
+
+</details>
+
+<details>
+  <summary>Model</summary>
+
+- [models/user](https://github.com/processing/p5.js-web-editor/blob/develop/server/models/user.ts)
+- [models/user test](https://github.com/processing/p5.js-web-editor/blob/develop/server/models/__test__/user.ts)
+
+</details>
+
+<details>
+  <summary>Controller</summary>
+
+- [controllers/user.controller > index file](https://github.com/processing/p5.js-web-editor/blob/develop/server/controllers/user.controller/index.ts)
+  - Note that controllers should be organised in barrel format with an index file.
+- [controllers/user.controller > updateSettings method](https://github.com/processing/p5.js-web-editor/blob/develop/server/controllers/user.controller/userPreferences.ts)
+- [controllers/user.controller > updateSettings method test](https://github.com/processing/p5.js-web-editor/blob/develop/server/controllers/user.controller/__tests__/userPreferences.test.ts)
+
+</details>
+
+<details>
+  <summary>Custom type declaration for a namespace for a dependency</summary>
+  
+  - [types/express](https://github.com/processing/p5.js-web-editor/blob/develop/server/types/express/index.d.ts)
+    - Extend the `express` namespace `Request.User` with a custom user type.
+  - [types/jest-express](https://github.com/processing/p5.js-web-editor/blob/develop/server/types/jest-express/index.d.ts)
+    - Parallel change on `jest-express` to extend `Request.User` in the test environment
+
+</details>
+
+### Common Files:
+
+<details>
+  <summary>Types shared across the server to client are exported in /common/types</summary>
+  
+  - [types/index](https://github.com/processing/p5.js-web-editor/blob/develop/common/types/index.ts)
+    - Note that for some APIs (eg. user) we don't want to export **all** types, we want to specifically name the types to share with the client (eg. not `UserDocument`)
+
+</details>
 
 ## Next Step Issues:
 
