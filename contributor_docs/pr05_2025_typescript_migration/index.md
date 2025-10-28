@@ -2,13 +2,32 @@
 
 This is the project appendix for the **2025 pr05 Grant: Incremental Typescript Migration of the p5.js Web Editor**.
 
+## Additional Reading:
+
+- [pr05 grant](https://github.com/processing/pr05-grant/wiki/2025-pr05-Program-Page)
+- [pr05 grant: Typescript Migration Project](https://github.com/processing/pr05-grant/wiki/2025-pr05-Project-List#incremental-typescript-migration-for-the-p5js-editor)
+- [Intro to the Incremental Typescript Migration for the p5.js Web Editor](https://medium.com/@clairepeng94/intro-to-the-incremental-typescript-migration-for-the-p5-js-web-editor-2ffbc305c6a9)
+
 ## Table of Contents
+
+<details open>
+
+- [Project Outline](#project-outline)
+  - [Context](#project-context)
+  - [Proposed Approach](#proposed-approach)
+  - [Project Timeline](#project-timeline)
+- [Summary of TS Configurations](#configuration-summary)
+- [Migration Tutorial](#migration-tutorial)
+- [Index of Migration Examples](#examples-index)
+- [Next Step Issues](#next-step-issues)
+- [Additional Reading](#additional-reading)
+</details>
 
 ## Project Outline:
 
-### Project Background:
+### Project Context:
 
-<details>
+<details open>
   <summary>View details</summary>
 
 - Grant period of 200h over July 1st - October 31, 2025
@@ -69,7 +88,59 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 ### Project Timeline:
 
-<img src='Project_Timeline.png'/>
+<details open>
+  <summary>July</summary>
+
+- Set up TS dependencies & configuration on the `root`
+  - `tsconfig.json`
+  - `tsconfig.base.json`
+  - `.babelrc`
+  - `.eslintrc`
+  - `package.json > jest.config`
+  - `webpack/`
+- Set up TS dependencies & configuration in `/client`
+  - `/client/tsconfig.json`
+  - `@types/...` for `/client` dependencies (eg. React 16)
+- Set up `typecheck` and `typecheck:client` commands in `package.json`
+- Migrate `/client/utils`
+
+</details>
+
+<details open>
+  <summary>August</summary>
+
+- Migrate `/client/common` with co-located types & tests
+- Migrate `/client/components` with co-located types & tests
+
+</details>
+
+<details open>
+  <summary>September</summary>
+
+- Set up TS dependencies & configuration in `/server`
+  - `nodemon.json`
+  - `webpack/`
+  - `/server/tsconfig.json`
+  - `@types/...` for `/server` dependencies
+- Set up `/server/types` to store all `/server` types (eg Mongoose v8)
+- Migrate `/server` components related to emailing and `nodemailer`
+- Migrate `/server/routes`
+- Migrate `/server/models/User` with tests
+- Migrate `/server/models/ApiKeys` with tests
+
+</details>
+
+<details open>
+  <summary>October</summary>
+
+- Migrate `/server/controllers/User`
+  - Major refactor. Added tests to all the methods & re-organised by sub-domain (eg. auth management) & added JSDocs for each controller method.
+- Instantiate `.d.ts` files for `express` and `jest-express` to create a custome `Express` namespace `Request.User` definition
+- Migrate root redux files: `/client/store`, `/client/reducers` & `/client/persistState`
+- Migrate user preferences redux: `/client/IDE/reducers/preferences` & `/client/IDE/actions/preferences`
+- Migrate most of `/client/modules/User` (with exception of files related to `Collections`)
+
+</details>
 
 ## Outcome:
 
@@ -101,9 +172,17 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 - Make a best effort at being as precise as possible with context clues, but when in doubt, selecting a broader type (eg. `string` instead of an `enum`) is valid and we can update to be stricter as the migration continues.
 
+- Keep refactoring/logic updates outside of migration PRs, unless the relevant file has been secured with a test prior to migration work.
+  - This helps keep reviews easy for maintainers
+  - Branch off the migration PR and make a subsequent PR with your proposed refactor.
+
 ## Configuration Summary:
 
 ## Migration Tutorial:
+
+[Video Guide - Migrating the `client/modules/User/pages/AccountView`](youtube.com/watch?v=y84SVy7lAgg&feature=youtu.be)
+
+Text Steps:
 
 ## Examples Index:
 
@@ -118,9 +197,3 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 - E2e test to cover core user flows
 - Open API
-
-## Additional Reading:
-
-- [pr05 grant](https://github.com/processing/pr05-grant/wiki/2025-pr05-Program-Page)
-- [pr05 grant: Typescript Migration Project](https://github.com/processing/pr05-grant/wiki/2025-pr05-Project-List#incremental-typescript-migration-for-the-p5js-editor)
-- [Intro to the Incremental Typescript Migration for the p5.js Web Editor](https://medium.com/@clairepeng94/intro-to-the-incremental-typescript-migration-for-the-p5-js-web-editor-2ffbc305c6a9)
