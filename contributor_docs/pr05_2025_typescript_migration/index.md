@@ -89,7 +89,7 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 ### Project Timeline:
 
 <details open>
-  <summary>July</summary>
+  <summary>July:</summary>
 
 - Set up TS dependencies & configuration on the `root`
   - `tsconfig.json`
@@ -106,16 +106,16 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 </details>
 
-<details open>
-  <summary>August</summary>
+<details>
+  <summary>August:</summary>
 
 - Migrate `/client/common` with co-located types & tests
 - Migrate `/client/components` with co-located types & tests
 
 </details>
 
-<details open>
-  <summary>September</summary>
+<details>
+  <summary>September:</summary>
 
 - Set up TS dependencies & configuration in `/server`
   - `nodemon.json`
@@ -127,24 +127,86 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 - Migrate `/server/routes`
 - Migrate `/server/models/User` with tests
 - Migrate `/server/models/ApiKeys` with tests
+- Start migrating `/server/controllers/User`
 
 </details>
 
 <details open>
-  <summary>October</summary>
+  <summary>October:</summary>
 
-- Migrate `/server/controllers/User`
-  - Major refactor. Added tests to all the methods & re-organised by sub-domain (eg. auth management) & added JSDocs for each controller method.
+- Complete migration for `/server/controllers/User`
+  - Added tests to all the methods & re-organised by sub-domain (eg. auth management) & added JSDocs for each controller method.
 - Instantiate `.d.ts` files for `express` and `jest-express` to create a custome `Express` namespace `Request.User` definition
+- Set up `/common/types` folder to
 - Migrate root redux files: `/client/store`, `/client/reducers` & `/client/persistState`
 - Migrate user preferences redux: `/client/IDE/reducers/preferences` & `/client/IDE/actions/preferences`
+- Migrate `/client/modules/Legal`
+- Migrate `/client/modules/About`
 - Migrate most of `/client/modules/User` (with exception of files related to `Collections`)
+- Clean up of previous work & documentation
 
 </details>
 
 ## Outcome:
 
-- Root TS config that points to separate TS and
+<details>
+  <summary>All TS-related configuration for dependencies is completed</summary>
+
+- `tsconfig.json`
+- `tsconfig.base.json`
+- `.babelrc`
+- `.eslintrc`
+- `package.json > jest.config`
+- `webpack/`
+- `nodemon.json`
+- `/client/tsconfig.json`
+- `/server/tsconfig.json`
+</details>
+
+<details>
+  <summary>Typecheck commands have been set up & enabled on automated checks locally and on CI</summary>
+
+- `npm run typecheck` to check both the `/server` and `/client` folders
+- `npm run typecheck:server` to check only the `/server` folder
+- `npm run typecheck:client` to check only the `/client` folder
+- `package.json > husky` configured to run `npm run typecheck` during `pre-commit` check
+- `/github/workflows/test.yml` configured to run `npm run typecheck` during `test` on GHA
+
+</details>
+
+<details>
+  <summary>The following files have been migrated, covering at least once instance of each 'kind' of file encountered on the repo:</summary>
+
+- [x] `/common/types`
+- [.] `/client/`:
+  - [x] `/client/utils/`
+  - [x] `/client/common/`
+  - [x] `/client/components/`
+  - [x] `/client/store`
+  - [x] `/client/reducers`
+  - [x] `/client/persistState`
+  - [x] `/client/IDE/reducers/preferences`
+  - [x]`/client/IDE/actions/preferences`
+  - [x] `/client/modules/User/`
+  - [x] `/client/modules/About/`
+  - [x] `/client/modules/Legal/`
+  - [x] `/client/custom.d.ts`
+- [.] `/server`:
+  - [.] `/server/controllers`
+    - [x] `/server/controllers/user.controller/`
+  - [.] `/server/models/`
+    - [x] `/server/models/user`
+    - [x] `/server/models/apiKey`
+  - [x] `/server/routes/`
+  - [x] `/server/middleware/`
+  - [x] `/server/types/`
+  - [x] `/server/views/`
+- [.] `/server/utils/`
+  - [x] `/server/utils/generateFileSystemSafeName`
+  - [x] `/server/utils/mail`
+  - [x] `/server/utils/renderMjml`
+
+</details>
 
 ## Key Decisions:
 
