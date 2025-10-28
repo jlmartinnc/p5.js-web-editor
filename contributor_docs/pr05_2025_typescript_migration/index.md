@@ -15,6 +15,7 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
   - [Context](#project-context)
   - [Proposed Approach](#proposed-approach)
   - [Project Timeline](#project-timeline)
+  - [All PRs](#all-prs)
 - [Summary of Outcome](#outcome)
 - [Key Decisions](#key-decisions)
 - [Summary of TS Configurations](#configuration-summary)
@@ -146,6 +147,38 @@ Click to view details by month
 - Migrate `/client/modules/About`
 - Migrate most of `/client/modules/User` (with exception of files related to `Collections`)
 - Clean up of previous work & documentation
+
+</details>
+
+## All PRs:
+
+Click to view all PRs for this project:
+
+<details>
+  <summary>Click to view all PRs for this project:
+  </summary>
+
+- [pr05 Typescript #1: Set up TS dependencies in the root & client](https://github.com/processing/p5.js-web-editor/pull/3533)
+- [pr05 Typescript #2: automatically resolve imports of ts files & migrate instance of client/utils file](https://github.com/processing/p5.js-web-editor/pull/3540)
+- [pr05 Typescript #3: Migrate client/utils folder](https://github.com/processing/p5.js-web-editor/pull/3553)
+- [pr05 Typescript #4: migrate instance of react file](https://github.com/processing/p5.js-web-editor/pull/3554)
+- [pr05 Typescript Migration #5: Migrate client/common folder](https://github.com/processing/p5.js-web-editor/pull/3565)
+- [pr05 Typescript Migration #6: Initial docs on typescript migration](https://github.com/processing/p5.js-web-editor/pull/3581)
+- [pr05 Typescript Migration #7: migrate client components](https://github.com/processing/p5.js-web-editor/pull/3619)
+- [pr05 Typescript #8: migrate client/components/Menubar/MenubarSubmenu](https://github.com/processing/p5.js-web-editor/pull/3623)
+- [pr05 Typescript Migration #10: Setup Server TS Dependencies & migrate instance of server file](https://github.com/processing/p5.js-web-editor/pull/3636)
+- [pr05 Typescript Migration #11: Migrate server/routes folder](https://github.com/processing/p5.js-web-editor/pull/3643)
+- [pr05 Typescript Migration 12: Migrate server files related to emailing/nodemailer](https://github.com/processing/p5.js-web-editor/pull/3658)
+- [pr05 Typescript Migration #13: Migrate the User Model (& API Key schema)](https://github.com/processing/p5.js-web-editor/pull/3672)
+- [pr05 Typescript Migration #14: Migrate User Controller](https://github.com/processing/p5.js-web-editor/pull/3681)
+- [pr05 Typescript Migration #15: Redux base files & migrate user preferences redux system](https://github.com/processing/p5.js-web-editor/pull/3683)
+- [pr05 Typescript Migration #16: Fix build error webpack example config](https://github.com/processing/p5.js-web-editor/pull/3696)
+- [pr05 Typescript Migration #17: Add typecheck to ci](https://github.com/processing/p5.js-web-editor/pull/3699)
+- [Pr05 Typescript Migration #18: Migrate client/modules/About & client/modules/Legal](https://github.com/processing/p5.js-web-editor/pull/3702)
+- [Pr05 Typescript Migration #19: client/common/icons](https://github.com/processing/p5.js-web-editor/pull/3703)
+- [Pr05 Typescript Migration #20: Refine server/types & client/reducer types](https://github.com/processing/p5.js-web-editor/pull/3704)
+- [Pr05 Typescript Migration #21: client/modules/User](https://github.com/processing/p5.js-web-editor/pull/3705)
+- [pr05 Typescript Migration - Followon Project: Swagger / OpenApi documentation & UI for server routes](https://github.com/processing/p5.js-web-editor/pull/3706)
 
 </details>
 
