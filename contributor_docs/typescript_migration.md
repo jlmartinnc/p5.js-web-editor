@@ -8,6 +8,6 @@ Below are some guidelines on completing the migration.
 
 ## Migration Approach:
 
-- [TS Configuration Summary](./pr05_2025_typescript_migration/index.md#configuration-summary)
-- [Migration Tutorial](./pr05_2025_typescript_migration/index.md#migration-tutorial)
-- [TS & Code style decisions](./pr05_2025_typescript_migration/index.md#key-decisions)
+- [TS Configuration Summary](pr05_2025_typescript_migration/index.md#configuration-summary)
+- [Migration Tutorial](pr05_2025_typescript_migration/index.md#migration-tutorial)
+- [TS & Code style decisions](pr05_2025_typescript_migration/index.md#key-decisions)

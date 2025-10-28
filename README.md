@@ -36,7 +36,7 @@ The p5.js Editor is a collaborative project created by many individuals, mostly 
 
 > **TypeScript Migration:** We have initiated migrating the repo to Typescript as part of the **[p5.js Web Editor pr05 Grant](https://github.com/processing/pr05-grant/wiki/2025-pr05-Program-Page)**, and the repo is now open to migration contributions.
 >
-> Please see [Typescript Migration](./contributor_docs/typescript_migration.md) for migration guidelines. Please see [2025 pr05 Typescript Migration Project](./contributor_docs/pr05_2025_typescript_migration/index.md) for details and technical decisions for the migration project.
+> Please see [Typescript Migration](contributor_docs/typescript_migration.md) for migration guidelines. Please see [2025 pr05 Typescript Migration Project](contributor_docs/pr05_2025_typescript_migration/index.md) for details and technical decisions for the migration project.
 
 ## Acknowledgements 🙏
 
