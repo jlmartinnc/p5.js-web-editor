@@ -399,7 +399,8 @@ export const updatePreferences: RequestHandler<
   Best-effort & evolving-precision principle towards defining types
   </summary>
 
-- Make a best effort at being as precise as possible with context clues, but when in doubt, selecting a broader type (eg. `string` instead of an `enum`) is valid and we can update to be stricter as the migration continues.
+- Because we are adding types into a legacy project originally written without types, there are sometimes inconsistencies between component contracts, or misalignments between type shapes or name conventions that make adding in types difficult.
+- As such make a best effort at being as precise as possible with context clues, but when in doubt, selecting a broader type (eg. `string` instead of an `enum`) is valid and we can update to be stricter as the migration continues.
 
 </details>
 
