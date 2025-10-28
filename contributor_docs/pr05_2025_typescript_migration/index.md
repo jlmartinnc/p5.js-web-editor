@@ -16,6 +16,8 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
   - [Context](#project-context)
   - [Proposed Approach](#proposed-approach)
   - [Project Timeline](#project-timeline)
+- [Summary of Outcome](#outcome)
+- [Key Decisions](#key-decisions)
 - [Summary of TS Configurations](#configuration-summary)
 - [Migration Tutorial](#migration-tutorial)
 - [Index of Migration Examples](#examples-index)
@@ -88,7 +90,9 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 ### Project Timeline:
 
-<details open>
+Click to view details by month
+
+<details>
   <summary>July:</summary>
 
 - Set up TS dependencies & configuration on the `root`
@@ -131,7 +135,7 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 </details>
 
-<details open>
+<details>
   <summary>October:</summary>
 
 - Complete migration for `/server/controllers/User`
@@ -148,6 +152,8 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 </details>
 
 ## Outcome:
+
+Click to view details & relevant files per outcome-item
 
 <details>
   <summary>All TS-related configuration for dependencies is completed</summary>
@@ -210,41 +216,152 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 ## Key Decisions:
 
-- Typescript is used for typechecking only, not compiling
+<details>
+  <summary>
+    Typescript is configured to be used for type checking only, not for transpiling
+  </summary>
 
-- Define "source-of-truth" types in the `./server/types` folder
+```shell
+npm run tsc --noEmit
+```
 
-  - Pull any types that are relevant to share with the `./client` into the `./common/types` folder
+- The repo is too large to convert entirely to TS in one go, so we need to flexibly support both TS and JS files
+- We have existing legacy runtime build tools (Babel & Webpack) for the existing JS, so this was the easiest way to support both our intended direction and legacy codebase
+- Our configured automated type checking prevents PRs from being merged if they fail, so we're working towards a Typescript system without disrupting current build.
+- Once the repo has been migrated, we can update to full transpilation with `npm run tsc`
 
-- Prefer `named` exports over `default` exports
+</details>
 
-- JSDocs for API endpoints & client components that hit API endpoints
+<details>
+  <summary>
+    Prefer `named` exports over `default` exports where possible
+  </summary>
 
-  - Will eventually migrate to OpenAPI/Swagger documentation
-  - Enables devs to hover and see details more easily
+❌ DON'T:
 
-- Prefer `interface` over `type`
+```ts
+// calculator.ts
+export default function multiply(a: number, b: number): numer {
+  return a * b;
+}
 
-- `/server` types are in `/types` folder
-- `/client` types are co-located for now -- pending change
+// main.ts
+import calculate from './calculator'; // the default function is renamed and confusing for next dev to read
 
-  - Components have their own types so they get messy
+console.log(calculate(2, 2)); // is this 2*2? 2+2? 2^2? something else?
+```
 
-- If using code-assistance, make sure to write unit tests that cover all happy/unhappy paths to secure against regression. Please see [testing](../testing.md) for more details on general guidelines, or the example code index below.
+✅ DO:
+
+```ts
+// calculator.ts
+export function multiply(a: number, b: number): numer {
+  return a * b;
+}
+
+// main.ts
+import { multiply } from './calculator';
+
+console.log(multiply(2, 2));
+```
+
+- Default exports allow devs to rename the import anything they want, and inaccurate misnaming will cause confusion
+- Renaming default export also makes it more difficult to perform a global search on the function
+
+</details>
+
+<details>
+  <summary>
+  Prefer `interface` over `type`
+  </summary>
+
+- This is not strictly enforced in linting rules, but aims to align with [Google Typescript styling](https://google.github.io/styleguide/tsguide.html#prefer-interfaces). Please see attached link for details.
+
+</details>
+
+<details>
+  <summary>
+  If possible, add unit tests prior to the component that you are migrating prior to performing any migration
+  </summary>
+
+- This protects the app from unintended regression & also helps demonstrate to reviewers that you understand the intent of a component/file you are migrating
+- Tests also help document how the component is intended to work.
+- Please see [testing](../testing.md) for more details on general guidelines, or the example code index below.
+
+</details>
+
+<details>
+  <summary>
+    If a component does not have an existing unit test, keep refactors/logic changes outside of Typescript Migration PRs
+  </summary
+
+- This helps keep reviews easy for maintainers
+- Branch off the migration PR and make a subsequent PR with your proposed refactor.
+
+</details>
+
+<details>
+  <summary>
+    Add JSDocs & specify the `Express` `RequestHandler` generics to `/server` controller methods in the following example:
+  </summary>
+
+```ts
+// see server/controllers/user.controller/userPreferences.ts
+
+/**
+ * - Method: `PUT`
+ * - Endpoint: `/preferences`
+ * - Authenticated: `true`
+ * - Id: `UserController.updatePreferences`
+ *
+ * Description:
+ *   - Update user preferences, such as AppTheme
+ */
+export const updatePreferences: RequestHandler<
+  {}, // request params type if there are any, extending RouteParam
+  UpdatePreferencesResponseBody, // response body type
+  UpdatePreferencesRequestBody // request body type
+  // query params type if there are any
+> = async (req, res) => {
+  // ... rest of code
+};
+```
+
+- JSDocs will reduce cognitive load for other developers and enable them to see the controllers details on hover.
+- Add the JSDocs to any `client` controllers that use these endpoints.
+
+<img src='./images/hoverJsDocs.gif' alt='hover on a function with jsdocs' width="400px"/>
+
+</details>
+
+<details>
+  <summary>
+  Best-effort & evolving-precision principle towards defining types
+  </summary>
 
 - Make a best effort at being as precise as possible with context clues, but when in doubt, selecting a broader type (eg. `string` instead of an `enum`) is valid and we can update to be stricter as the migration continues.
 
-- Keep refactoring/logic updates outside of migration PRs, unless the relevant file has been secured with a test prior to migration work.
-  - This helps keep reviews easy for maintainers
-  - Branch off the migration PR and make a subsequent PR with your proposed refactor.
+</details>
+
+<details>
+  <summary>
+    `/server` types live in `/server/types`. `/client` types are co-located (currently). Shared types between the `/server` and `/client` live in `/common/types`.  
+  </summary>
+
+- `/server` types are in `/types` folder
+  - These types should serves the source-of-truth for the rest of the app.
+- Pull any types that are relevant to share with the `./client` into the `./common/types` folder
+- `/client` types are co-located for now
+  - Components have their own types so they will get very numerous and messy
+  - However this is open to proposals for change
+
+</details>
 
 ## Configuration Summary:
 
 ## Migration Tutorial:
 
 [Video Guide - Migrating the `client/modules/User/pages/AccountView`](youtube.com/watch?v=y84SVy7lAgg&feature=youtu.be)
-
-Text Steps:
 
 ## Examples Index:
 
