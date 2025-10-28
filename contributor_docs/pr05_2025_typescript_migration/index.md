@@ -4,6 +4,7 @@ This is the project appendix for the **2025 pr05 Grant: Incremental Typescript M
 
 ## Additional Reading:
 
+- [All PRs related to the pr05 grant can be found with the `pr05` tag](https://github.com/processing/p5.js-web-editor/issues?q=state%3Aclosed%20label%3A%22pr05%20Grant%20Projects%22)
 - [pr05 grant](https://github.com/processing/pr05-grant/wiki/2025-pr05-Program-Page)
 - [pr05 grant: Typescript Migration Project](https://github.com/processing/pr05-grant/wiki/2025-pr05-Project-List#incremental-typescript-migration-for-the-p5js-editor)
 - [Intro to the Incremental Typescript Migration for the p5.js Web Editor](https://medium.com/@clairepeng94/intro-to-the-incremental-typescript-migration-for-the-p5-js-web-editor-2ffbc305c6a9)
@@ -387,6 +388,20 @@ export const updatePreferences: RequestHandler<
 
 ## Configuration Summary:
 
+<details>
+  <summary>
+    Relevant PRs
+  </summary>
+
+- [pr05 Typescript #1: Set up TS dependencies in the root & client](https://github.com/processing/p5.js-web-editor/pull/3533)
+- [pr05 Typescript #2: automatically resolve imports of ts files & migrate instance of client/utils file](https://github.com/processing/p5.js-web-editor/pull/3540)
+- [pr05 Typescript Migration #10: Setup Server TS Dependencies & migrate instance of server file](https://github.com/processing/p5.js-web-editor/pull/3636)
+- [pr05 Typescript Migration #15: Redux base files & migrate user preferences redux system](https://github.com/processing/p5.js-web-editor/pull/3683)
+- [pr05 Typescript Migration #16: Fix build error webpack example config](https://github.com/processing/p5.js-web-editor/pull/3696)
+- [pr05 Typescript Migration #17: Add typecheck to ci](https://github.com/processing/p5.js-web-editor/pull/3699)
+
+</details>
+
 ## Migration Tutorial:
 
 [Video Guide - Migrating the `client/modules/User/pages/AccountView`](youtube.com/watch?v=y84SVy7lAgg&feature=youtu.be)
@@ -530,10 +545,11 @@ export const updatePreferences: RequestHandler<
 </details>
 
 <details>
-  <summary>Create a [OpenAPI/Swagger](https://swagger.io/tools/swagger-ui/) documentation microsite for the server APIs</summary>
+  <summary>Create a OpenAPI/Swagger documentation microsite for the server APIs</summary>
 
 <img src='./images/swagger-microsite.png' alt='proof of concept of a swagger documentation microsite'>
 
+- [Swagger.ui](https://swagger.io/tools/swagger-ui/)
 - [Issue Link - TODO]()
 
 - This would enable new contributors to have a centralised location to look for APIs
