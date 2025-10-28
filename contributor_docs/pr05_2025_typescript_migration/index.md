@@ -232,6 +232,8 @@ npm run tsc --noEmit
 
 </details>
 
+<br>
+
 <details>
   <summary>
     Prefer `named` exports over `default` exports where possible
@@ -279,6 +281,8 @@ console.log(multiply(2, 2));
 
 </details>
 
+<br>
+
 <details>
   <summary>
   If possible, add unit tests prior to the component that you are migrating prior to performing any migration
@@ -299,6 +303,8 @@ console.log(multiply(2, 2));
 - Branch off the migration PR and make a subsequent PR with your proposed refactor.
 
 </details>
+
+<br>
 
 <details>
   <summary>
@@ -334,6 +340,8 @@ export const updatePreferences: RequestHandler<
 
 </details>
 
+<br>
+
 <details>
   <summary>
   Best-effort & evolving-precision principle towards defining types
@@ -342,6 +350,8 @@ export const updatePreferences: RequestHandler<
 - Make a best effort at being as precise as possible with context clues, but when in doubt, selecting a broader type (eg. `string` instead of an `enum`) is valid and we can update to be stricter as the migration continues.
 
 </details>
+
+<br>
 
 <details>
   <summary>
@@ -362,6 +372,15 @@ export const updatePreferences: RequestHandler<
 ## Migration Tutorial:
 
 [Video Guide - Migrating the `client/modules/User/pages/AccountView`](youtube.com/watch?v=y84SVy7lAgg&feature=youtu.be)
+
+<summary>
+  <details>
+    Text Guide
+  </details>
+
+- TODO
+
+</summary>
 
 ## Examples Index:
 
