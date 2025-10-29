@@ -438,7 +438,7 @@ export const updatePreferences: RequestHandler<
 
 ## Migration Tutorial:
 
-[Video Guide - Migrating the `client/modules/User/pages/AccountView`](youtube.com/watch?v=y84SVy7lAgg&feature=youtu.be)
+[Video Guide - Migrating the `client/modules/User/pages/AccountView`](https://youtu.be/y84SVy7lAgg)
 
 <summary>
   <details>
