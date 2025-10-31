@@ -32,7 +32,7 @@ export const initialState = () => {
     },
     {
       name: 'index.html',
-      content: defaultHTML,
+      content: defaultHTML(),
       id: b,
       _id: b,
       fileType: 'file',

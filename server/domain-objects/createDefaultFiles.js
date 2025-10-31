@@ -8,11 +8,35 @@ function draw() {
   background(220);
 }`;
 
-export const defaultHTML = `<!DOCTYPE html>
+export function defaultHTML({
+  version = currentP5Version,
+  sound = true,
+  preload = false,
+  shapes = false,
+  data = false
+} = {}) {
+  const soundURL = version.startsWith('2.')
+    ? `https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js`
+    : `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${version}/addons/p5.sound.min.js`;
+
+  const libraries = [
+    `<script src="https://cdn.jsdelivr.net/npm/p5@${version}/lib/p5.js"></script>`,
+    sound ? `<script src="${soundURL}"></script>` : '',
+    preload
+      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/preload.js"></script>`
+      : '',
+    shapes
+      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/shapes.js"></script>`
+      : '',
+    data
+      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/data.js"></script>`
+      : ''
+  ].join('\n    ');
+
+  return `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdn.jsdelivr.net/npm/p5@${currentP5Version}/lib/p5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@${currentP5Version}/lib/addons/p5.sound.min.js"></script>
+    ${libraries}
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
 
@@ -24,6 +48,7 @@ export const defaultHTML = `<!DOCTYPE html>
   </body>
 </html>
 `;
+}
 
 export const defaultCSS = `html, body {
   margin: 0;
@@ -37,7 +62,7 @@ canvas {
 export default function createDefaultFiles() {
   return {
     'index.html': {
-      content: defaultHTML
+      content: defaultHTML()
     },
     'style.css': {
       content: defaultCSS
