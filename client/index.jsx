@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import browserHistory from './browserHistory';
-import configureStore from './store';
+import { setupStore } from './store';
 import Routing from './routes';
 import ThemeProvider from './modules/App/components/ThemeProvider';
 import Loader from './modules/App/components/loader';
@@ -19,11 +19,14 @@ require('./images/p5js-square-logo.png');
 
 const initialState = window.__INITIAL_STATE__;
 
-const store = configureStore(initialState);
+const store = setupStore(initialState);
 
 const DONATE_LOGO_IMAGE_URL = 'https://donorbox.org/images/white_logo.svg';
 
+const showDonateCampaign = false;
+
 if (
+  showDonateCampaign &&
   window.location.href.indexOf('full') === -1 &&
   window.location.href.indexOf('embed') === -1
 ) {
@@ -93,13 +96,19 @@ const App = () => {
   );
 };
 
-render(
-  <Provider store={store}>
-    <ThemeProvider>
-      <Suspense fallback={<Loader />}>
-        <App />
-      </Suspense>
-    </ThemeProvider>
-  </Provider>,
-  document.getElementById('root')
-);
+// This prevents crashes in test environments (like Jest) where document.getElementById('root') may return null.
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  render(
+    <Provider store={store}>
+      <ThemeProvider>
+        <Suspense fallback={<Loader />}>
+          <App />
+        </Suspense>
+      </ThemeProvider>
+    </Provider>,
+    rootEl
+  );
+}
+
+export default store;
