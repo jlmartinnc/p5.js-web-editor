@@ -1,4 +1,12 @@
 import { currentP5Version } from '../../common/p5Versions';
+import {
+  p5SoundURLOldTemplate,
+  p5SoundURL,
+  p5PreloadAddonURL,
+  p5ShapesAddonURL,
+  p5DataAddonURL,
+  p5URLTemplate
+} from '../../common/p5URLs';
 
 export const defaultSketch = `function setup() {
   createCanvas(400, 400);
@@ -8,6 +16,8 @@ function draw() {
   background(220);
 }`;
 
+const majorVersion = (version) => version.split('.')[0];
+
 export function defaultHTML({
   version = currentP5Version,
   sound = true,
@@ -15,22 +25,19 @@ export function defaultHTML({
   shapes = false,
   data = false
 } = {}) {
-  const soundURL = version.startsWith('2.')
-    ? `https://cdn.jsdelivr.net/npm/p5.sound@0.2.0/dist/p5.sound.min.js`
-    : `https://cdnjs.cloudflare.com/ajax/libs/p5.js/${version}/addons/p5.sound.min.js`;
+  const p5URL = p5URLTemplate.replace('$VERSION', version);
+
+  const soundURL =
+    majorVersion(version) === '2'
+      ? p5SoundURL
+      : p5SoundURLOldTemplate.replace('$VERSION', version);
 
   const libraries = [
-    `<script src="https://cdn.jsdelivr.net/npm/p5@${version}/lib/p5.js"></script>`,
+    `<script src="${p5URL}"></script>`,
     sound ? `<script src="${soundURL}"></script>` : '',
-    preload
-      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/preload.js"></script>`
-      : '',
-    shapes
-      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/shapes.js"></script>`
-      : '',
-    data
-      ? `<script src="https://cdn.jsdelivr.net/npm/p5.js-compatibility@0.1.2/src/data.js"></script>`
-      : ''
+    preload ? `<script src="${p5PreloadAddonURL}"></script>` : '',
+    shapes ? `<script src="${p5ShapesAddonURL}"></script>` : '',
+    data ? `<script src="${p5DataAddonURL}"></script>` : ''
   ].join('\n    ');
 
   return `<!DOCTYPE html>
