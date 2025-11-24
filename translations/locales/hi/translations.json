@@ -43,7 +43,7 @@
         "MySketches": "मेरे स्केच",
         "MyCollections": "मेरे संग्रह",
         "Asset": "संपत्ति",
-        "MyAssets": "मेरे ऐसेट",
+        "MyAssets": "मेरी संपत्तियाँ",
         "LogOut": "लॉग आउट"
       }
     },
@@ -278,8 +278,8 @@
     },
     "Common": {
       "SiteName": "p5.js वेब एडिटर",
-      "Error": "एरर",
-      "ErrorARIA": "एरर",
+      "Error": "ग़लती",
+      "ErrorARIA": "ग़लती",
       "Save": "सेव",
       "p5logoARIA": "p5.js लोगो",
       "DeleteConfirmation": "क्या आप पक्का {{name}} को डिलीट करना चाहते हैं?"
