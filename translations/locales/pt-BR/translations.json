@@ -238,7 +238,8 @@
       "FindPreviousTextMatch": "Localizar ocorrência de texto anterior",
       "CodeEditing": "Edição de código",
       "ColorPicker": "Mostrar ferramenta seletora de cores",
-      "CreateNewFile": "Criar novo arquivo"
+      "CreateNewFile": "Criar novo arquivo",
+      "RenameVariable": "Renomear variável"
     },
     "GeneralSelection": {
       "StartSketch": "Começar esboço",
