@@ -135,18 +135,8 @@ export function CookieConsent({ hide = false }: { hide?: boolean }) {
   function mergeCookieConsent() {
     if (user.authenticated) {
       if (!user.cookieConsent) {
-        return;
+        user.cookieConsent = CookieConsentOptions.NONE;
       }
-      if (
-        ![
-          CookieConsentOptions.ALL,
-          CookieConsentOptions.ESSENTIAL,
-          CookieConsentOptions.NONE
-        ].includes(user.cookieConsent)
-      ) {
-        return;
-      }
-
       if (
         user.cookieConsent === CookieConsentOptions.NONE &&
         cookieConsent !== CookieConsentOptions.NONE
