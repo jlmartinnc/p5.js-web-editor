@@ -69,7 +69,7 @@ export const APIKeyForm = () => {
           <Button
             disabled={keyLabel === ''}
             iconBefore={<PlusIcon />}
-            label="Create new key"
+            aria-label="Create new key"
             type={ButtonTypes.SUBMIT}
           >
             {t('APIKeyForm.CreateTokenSubmit')}

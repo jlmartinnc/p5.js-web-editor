@@ -92,7 +92,6 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
    * but React will automatically convert a boolean prop to the correct string value.
    */
   focusable?: boolean;
-  label?: string;
 }
 
 interface StyledButtonProps extends ButtonProps {
