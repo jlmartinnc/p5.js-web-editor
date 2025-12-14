@@ -2,10 +2,8 @@ import { useEffect, MutableRefObject } from 'react';
 import type { FormApi } from 'final-form';
 
 // Generic FormLike that mirrors FormApi for any form value type
-export type FormLike<FormValues = Record<string, unknown>> = Pick<
-  FormApi<FormValues>,
-  'getState' | 'reset' | 'change'
->;
+export interface FormLike<FormValues = Record<string, unknown>>
+  extends Pick<FormApi<FormValues>, 'getState' | 'reset' | 'change'> {}
 
 /**
  * This hook ensures that form values are preserved when the language changes.
