@@ -107,7 +107,7 @@ export function AccountForm() {
                 </span>
               ) : (
                 <Button
-                  onClick={() => handleInitiateVerification}
+                  onClick={handleInitiateVerification}
                   className="form__resend-button"
                 >
                   {t('AccountForm.Resend')}
